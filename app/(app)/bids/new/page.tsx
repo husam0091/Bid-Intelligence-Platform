@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Header } from '@/components/layout/Header'
 import { computeDecision } from '@/lib/decision'
 import { renderMd } from '@/lib/render-md'
+import { useAr } from '@/hooks/useAr'
 
 type ComparableBid = {
   id: string; name: string; location: string; type: string
@@ -14,68 +15,62 @@ type ComparableBid = {
 
 const GROUPS = [
   {
-    key: 'competitive', label: 'Competitive Position', color: 'var(--ink)', max: 50,
+    key: 'competitive', label: 'Competitive Position', labelAr: 'الموقف التنافسي', color: 'var(--ink)', max: 50,
     fields: [
-      { key: 'relStrength',     label: 'Relationship Strength' },
-      { key: 'budgetKnown',     label: 'Budget Known' },
-      { key: 'competitors',     label: 'Competitor Landscape' },
-      { key: 'limitedInv',      label: 'Limited Invitations' },
-      { key: 'similarExp',      label: 'Similar Experience' },
-      { key: 'noPriceBreakers', label: 'No Price Breakers' },
-      { key: 'techAdv',         label: 'Technical Advantage' },
-      { key: 'withinExpertise', label: 'Within Expertise' },
-      { key: 'lowChanges',      label: 'Low Change Orders Risk' },
-      { key: 'goodLocation',    label: 'Good Location' },
+      { key: 'relStrength',     label: 'Relationship Strength',          labelAr: 'قوة العلاقة' },
+      { key: 'budgetKnown',     label: 'Budget Known',                   labelAr: 'الميزانية معروفة' },
+      { key: 'competitors',     label: 'Competitor Landscape',           labelAr: 'المشهد التنافسي' },
+      { key: 'limitedInv',      label: 'Limited Invitations',            labelAr: 'دعوات محدودة' },
+      { key: 'similarExp',      label: 'Similar Experience',             labelAr: 'تجربة مشابهة' },
+      { key: 'noPriceBreakers', label: 'No Price Breakers',              labelAr: 'لا كسر للسعر' },
+      { key: 'techAdv',         label: 'Technical Advantage',            labelAr: 'ميزة تقنية' },
+      { key: 'withinExpertise', label: 'Within Expertise',               labelAr: 'ضمن الخبرة' },
+      { key: 'lowChanges',      label: 'Low Change Orders Risk',         labelAr: 'مخاطر أوامر تغيير منخفضة' },
+      { key: 'goodLocation',    label: 'Good Location',                  labelAr: 'موقع جيد' },
     ],
   },
   {
-    key: 'load', label: 'Company Load Factor', color: 'var(--data-blue)', max: 25,
+    key: 'load', label: 'Company Load Factor', labelAr: 'عامل حمل الشركة', color: 'var(--data-blue)', max: 25,
     fields: [
-      { key: 'teamAvail',       label: 'Team Availability' },
-      { key: 'equipAvail',      label: 'Equipment Availability' },
-      { key: 'cashFlow',        label: 'Cash Flow Capacity' },
-      { key: 'currWorkload',    label: 'Current Workload' },
-      { key: 'noImpactRunning', label: 'No Impact on Running Projects' },
+      { key: 'teamAvail',       label: 'Team Availability',              labelAr: 'توافر الفريق' },
+      { key: 'equipAvail',      label: 'Equipment Availability',         labelAr: 'توافر المعدات' },
+      { key: 'cashFlow',        label: 'Cash Flow Capacity',             labelAr: 'طاقة التدفق النقدي' },
+      { key: 'currWorkload',    label: 'Current Workload',               labelAr: 'عبء العمل الحالي' },
+      { key: 'noImpactRunning', label: 'No Impact on Running Projects',  labelAr: 'لا تأثير على المشاريع الجارية' },
     ],
   },
   {
-    key: 'contractual', label: 'Contractual Risk', color: 'var(--review)', max: 20,
+    key: 'contractual', label: 'Contractual Risk', labelAr: 'المخاطر التعاقدية', color: 'var(--review)', max: 20,
     fields: [
-      { key: 'ld',       label: 'Liquidated Damages' },
-      { key: 'apg',      label: 'Advance Payment Guarantee' },
-      { key: 'perfBond', label: 'Performance Bond' },
-      { key: 'retention',label: 'Retention Terms' },
+      { key: 'ld',       label: 'Liquidated Damages',           labelAr: 'التعويضات المحددة' },
+      { key: 'apg',      label: 'Advance Payment Guarantee',    labelAr: 'ضمان الدفعة المقدمة' },
+      { key: 'perfBond', label: 'Performance Bond',             labelAr: 'ضمان الأداء' },
+      { key: 'retention',label: 'Retention Terms',              labelAr: 'شروط الاحتجاز' },
     ],
   },
   {
-    key: 'technical', label: 'Technical Risk', color: 'var(--go)', max: 15,
+    key: 'technical', label: 'Technical Risk', labelAr: 'المخاطر التقنية', color: 'var(--go)', max: 15,
     fields: [
-      { key: 'newSystem',   label: 'New Systems Required' },
-      { key: 'complexMEP',  label: 'Complex MEP' },
-      { key: 'specialAuth', label: 'Special Authorities' },
+      { key: 'newSystem',   label: 'New Systems Required',   labelAr: 'أنظمة جديدة مطلوبة' },
+      { key: 'complexMEP',  label: 'Complex MEP',            labelAr: 'أنظمة ميكانيكية وكهربائية معقدة' },
+      { key: 'specialAuth', label: 'Special Authorities',    labelAr: 'سلطات خاصة' },
     ],
   },
   {
-    key: 'commercial', label: 'Commercial & Financial Risk', color: 'var(--nogo)', max: 25,
+    key: 'commercial', label: 'Commercial & Financial Risk', labelAr: 'المخاطر التجارية والمالية', color: 'var(--nogo)', max: 25,
     fields: [
-      { key: 'clientRep',   label: 'Client Reputation' },
-      { key: 'clearDwgs',   label: 'Clear Drawings' },
-      { key: 'advPayment',  label: 'Advance Payment' },
-      { key: 'payments',    label: 'Payment Terms' },
-      { key: 'finDuration', label: 'Financial Duration' },
+      { key: 'clientRep',   label: 'Client Reputation',   labelAr: 'سمعة العميل' },
+      { key: 'clearDwgs',   label: 'Clear Drawings',      labelAr: 'رسومات واضحة' },
+      { key: 'advPayment',  label: 'Advance Payment',     labelAr: 'دفعة مقدمة' },
+      { key: 'payments',    label: 'Payment Terms',       labelAr: 'شروط الدفع' },
+      { key: 'finDuration', label: 'Financial Duration',  labelAr: 'المدة المالية' },
     ],
   },
 ]
 
-const STEP_LABELS = [
-  '01\nPROFILE',
-  '02\nCOMPETITIVE',
-  '03\nLOAD',
-  '04\nCONTRACTUAL',
-  '05\nTECHNICAL',
-  '06\nCOMMERCIAL',
-  '07\nREVIEW & SAVE',
-]
+const STEP_NAMES_EN = ['PROFILE', 'COMPETITIVE', 'LOAD', 'CONTRACTUAL', 'TECHNICAL', 'COMMERCIAL', 'REVIEW & SAVE']
+const STEP_NAMES_AR = ['الملف', 'تنافسية', 'الحمل', 'تعاقدي', 'تقني', 'تجاري', 'مراجعة وحفظ']
+const STEP_NUMS     = ['01', '02', '03', '04', '05', '06', '07']
 
 const ALL_KEYS = GROUPS.flatMap(g => g.fields.map(f => f.key))
 const defaultCriteria = Object.fromEntries(ALL_KEYS.map(k => [k, 3]))
@@ -84,22 +79,21 @@ function groupScore(group: typeof GROUPS[0], criteria: Record<string, number>) {
   return group.fields.reduce((s, f) => s + (criteria[f.key] ?? 0), 0)
 }
 
-function StepIndicator({ step }: { step: number }) {
+function StepIndicator({ step, ar }: { step: number; ar: boolean }) {
   return (
     <div className="steps">
-      {STEP_LABELS.map((label, i) => {
-        const num    = i + 1
-        const active = step === num
-        const done   = step > num
-        const lines  = label.split('\n')
+      {STEP_NUMS.map((num, i) => {
+        const idx    = i + 1
+        const active = step === idx
+        const done   = step > idx
         return (
           <div
-            key={num}
+            key={idx}
             className={`step${active ? ' current' : done ? ' done' : ''}`}
           >
             <div className="step-bar" />
-            <div className="step-num">{lines[0]}</div>
-            <div className="step-name">{lines[1]}</div>
+            <div className="step-num">{num}</div>
+            <div className="step-name">{ar ? STEP_NAMES_AR[i] : STEP_NAMES_EN[i]}</div>
           </div>
         )
       })}
@@ -109,6 +103,7 @@ function StepIndicator({ step }: { step: number }) {
 
 export default function NewBidPage() {
   const router  = useRouter()
+  const ar      = useAr()
   const [step,        setStep]        = useState(1)
   const [saving,      setSaving]      = useState(false)
   const [error,       setError]       = useState('')
@@ -233,6 +228,23 @@ export default function NewBidPage() {
   /* The group for the current step (steps 2-6) */
   const currentGroup = step >= 2 && step <= 6 ? GROUPS[step - 2] : null
 
+  /* Rating label helper */
+  function ratingLabel(v: number): string {
+    if (v === 0) return 'N/A'
+    if (v === 1) return ar ? 'ضعيف جداً'  : 'Very Poor'
+    if (v === 2) return ar ? 'ضعيف'       : 'Poor'
+    if (v === 3) return ar ? 'مقبول'      : 'Fair'
+    if (v === 4) return ar ? 'جيد'        : 'Good'
+    return ar ? 'ممتاز' : 'Excellent'
+  }
+
+  /* Advisory section labels */
+  const advisorySections = [
+    { key: 'business', label: ar ? 'الأعمال'       : 'BUSINESS',     color: 'var(--data-blue)', match: /## 1\. Business Perspective([\s\S]*?)(?=## 2\.|$)/i },
+    { key: 'risk',     label: ar ? 'إدارة المخاطر' : 'RISK MGMT',    color: 'var(--nogo)',      match: /## 2\. Risk Management([\s\S]*?)(?=## 3\.|$)/i },
+    { key: 'project',  label: ar ? 'إدارة المشروع' : 'PROJECT MGMT', color: 'var(--review)',    match: /## 3\. Project Management([\s\S]*?)$/i },
+  ]
+
   return (
     <>
       <Header title="New Bid Assessment" titleAr="تقييم عطاء جديد" />
@@ -240,13 +252,22 @@ export default function NewBidPage() {
       <div className="page-wrap">
         <div className="page-header">
           <div className="h-left">
-            <div className="h-kicker"><span className="dash" />03 · BID ENTRY</div>
-            <h1 className="h-title">Score a <em>New Tender</em></h1>
-            <p className="h-sub">Fill in project details and rate each of the 27 scoring criteria. The verdict panel updates live.</p>
+            <div className="h-kicker">
+              <span className="dash" />
+              {ar ? '03 · إدخال العطاء' : '03 · BID ENTRY'}
+            </div>
+            <h1 className="h-title">
+              {ar ? 'تقييم' : 'Score a'} <em>{ar ? 'عطاء جديد' : 'New Tender'}</em>
+            </h1>
+            <p className="h-sub">
+              {ar
+                ? 'أدخل تفاصيل المشروع وقيّم كل معيار من معايير التقييم السبعة والعشرين. تتحدث لوحة الحكم في الوقت الفعلي'
+                : 'Fill in project details and rate each of the 27 scoring criteria. The verdict panel updates live.'}
+            </p>
           </div>
         </div>
 
-        <StepIndicator step={step} />
+        <StepIndicator step={step} ar={ar} />
 
         <form onSubmit={handleSubmit}>
           <div className="wizard">
@@ -264,32 +285,34 @@ export default function NewBidPage() {
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: 12, marginBottom: 12 }}>
                       <label className="input-label">
-                        Project Name *
+                        {ar ? 'اسم المشروع *' : 'Project Name *'}
                         <input className="field" required value={info.name}
-                          onChange={e => setField('name', e.target.value)} placeholder="e.g. Al Riyadh Tower Block C" />
+                          onChange={e => setField('name', e.target.value)}
+                          placeholder={ar ? 'مثال: برج الرياض - المبنى ج' : 'e.g. Al Riyadh Tower Block C'} />
                       </label>
                       <label className="input-label">
-                        Location *
+                        {ar ? 'الموقع *' : 'Location *'}
                         <input className="field" required value={info.location}
-                          onChange={e => setField('location', e.target.value)} placeholder="City / Region" />
+                          onChange={e => setField('location', e.target.value)}
+                          placeholder={ar ? 'المدينة / المنطقة' : 'City / Region'} />
                       </label>
                       <label className="input-label">
-                        Type
+                        {ar ? 'النوع' : 'Type'}
                         <select className="field" value={info.type} onChange={e => setField('type', e.target.value)}>
-                          <option value="BUILDING">Building</option>
-                          <option value="INFRASTRUCTURE">Infrastructure</option>
-                          <option value="INDUSTRIAL">Industrial</option>
+                          <option value="BUILDING">{ar ? 'مباني' : 'Building'}</option>
+                          <option value="INFRASTRUCTURE">{ar ? 'بنية تحتية' : 'Infrastructure'}</option>
+                          <option value="INDUSTRIAL">{ar ? 'صناعي' : 'Industrial'}</option>
                         </select>
                       </label>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12, marginBottom: 12 }}>
                       <label className="input-label">
-                        Est. Value (SAR) *
+                        {ar ? 'القيمة التقديرية (ريال) *' : 'Est. Value (SAR) *'}
                         <input className="field" required type="number" min="1" value={info.estValue}
                           onChange={e => setField('estValue', e.target.value)} placeholder="0" />
                       </label>
                       <label className="input-label">
-                        Size
+                        {ar ? 'الحجم' : 'Size'}
                         <select className="field" value={info.size} onChange={e => setField('size', e.target.value)}>
                           <option value="MEDIUM_SMALL">Medium / Small</option>
                           <option value="LARGE">Large</option>
@@ -297,40 +320,42 @@ export default function NewBidPage() {
                         </select>
                       </label>
                       <label className="input-label">
-                        Duration
+                        {ar ? 'المدة' : 'Duration'}
                         <input className="field" value={info.duration}
-                          onChange={e => setField('duration', e.target.value)} placeholder="e.g. 24 months" />
+                          onChange={e => setField('duration', e.target.value)}
+                          placeholder={ar ? 'مثال: 24 شهرًا' : 'e.g. 24 months'} />
                       </label>
                       <label className="input-label">
-                        Tender Type
+                        {ar ? 'نوع المناقصة' : 'Tender Type'}
                         <select className="field" value={info.tenderType} onChange={e => setField('tenderType', e.target.value)}>
-                          <option value="OPEN">Open</option>
-                          <option value="LIMITED">Limited</option>
-                          <option value="NEGOTIATED">Negotiated</option>
+                          <option value="OPEN">{ar ? 'مفتوح' : 'OPEN'}</option>
+                          <option value="LIMITED">{ar ? 'محدود' : 'LIMITED'}</option>
+                          <option value="NEGOTIATED">{ar ? 'تفاوضي' : 'NEGOTIATED'}</option>
                         </select>
                       </label>
                       <label className="input-label">
-                        Bid Date
+                        {ar ? 'تاريخ العطاء' : 'Bid Date'}
                         <input className="field" type="date" value={info.date}
                           onChange={e => setField('date', e.target.value)} />
                       </label>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
                       <label className="input-label">
-                        Client Category
+                        {ar ? 'فئة العميل' : 'Client Category'}
                         <select className="field" value={info.clientCategory} onChange={e => setField('clientCategory', e.target.value)}>
-                          <option value="GOV">Government</option>
-                          <option value="PRIVATE">Private</option>
-                          <option value="SEMI">Semi-Government</option>
+                          <option value="GOV">{ar ? 'حكومي' : 'GOVERNMENT'}</option>
+                          <option value="PRIVATE">{ar ? 'خاص' : 'PRIVATE'}</option>
+                          <option value="SEMI">{ar ? 'شبه حكومي' : 'SEMI-GOVERNMENT'}</option>
                         </select>
                       </label>
                       <label className="input-label">
-                        Consultant
+                        {ar ? 'الاستشاري' : 'Consultant'}
                         <input className="field" value={info.consultant}
-                          onChange={e => setField('consultant', e.target.value)} placeholder="e.g. AECOM" />
+                          onChange={e => setField('consultant', e.target.value)}
+                          placeholder={ar ? 'مثال: إيكوم' : 'e.g. AECOM'} />
                       </label>
                       <label className="input-label">
-                        Main Competitor
+                        {ar ? 'المنافس الرئيسي' : 'Main Competitor'}
                         <input className="field" value={info.mainCompetitor}
                           onChange={e => setField('mainCompetitor', e.target.value)} />
                       </label>
@@ -342,7 +367,7 @@ export default function NewBidPage() {
                       <div className="card-section-head" style={{ marginBottom: 12, paddingBottom: 8 }}>
                         <span className="card-eyebrow"><span className="eyebrow-dot" />Comparable Past Projects</span>
                         <span style={{ fontSize: 10, color: 'var(--mute)', fontFamily: "'JetBrains Mono',monospace" }}>
-                          Top {comparables.length} · same type
+                          {ar ? `أفضل ${comparables.length} · نفس النوع` : `Top ${comparables.length} · same type`}
                         </span>
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -379,7 +404,7 @@ export default function NewBidPage() {
                     <div>
                       <span className="card-eyebrow">
                         <span className="eyebrow-dot" style={{ background: currentGroup.color }} />
-                        {currentGroup.label}
+                        {ar ? currentGroup.labelAr : currentGroup.label}
                       </span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
@@ -394,9 +419,9 @@ export default function NewBidPage() {
 
                   {currentGroup.fields.map((f, fi) => (
                     <div key={f.key} className="criteria-row" style={{ borderBottom: fi < currentGroup.fields.length - 1 ? '1px dashed var(--hairline-soft)' : 'none' }}>
-                      <div className="criteria-name">{f.label}</div>
+                      <div className="criteria-name">{ar ? f.labelAr : f.label}</div>
                       <span className="criteria-score-label">
-                        {criteria[f.key] === 0 ? 'N/A' : criteria[f.key] === 1 ? 'Very Poor' : criteria[f.key] === 2 ? 'Poor' : criteria[f.key] === 3 ? 'Fair' : criteria[f.key] === 4 ? 'Good' : 'Excellent'}
+                        {ratingLabel(criteria[f.key])}
                       </span>
                       <div className="rating">
                         {[0,1,2,3,4,5].map(v => (
@@ -424,7 +449,7 @@ export default function NewBidPage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span style={{ fontSize: 13 }}>✦</span>
                       <span style={{ fontFamily: "'Archivo Narrow',sans-serif", fontWeight: 700, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                        AI Advisory
+                        {ar ? 'توصية الذكاء الاصطناعي' : 'AI Advisory'}
                       </span>
                     </div>
                     <button
@@ -433,19 +458,15 @@ export default function NewBidPage() {
                       disabled={advLoading}
                       style={{ fontSize: 10, fontFamily: "'JetBrains Mono',monospace", color: 'var(--mute)', background: 'none', border: '1px solid var(--hairline)', borderRadius: 'var(--radius-sm)', padding: '3px 8px', cursor: advLoading ? 'default' : 'pointer' }}
                     >
-                      {advLoading ? 'Fetching…' : '↻ Refresh'}
+                      {advLoading ? (ar ? 'جارٍ الجلب…' : 'Fetching…') : (ar ? '↻ تحديث' : '↻ Refresh')}
                     </button>
                   </div>
 
                   {/* Loading skeleton */}
                   {advLoading && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                      {[
-                        { label: 'BUSINESS', color: 'var(--data-blue)' },
-                        { label: 'RISK MGMT', color: 'var(--nogo)' },
-                        { label: 'PROJECT MGMT', color: 'var(--review)' },
-                      ].map(s => (
-                        <div key={s.label} style={{ borderLeft: `3px solid ${s.color}`, paddingLeft: 12, paddingTop: 10, paddingBottom: 10, background: 'var(--surface)', borderRadius: '0 4px 4px 0' }}>
+                      {advisorySections.map(s => (
+                        <div key={s.key} style={{ borderLeft: `3px solid ${s.color}`, paddingLeft: 12, paddingTop: 10, paddingBottom: 10, background: 'var(--surface)', borderRadius: '0 4px 4px 0' }}>
                           <div style={{ fontSize: 9, fontFamily: "'JetBrains Mono',monospace", color: s.color, letterSpacing: '0.14em', marginBottom: 8 }}>{s.label}</div>
                           {[70, 90, 60].map((w, i) => (
                             <div key={i} style={{ height: 10, width: `${w}%`, background: 'var(--hairline)', borderRadius: 3, marginBottom: 6, animation: 'pulse 1.4s infinite' }} />
@@ -457,14 +478,9 @@ export default function NewBidPage() {
 
                   {/* Rendered advice */}
                   {!advLoading && advice && (() => {
-                    const sections = [
-                      { key: 'business',   label: 'BUSINESS',     color: 'var(--data-blue)', match: /## 1\. Business Perspective([\s\S]*?)(?=## 2\.|$)/i },
-                      { key: 'risk',       label: 'RISK MGMT',    color: 'var(--nogo)',      match: /## 2\. Risk Management([\s\S]*?)(?=## 3\.|$)/i },
-                      { key: 'project',    label: 'PROJECT MGMT', color: 'var(--review)',    match: /## 3\. Project Management([\s\S]*?)$/i },
-                    ]
                     return (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                        {sections.map(s => {
+                        {advisorySections.map(s => {
                           const m = advice.match(s.match)
                           const content = m ? m[1].trim() : advice
                           return (
@@ -489,7 +505,7 @@ export default function NewBidPage() {
                             letterSpacing: '0.02em',
                           }}
                         >
-                          Continue this conversation in AI Chat →
+                          {ar ? '→ تابع هذه المحادثة في محادثة الذكاء الاصطناعي' : 'Continue this conversation in AI Chat →'}
                         </button>
                       </div>
                     )
@@ -501,11 +517,14 @@ export default function NewBidPage() {
               {step === 7 && (
                 <div className="card" style={{ marginBottom: 14 }}>
                   <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
-                    <span className="card-eyebrow"><span className="eyebrow-dot" />Score Summary</span>
+                    <span className="card-eyebrow">
+                      <span className="eyebrow-dot" />
+                      {ar ? 'ملخص النقاط' : 'Score Summary'}
+                    </span>
                   </div>
                   <div style={{ marginBottom: 16 }}>
                     <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: 'var(--mute)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 8 }}>
-                      Project: {info.name || '—'} · {info.location || '—'} · {info.type}
+                      {ar ? 'المشروع:' : 'Project:'} {info.name || '—'} · {info.location || '—'} · {info.type}
                     </div>
                   </div>
                   {GROUPS.map(g => {
@@ -514,7 +533,7 @@ export default function NewBidPage() {
                     return (
                       <div key={g.key} style={{ marginBottom: 12 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                          <span style={{ fontSize: 12, fontWeight: 500 }}>{g.label}</span>
+                          <span style={{ fontSize: 12, fontWeight: 500 }}>{ar ? g.labelAr : g.label}</span>
                           <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 12, fontWeight: 700, color: g.color }}>{gs}/{g.max}</span>
                         </div>
                         <div style={{ height: 6, background: 'var(--hairline)', borderRadius: 3, overflow: 'hidden' }}>
@@ -524,8 +543,15 @@ export default function NewBidPage() {
                     )
                   })}
                   <div style={{ marginTop: 16, padding: '12px 16px', background: 'var(--bg-card-alt, #F4F1E8)', borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: 'var(--mute)', letterSpacing: '0.12em' }}>TOTAL SCORE</span>
-                    <span style={{ fontFamily: "'Archivo Narrow',sans-serif", fontWeight: 800, fontSize: 28, color: decisionColor }}>{result.totalScore}<span style={{ fontSize: 14, fontWeight: 500, color: 'var(--mute)' }}>/135</span></span>
+                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: 'var(--mute)', letterSpacing: '0.12em' }}>
+                      {ar ? 'مجموع النقاط' : 'TOTAL SCORE'}
+                    </span>
+                    <span style={{ fontFamily: "'Archivo Narrow',sans-serif", fontWeight: 800, fontSize: 28, color: decisionColor }}>
+                      {result.totalScore}
+                      <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--mute)' }}>
+                        {ar ? '/135 نقطة' : '/135 points'}
+                      </span>
+                    </span>
                     <span style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: 16, color: decisionColor, letterSpacing: '0.06em' }}>{result.decision.replace('_', ' ')}</span>
                   </div>
                 </div>
@@ -536,22 +562,22 @@ export default function NewBidPage() {
                 <div>
                   {step > 1 && (
                     <button type="button" className="btn btn--secondary" onClick={prevStep}>
-                      ← Back
+                      {ar ? 'رجوع' : '← Back'}
                     </button>
                   )}
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button type="button" className="btn btn--secondary" onClick={() => router.back()}>
-                    Cancel
+                    {ar ? 'إلغاء' : 'Cancel'}
                   </button>
                   {step < 7 && (
                     <button type="button" className="btn btn--primary" onClick={nextStep}>
-                      Next →
+                      {ar ? '→ التالي' : 'Next →'}
                     </button>
                   )}
                   {step === 7 && (
                     <button type="submit" className="btn btn--primary" disabled={saving}>
-                      {saving ? 'Saving…' : 'Save Bid'}
+                      {saving ? (ar ? 'جارٍ الحفظ…' : 'Saving…') : (ar ? 'حفظ العطاء' : 'Save Bid')}
                     </button>
                   )}
                 </div>
@@ -562,7 +588,7 @@ export default function NewBidPage() {
             <div className={`verdict-panel verdict-panel--${decisionClass}`}>
               <div className="card-eyebrow" style={{ marginBottom: 14 }}>
                 <span className="eyebrow-dot" style={{ background: 'var(--mute)' }} />
-                Live Verdict
+                {ar ? 'الحكم الفوري' : 'Live Verdict'}
               </div>
 
               <div className={`verdict-headline verdict-headline--${decisionClass}`}>
@@ -571,10 +597,13 @@ export default function NewBidPage() {
 
               <div style={{ margin: '16px 0 4px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                 <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 9.5, color: 'var(--mute)', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
-                  Total Score
+                  {ar ? 'مجموع النقاط' : 'Total Score'}
                 </span>
                 <span style={{ fontFamily: "'Archivo Narrow',sans-serif", fontWeight: 700, fontSize: 26, color: decisionColor, letterSpacing: '-0.02em' }}>
-                  {result.totalScore}<span style={{ fontSize: 13, fontWeight: 500, color: 'var(--mute)', marginLeft: 2 }}>/135</span>
+                  {result.totalScore}
+                  <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--mute)', marginLeft: 2 }}>
+                    {ar ? '/135 نقطة' : '/135 points'}
+                  </span>
                 </span>
               </div>
               <div className="verdict-bar-bg">
@@ -583,11 +612,15 @@ export default function NewBidPage() {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, margin: '16px 0' }}>
                 <div>
-                  <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 9.5, color: 'var(--mute)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 5 }}>CFR Risk</div>
+                  <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 9.5, color: 'var(--mute)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 5 }}>
+                    {ar ? 'مخاطر التجارية والمالية' : 'CFR Risk'}
+                  </div>
                   <span className={`pill pill-${result.riskIndex.toLowerCase()}`}>{result.riskIndex}</span>
                 </div>
                 <div>
-                  <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 9.5, color: 'var(--mute)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 5 }}>Win Probability</div>
+                  <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 9.5, color: 'var(--mute)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 5 }}>
+                    {ar ? 'احتمالية الفوز' : 'WIN PROBABILITY'}
+                  </div>
                   <span style={{ fontFamily: "'Archivo Narrow',sans-serif", fontWeight: 700, fontSize: 22, color: decisionColor }}>
                     {Math.round(result.expectWin * 100)}%
                   </span>
@@ -598,8 +631,14 @@ export default function NewBidPage() {
                 <div className="verdict-alert">
                   <span style={{ fontSize: 14 }}>⚠</span>
                   <div>
-                    <div style={{ fontWeight: 600, marginBottom: 2 }}>Hard Stop — Commercial Risk</div>
-                    <div>CFR score below threshold. Bid forced to NO GO regardless of total score.</div>
+                    <div style={{ fontWeight: 600, marginBottom: 2 }}>
+                      {ar ? 'إيقاف إجباري — مخاطر تجارية' : 'Hard Stop — Commercial Risk'}
+                    </div>
+                    <div>
+                      {ar
+                        ? 'نقاط المخاطر التجارية أدنى من الحد المطلوب. تم تصنيف العطاء كـ مرفوض بغض النظر عن المجموع الكلي'
+                        : 'CFR score below threshold. Bid forced to NO GO regardless of total score.'}
+                    </div>
                   </div>
                 </div>
               )}
@@ -611,7 +650,7 @@ export default function NewBidPage() {
                   return (
                     <div key={g.key} className="minibar-row">
                       <span style={{ fontSize: 11, color: 'var(--ink-2)', fontWeight: 500, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {g.label}
+                        {ar ? g.labelAr : g.label}
                       </span>
                       <div className="minibar-track">
                         <div className="minibar-fill" style={{ width: `${pct}%`, background: g.color }} />

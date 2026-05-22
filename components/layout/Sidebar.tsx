@@ -48,7 +48,11 @@ export function Sidebar({ pipelineCount, historyCount }: { pipelineCount?: numbe
 
   useEffect(() => {
     const savedLang = localStorage.getItem('blackbid_lang') as 'en' | 'ar' | null
-    if (savedLang) applyLang(savedLang, false)
+    if (savedLang) {
+      applyLang(savedLang, false)
+      // keep cookie in sync with localStorage on mount
+      document.cookie = `lang=${savedLang};path=/;max-age=31536000;SameSite=Lax`
+    }
     const savedDark = localStorage.getItem('blackbid_dark') === 'true'
     if (savedDark) { document.body.classList.add('dark'); setDark(true) }
   }, [])
@@ -64,7 +68,10 @@ export function Sidebar({ pipelineCount, historyCount }: { pipelineCount?: numbe
     setLangState(l)
     document.documentElement.setAttribute('lang', l)
     document.body.classList.toggle('ar', l === 'ar')
-    if (save) localStorage.setItem('blackbid_lang', l)
+    if (save) {
+      localStorage.setItem('blackbid_lang', l)
+      document.cookie = `lang=${l};path=/;max-age=31536000;SameSite=Lax`
+    }
   }
 
   const ar = lang === 'ar'

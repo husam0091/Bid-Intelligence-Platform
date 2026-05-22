@@ -1,44 +1,55 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useAr } from '@/hooks/useAr'
 
 type Log = { id: string; type: string; format: string; filename: string; createdAt: string }
 type BidOption = { id: string; sr: number; name: string }
 
-const REPORTS = [
+const REPORTS_EN = [
   {
     id:     'pipeline-summary',
     title:  'Pipeline Summary',
+    titleAr:'ملخص خط الأنابيب',
     desc:   'All pending bids — decision, risk exposure, score, and estimated value.',
+    descAr: 'جميع العطاءات المعلقة — القرار والمخاطر والنقاط والقيمة التقديرية.',
     config: null as null | 'scorecard' | 'monthly' | 'group',
   },
   {
     id:     'win-loss',
     title:  'Win / Loss Analysis',
+    titleAr:'تحليل الفوز والخسارة',
     desc:   'Completed bids grouped by outcome with win rate by type, location, and client.',
+    descAr: 'العطاءات المكتملة مجمّعة حسب النتيجة مع معدل الفوز حسب النوع والموقع والعميل.',
     config: null as null | 'scorecard' | 'monthly' | 'group',
   },
   {
     id:     'scorecard',
     title:  'Single Bid Scorecard',
+    titleAr:'بطاقة تقييم عطاء واحد',
     desc:   'Full 27-criterion scoring breakdown and decision rationale for one selected bid.',
+    descAr: 'تفصيل كامل لـ 27 معياراً وتبرير القرار لعطاء محدد.',
     config: 'scorecard' as null | 'scorecard' | 'monthly' | 'group',
   },
   {
     id:     'executive-monthly',
     title:  'Executive Monthly',
+    titleAr:'التقرير التنفيذي الشهري',
     desc:   'Monthly snapshot of bids submitted, pipeline value, and win performance.',
+    descAr: 'لقطة شهرية للعطاءات المقدمة وقيمة خط الأنابيب وأداء الفوز.',
     config: 'monthly' as null | 'scorecard' | 'monthly' | 'group',
   },
   {
     id:     'by-group',
     title:  'By Location / Client',
+    titleAr:'حسب الموقع / العميل',
     desc:   'Win rate, bid count, and portfolio value grouped by city or client category.',
+    descAr: 'معدل الفوز وعدد العطاءات وقيمة المحفظة مجمّعة حسب المدينة أو فئة العميل.',
     config: 'group' as null | 'scorecard' | 'monthly' | 'group',
   },
 ]
 
-const TYPE_LABEL: Record<string, string> = {
+const TYPE_LABEL_EN: Record<string, string> = {
   'pipeline-summary':  'Pipeline Summary',
   'win-loss':          'Win/Loss',
   'scorecard':         'Scorecard',
@@ -46,17 +57,27 @@ const TYPE_LABEL: Record<string, string> = {
   'by-group':          'By Group',
 }
 
-function relTime(iso: string) {
+const TYPE_LABEL_AR: Record<string, string> = {
+  'pipeline-summary':  'ملخص خط الأنابيب',
+  'win-loss':          'فوز/خسارة',
+  'scorecard':         'بطاقة التقييم',
+  'executive-monthly': 'التقرير التنفيذي الشهري',
+  'by-group':          'حسب المجموعة',
+}
+
+function relTime(iso: string, ar: boolean) {
   const diff = Date.now() - new Date(iso).getTime()
   const m = Math.floor(diff / 60000)
-  if (m < 1)  return 'just now'
-  if (m < 60) return `${m}m ago`
+  if (m < 1)  return ar ? 'الآن' : 'just now'
+  if (m < 60) return ar ? `منذ ${m} دقيقة` : `${m}m ago`
   const h = Math.floor(m / 60)
-  if (h < 24) return `${h}h ago`
-  return `${Math.floor(h/24)}d ago`
+  if (h < 24) return ar ? `منذ ${h} ساعة` : `${h}h ago`
+  return ar ? `منذ ${Math.floor(h/24)} يوم` : `${Math.floor(h/24)}d ago`
 }
 
 export default function ReportsPage() {
+  const ar = useAr()
+
   const [configOpen,     setConfigOpen]     = useState<string | null>(null)
   const [bids,           setBids]           = useState<BidOption[]>([])
   const [scorecardBidId, setScorecardBidId] = useState('')
@@ -81,7 +102,10 @@ export default function ReportsPage() {
   async function doExport(type: string, format: string) {
     const body: Record<string, unknown> = {}
     if (type === 'scorecard') {
-      if (!scorecardBidId) { alert('Select a bid first — click Configure.'); return }
+      if (!scorecardBidId) {
+        alert(ar ? 'اختر عطاءً أولاً — انقر على إعداد.' : 'Select a bid first — click Configure.')
+        return
+      }
       body.bidId = scorecardBidId
     } else if (type === 'executive-monthly') {
       body.year = year; body.month = month
@@ -115,22 +139,24 @@ export default function ReportsPage() {
     }
   }
 
-  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+  const MONTHS_EN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+  const MONTHS_AR = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
+  const MONTHS = ar ? MONTHS_AR : MONTHS_EN
   const curYear = new Date().getFullYear()
 
   return (
     <div className="page-wrap">
       <div className="page-header">
         <div className="h-left">
-          <div className="h-kicker"><span className="dash" />06 · Intelligence</div>
-          <h1 className="h-title"><em>Reports</em></h1>
-          <p className="h-sub">Generate, configure, and export portfolio reports in PDF, Excel, or CSV.</p>
+          <div className="h-kicker"><span className="dash" />{ar ? '08 · التقارير' : '08 · Reports'}</div>
+          <h1 className="h-title"><em>{ar ? 'تقارير' : 'Reports'}</em></h1>
+          <p className="h-sub">{ar ? 'إنشاء وتهيئة وتصدير تقارير المحفظة بتنسيق PDF أو Excel أو CSV' : 'Generate, configure, and export portfolio reports in PDF, Excel, or CSV.'}</p>
         </div>
       </div>
 
       {/* 3+2 card grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 14, marginBottom: 14 }}>
-        {REPORTS.map((rpt, idx) => {
+        {REPORTS_EN.map((rpt, idx) => {
           const isOpen  = configOpen === rpt.id
           const gridCol = idx < 3 ? 'span 2' : 'span 3'
           return (
@@ -138,7 +164,7 @@ export default function ReportsPage() {
               {/* Card header */}
               <div className="card-section-head" style={{ paddingBottom: 10, marginBottom: 10 }}>
                 <span className="card-eyebrow">
-                  <span className="eyebrow-dot" />{rpt.title}
+                  <span className="eyebrow-dot" />{ar ? rpt.titleAr : rpt.title}
                 </span>
                 {rpt.config && (
                   <button
@@ -146,27 +172,27 @@ export default function ReportsPage() {
                     onClick={() => setConfigOpen(isOpen ? null : rpt.id)}
                     style={{ fontSize: 11 }}
                   >
-                    Configure {isOpen ? '▲' : '▾'}
+                    {ar ? 'إعداد' : 'Configure'} {isOpen ? '▲' : '▾'}
                   </button>
                 )}
               </div>
 
               <p style={{ fontSize: 12.5, color: 'var(--mute)', lineHeight: 1.65, marginBottom: 14, flex: 1 }}>
-                {rpt.desc}
+                {ar ? rpt.descAr : rpt.desc}
               </p>
 
               {/* Configure: Scorecard bid selector */}
               {isOpen && rpt.config === 'scorecard' && (
                 <div style={{ marginBottom: 14, padding: '10px 12px', background: 'var(--surface-3)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--hairline)' }}>
                   <label style={{ fontSize: 12, fontWeight: 500, display: 'flex', flexDirection: 'column', gap: 5 }}>
-                    Select Bid
+                    {ar ? 'اختر العطاء' : 'Select Bid'}
                     <select
                       className="field"
                       value={scorecardBidId}
                       onChange={e => setScorecardBidId(e.target.value)}
                       style={{ fontSize: 12 }}
                     >
-                      <option value="">— Choose a bid —</option>
+                      <option value="">{ar ? '— اختر عطاءً —' : '— Choose a bid —'}</option>
                       {bids.map(b => (
                         <option key={b.id} value={b.id}>#{b.sr} · {b.name}</option>
                       ))}
@@ -179,13 +205,13 @@ export default function ReportsPage() {
               {isOpen && rpt.config === 'monthly' && (
                 <div style={{ marginBottom: 14, padding: '10px 12px', background: 'var(--surface-3)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--hairline)', display: 'flex', gap: 10 }}>
                   <label style={{ fontSize: 12, fontWeight: 500, flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
-                    Month
+                    {ar ? 'الشهر' : 'Month'}
                     <select className="field" value={month} onChange={e => setMonth(+e.target.value)} style={{ fontSize: 12 }}>
                       {MONTHS.map((mn, i) => <option key={i} value={i+1}>{mn}</option>)}
                     </select>
                   </label>
                   <label style={{ fontSize: 12, fontWeight: 500, flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
-                    Year
+                    {ar ? 'السنة' : 'Year'}
                     <select className="field" value={year} onChange={e => setYear(+e.target.value)} style={{ fontSize: 12 }}>
                       {[curYear-2, curYear-1, curYear, curYear+1].map(y => (
                         <option key={y} value={y}>{y}</option>
@@ -210,7 +236,9 @@ export default function ReportsPage() {
                         cursor: 'pointer', transition: 'all 0.12s',
                       }}
                     >
-                      {v === 'location' ? 'By Location' : 'By Client'}
+                      {v === 'location'
+                        ? (ar ? 'حسب الموقع' : 'By Location')
+                        : (ar ? 'حسب العميل' : 'By Client')}
                     </button>
                   ))}
                 </div>
@@ -241,25 +269,28 @@ export default function ReportsPage() {
       {/* Recent Exports */}
       <div className="card">
         <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 12 }}>
-          <span className="card-eyebrow"><span className="eyebrow-dot" />Recent Exports</span>
+          <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'التصديرات الأخيرة' : 'Recent Exports'}</span>
         </div>
         {logs.length === 0 ? (
-          <p style={{ fontSize: 13, color: 'var(--mute)' }}>No exports yet.</p>
+          <p style={{ fontSize: 13, color: 'var(--mute)' }}>{ar ? 'لا توجد تصديرات بعد.' : 'No exports yet.'}</p>
         ) : (
           <div style={{ overflowX: 'auto' }}>
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Report Type</th><th>Format</th><th>Filename</th><th>When</th>
+                  <th>{ar ? 'نوع التقرير' : 'Report Type'}</th>
+                  <th>{ar ? 'التنسيق' : 'Format'}</th>
+                  <th>{ar ? 'اسم الملف' : 'Filename'}</th>
+                  <th>{ar ? 'متى' : 'When'}</th>
                 </tr>
               </thead>
               <tbody>
                 {logs.map(l => (
                   <tr key={l.id}>
-                    <td style={{ fontWeight: 500 }}>{TYPE_LABEL[l.type] ?? l.type}</td>
+                    <td style={{ fontWeight: 500 }}>{(ar ? TYPE_LABEL_AR : TYPE_LABEL_EN)[l.type] ?? l.type}</td>
                     <td style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, textTransform: 'uppercase', fontWeight: 700 }}>{l.format}</td>
                     <td style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, color: 'var(--mute)' }}>{l.filename}</td>
-                    <td style={{ fontSize: 11, color: 'var(--mute)' }}>{relTime(l.createdAt)}</td>
+                    <td style={{ fontSize: 11, color: 'var(--mute)' }}>{relTime(l.createdAt, ar)}</td>
                   </tr>
                 ))}
               </tbody>

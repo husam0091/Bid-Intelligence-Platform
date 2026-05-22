@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Header } from '@/components/layout/Header'
+import { cookies } from 'next/headers'
 
 function decisionPill(d: string) {
   if (d === 'GO')     return 'pill pill-go'
@@ -31,6 +32,9 @@ interface Props {
 export default async function BidsPage({ searchParams }: Props) {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/login')
+
+  const cookieStore = await cookies()
+  const ar = cookieStore.get('lang')?.value === 'ar'
 
   const orgId     = (session.user as any).orgId
   const { decision, outcome, riskIndex } = searchParams
@@ -64,6 +68,22 @@ export default async function BidsPage({ searchParams }: Props) {
     return qs ? `/bids?${qs}` : '/bids'
   }
 
+  function decisionLabel(d: string) {
+    if (!ar) return d.replace('_', ' ')
+    if (d === 'GO')     return 'مقبول'
+    if (d === 'REVIEW') return 'مراجعة'
+    return 'مرفوض'
+  }
+
+  function outcomeLabel(o: string) {
+    if (!ar) return o
+    if (o === 'PENDING')  return 'معلق'
+    if (o === 'WON')      return 'فائز'
+    if (o === 'LOST')     return 'خسارة'
+    if (o === 'REJECTED') return 'مرفوض'
+    return o
+  }
+
   return (
     <>
       <Header title="Bid History" titleAr="سجل العطاءات" />
@@ -72,35 +92,50 @@ export default async function BidsPage({ searchParams }: Props) {
 
         <div className="page-header">
           <div className="h-left">
-            <div className="h-kicker"><span className="dash" />04 · Bids</div>
-            <h1 className="h-title">Bid <em>History</em></h1>
-            <p className="h-sub">Every bid entered in plain English. Click any row to update its outcome.</p>
+            <div className="h-kicker">
+              <span className="dash" />
+              {ar ? '04 · العطاءات' : '04 · Bids'}
+            </div>
+            <h1 className="h-title">
+              {ar ? 'سجل' : 'Bid'} <em>{ar ? 'العطاءات' : 'History'}</em>
+            </h1>
+            <p className="h-sub">
+              {ar
+                ? 'جميع العطاءات المُدخلة في عرض واضح. انقر على أي صف لتحديث نتيجته'
+                : 'Every bid entered in plain view. Click any row to update its outcome'}
+            </p>
           </div>
-          <Link href="/bids/new" className="btn btn--primary" style={{ alignSelf: 'flex-end' }}>+ New Bid</Link>
+          <Link href="/bids/new" className="btn btn--primary" style={{ alignSelf: 'flex-end' }}>
+            {ar ? '+ عطاء جديد' : '+ New Bid'}
+          </Link>
         </div>
 
         {/* Filter chips — decisions + outcomes only, matching prototype */}
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 14, alignItems: 'center' }}>
-          <span className="breadcrumb" style={{ marginRight: 6 }}>Filter</span>
+          <span className="breadcrumb" style={{ marginRight: 6 }}>
+            {ar ? 'تصفية' : 'Filter'}
+          </span>
           <Link href="/bids"
             className={`btn btn--xs ${!decision && !outcome && !riskIndex ? 'btn--primary' : 'btn--secondary'}`}>
-            All
+            {ar ? 'الكل' : 'All'}
           </Link>
           {DECISIONS.map(d => (
             <Link key={d} href={filterHref('decision', d)}
               className={`btn btn--xs ${decision === d ? 'btn--primary' : 'btn--secondary'}`}>
-              {d.replace('_', ' ')}
+              {decisionLabel(d)}
             </Link>
           ))}
           <span style={{ width: 1, height: 18, background: 'var(--hairline)', margin: '0 2px', display: 'inline-block' }} />
           {OUTCOMES.map(o => (
             <Link key={o} href={filterHref('outcome', o)}
               className={`btn btn--xs ${outcome === o ? 'btn--primary' : 'btn--secondary'}`}>
-              {o}
+              {outcomeLabel(o)}
             </Link>
           ))}
           {(decision || outcome || riskIndex) && (
-            <Link href="/bids" className="btn btn--xs btn--ghost" style={{ marginLeft: 4 }}>✕ Clear</Link>
+            <Link href="/bids" className="btn btn--xs btn--ghost" style={{ marginLeft: 4 }}>
+              ✕ {ar ? 'مسح' : 'Clear'}
+            </Link>
           )}
         </div>
 
@@ -111,16 +146,16 @@ export default async function BidsPage({ searchParams }: Props) {
                 <thead>
                   <tr>
                     <th style={{ width: 40 }}>#</th>
-                    <th>Project</th>
-                    <th>Location</th>
-                    <th>Type</th>
-                    <th style={{ width: 60 }}>Score</th>
-                    <th>Decision</th>
-                    <th>Risk</th>
-                    <th style={{ width: 60 }}>Win %</th>
-                    <th>Outcome</th>
-                    <th>Est. Value (SAR)</th>
-                    <th>Date</th>
+                    <th>{ar ? 'المشروع' : 'Project'}</th>
+                    <th>{ar ? 'الموقع' : 'Location'}</th>
+                    <th>{ar ? 'النوع' : 'Type'}</th>
+                    <th style={{ width: 60 }}>{ar ? 'النقاط' : 'Score'}</th>
+                    <th>{ar ? 'القرار' : 'Decision'}</th>
+                    <th>{ar ? 'المخاطر' : 'Risk'}</th>
+                    <th style={{ width: 60 }}>{ar ? '٪ الفوز' : 'Win %'}</th>
+                    <th>{ar ? 'النتيجة' : 'Outcome'}</th>
+                    <th>{ar ? 'القيمة التقديرية (ريال)' : 'Est. Value (SAR)'}</th>
+                    <th>{ar ? 'التاريخ' : 'Date'}</th>
                     <th style={{ width: 50 }}></th>
                   </tr>
                 </thead>
@@ -138,10 +173,10 @@ export default async function BidsPage({ searchParams }: Props) {
                         {bid.type}
                       </td>
                       <td className="mono" style={{ fontWeight: 700 }}>{bid.totalScore}</td>
-                      <td><span className={decisionPill(bid.decision)}>{bid.decision.replace('_', ' ')}</span></td>
+                      <td><span className={decisionPill(bid.decision)}>{decisionLabel(bid.decision)}</span></td>
                       <td><span className={riskPill(bid.riskIndex)}>{bid.riskIndex}</span></td>
                       <td className="mono">{Math.round(bid.expectWin * 100)}%</td>
-                      <td><span className={outcomePill(bid.outcome)}>{bid.outcome}</span></td>
+                      <td><span className={outcomePill(bid.outcome)}>{outcomeLabel(bid.outcome)}</span></td>
                       <td className="mono" style={{ color: '#6E6A62', fontSize: 12 }}>
                         {bid.estValue.toLocaleString()}
                       </td>
@@ -149,7 +184,9 @@ export default async function BidsPage({ searchParams }: Props) {
                         {new Date(bid.date).toLocaleDateString('en-SA')}
                       </td>
                       <td>
-                        <Link href={`/bids/${bid.id}`} className="btn btn--ghost btn--xs">View</Link>
+                        <Link href={`/bids/${bid.id}`} className="btn btn--ghost btn--xs">
+                          {ar ? 'عرض' : 'View'}
+                        </Link>
                       </td>
                     </tr>
                     )
@@ -157,7 +194,7 @@ export default async function BidsPage({ searchParams }: Props) {
                   {bids.length === 0 && (
                     <tr>
                       <td colSpan={12} style={{ textAlign: 'center', color: '#6E6A62', padding: '40px 0', fontFamily: "'JetBrains Mono',monospace", fontSize: 12 }}>
-                        No bids match the selected filters.
+                        {ar ? 'لا توجد عطاءات تطابق الفلاتر المحددة' : 'No bids match the selected filters'}
                       </td>
                     </tr>
                   )}
@@ -167,8 +204,10 @@ export default async function BidsPage({ searchParams }: Props) {
           </div>
 
         <div style={{ marginTop: 8, color: 'var(--mute)', fontSize: 11, fontFamily: "'JetBrains Mono',monospace" }}>
-          {bids.length} bid{bids.length !== 1 ? 's' : ''}
-          {(decision || outcome || riskIndex) && ' (filtered)'}
+          {bids.length} {ar
+            ? (bids.length !== 1 ? 'عطاءات' : 'عطاء')
+            : (bids.length !== 1 ? 'bids' : 'bid')}
+          {(decision || outcome || riskIndex) && (ar ? ' (مُصفّى)' : ' (filtered)')}
         </div>
 
       </div>

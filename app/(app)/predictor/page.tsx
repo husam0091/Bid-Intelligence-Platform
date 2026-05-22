@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth-options'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { Header } from '@/components/layout/Header'
 import BidSelector from './BidSelector'
 
@@ -122,6 +123,8 @@ export default async function PredictorPage({
   if (!session) redirect('/login')
   const orgId = (session.user as any).orgId
 
+  const ar = (await cookies()).get('lang')?.value === 'ar'
+
   const allBids = await prisma.bid.findMany({
     where: { orgId },
     select: {
@@ -159,9 +162,9 @@ export default async function PredictorPage({
 
         <div className="page-header">
           <div className="h-left">
-            <div className="h-kicker"><span className="dash" />05 · Intelligence</div>
-            <h1 className="h-title">Win <em>Predictor</em></h1>
-            <p className="h-sub">Benchmark this project against historical wins and losses. Surface comparable past bids.</p>
+            <div className="h-kicker"><span className="dash" />{ar ? '05 · الذكاء' : '05 · Intelligence'}</div>
+            <h1 className="h-title">{ar ? 'توقع' : 'Win'} <em>{ar ? 'الفوز' : 'Predictor'}</em></h1>
+            <p className="h-sub">{ar ? 'قارن هذا المشروع بالمكاسب والخسائر التاريخية. اكشف العطاءات السابقة المماثلة' : 'Benchmark this project against historical wins and losses. Surface comparable past bids.'}</p>
           </div>
         </div>
 
@@ -173,7 +176,7 @@ export default async function PredictorPage({
             {/* Project selector */}
             <div className="card" style={{ marginBottom: 14 }}>
               <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
-                <span className="card-eyebrow"><span className="eyebrow-dot" />Project</span>
+                <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'المشروع' : 'Project'}</span>
               </div>
               <BidSelector
                 bids={allBids.map(b => ({ id: b.id, sr: b.sr, name: b.name }))}
@@ -196,7 +199,7 @@ export default async function PredictorPage({
                     {selectedBid.totalScore}
                   </div>
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, color: '#6E6A62', marginBottom: 14 }}>
-                    / 135 points
+                    / 135 {ar ? 'نقطة' : 'points'}
                   </div>
                   <div style={{ marginBottom: 12 }}>
                     <span className={`pill pill-${decisionClass}`} style={{ fontSize: 14, padding: '5px 18px' }}>
@@ -207,23 +210,22 @@ export default async function PredictorPage({
                     {Math.round(selectedBid.expectWin * 100)}%
                   </div>
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, color: '#6E6A62', letterSpacing: '0.14em', marginBottom: 16 }}>
-                    WIN PROBABILITY
+                    {ar ? 'احتمالية الفوز' : 'WIN PROBABILITY'}
                   </div>
                 </div>
 
                 {/* AI Summary placeholder */}
                 <div style={{ padding: '12px 14px', background: '#F4F1E8', borderRadius: 5, borderLeft: `3px solid ${decisionColor}` }}>
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 9, color: '#6E6A62', letterSpacing: '0.14em', marginBottom: 6 }}>
-                    AI SUMMARY
+                    {ar ? 'ملخص الذكاء الاصطناعي' : 'AI SUMMARY'}
                   </div>
                   <p style={{ fontSize: 12, lineHeight: 1.6, color: '#3A3630', margin: 0 }}>
-                    <strong>{selectedBid.name}</strong> scores {selectedBid.totalScore}/135 with a{' '}
-                    <strong style={{ color: decisionColor }}>{selectedBid.decision.replace('_', ' ')}</strong> recommendation
-                    and {Math.round(selectedBid.expectWin * 100)}% estimated win probability.
+                    <strong>{selectedBid.name}</strong> {ar ? 'يحصل على' : 'scores'} {selectedBid.totalScore}/135 {ar ? 'مع توصية' : 'with a'}{' '}
+                    <strong style={{ color: decisionColor }}>{selectedBid.decision.replace('_', ' ')}</strong> {ar ? 'واحتمالية فوز تقديرية' : 'recommendation and'} {Math.round(selectedBid.expectWin * 100)}% {ar ? '' : 'estimated win probability.'}{ar ? '.' : ''}
                     {wonAvg > 0 && selectedBid.totalScore >= wonAvg
-                      ? ' Score is at or above the portfolio won-bid average.'
+                      ? (ar ? ' النقاط تساوي أو تتجاوز متوسط العطاءات الفائزة في المحفظة.' : ' Score is at or above the portfolio won-bid average.')
                       : wonAvg > 0
-                        ? ` Score is ${wonAvg - selectedBid.totalScore} points below the won-bid average of ${wonAvg}.`
+                        ? (ar ? ` النقاط أقل بـ ${wonAvg - selectedBid.totalScore} نقطة من متوسط العطاءات الفائزة ${wonAvg}.` : ` Score is ${wonAvg - selectedBid.totalScore} points below the won-bid average of ${wonAvg}.`)
                         : ''}
                   </p>
                 </div>
@@ -232,7 +234,7 @@ export default async function PredictorPage({
               <div className="card" style={{ textAlign: 'center', padding: '48px 24px', color: '#6E6A62' }}>
                 <div style={{ fontSize: 32, fontFamily: "'Archivo Narrow',sans-serif", fontWeight: 700, marginBottom: 8 }}>—</div>
                 <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, letterSpacing: '0.08em' }}>
-                  SELECT A PROJECT ABOVE
+                  {ar ? 'اختر مشروعًا أعلاه' : 'SELECT A PROJECT ABOVE'}
                 </div>
               </div>
             )}
@@ -244,13 +246,21 @@ export default async function PredictorPage({
             {/* Historical averages */}
             <div className="card" style={{ marginBottom: 14 }}>
               <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
-                <span className="card-eyebrow"><span className="eyebrow-dot" />Score Benchmarks</span>
+                <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'معايير النقاط' : 'Score Benchmarks'}</span>
               </div>
-              <CompareBar label={`Won Average (${wonBids.length} bids)`}   score={wonAvg}  color="#1F6E45" />
-              <CompareBar label={`Lost Average (${lostBids.length} bids)`} score={lostAvg} color="#A8362A" />
+              <CompareBar
+                label={ar ? `متوسط الفائزين (${wonBids.length} عطاءات)` : `Won Average (${wonBids.length} bids)`}
+                score={wonAvg}
+                color="#1F6E45"
+              />
+              <CompareBar
+                label={ar ? `متوسط الخاسرين (${lostBids.length} عطاءات)` : `Lost Average (${lostBids.length} bids)`}
+                score={lostAvg}
+                color="#A8362A"
+              />
               {selectedBid && (
                 <CompareBar
-                  label="This Project"
+                  label={ar ? 'هذا المشروع' : 'This Project'}
                   score={selectedBid.totalScore}
                   color={decisionColor}
                   highlight
@@ -259,7 +269,7 @@ export default async function PredictorPage({
               {!selectedBid && (
                 <div style={{ height: 32, background: '#F4F1E8', borderRadius: 4, display: 'flex', alignItems: 'center', paddingLeft: 12 }}>
                   <span style={{ fontSize: 11, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace" }}>
-                    — select a project to compare —
+                    {ar ? '— اختر مشروعًا للمقارنة —' : '— select a project to compare —'}
                   </span>
                 </div>
               )}
@@ -268,9 +278,11 @@ export default async function PredictorPage({
             {/* Comparable past projects */}
             <div className="card" style={{ marginBottom: 14 }}>
               <div className="card-section-head" style={{ marginBottom: 12, paddingBottom: 10 }}>
-                <span className="card-eyebrow"><span className="eyebrow-dot" />Comparable Past Projects</span>
+                <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'مشاريع سابقة مماثلة' : 'Comparable Past Projects'}</span>
                 <span style={{ fontSize: 10, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace" }}>
-                  {selectedBid ? `Same type · top ${comparables.length}` : 'Select a project'}
+                  {selectedBid
+                    ? (ar ? `نفس النوع · أفضل ${comparables.length}` : `Same type · top ${comparables.length}`)
+                    : (ar ? 'اختر مشروعًا' : 'Select a project')}
                 </span>
               </div>
               {comparables.length > 0 ? (
@@ -306,7 +318,7 @@ export default async function PredictorPage({
                 </div>
               ) : (
                 <div style={{ textAlign: 'center', color: '#6E6A62', fontSize: 11, fontFamily: "'JetBrains Mono',monospace", padding: '20px 0' }}>
-                  {selectedBid ? 'No comparable bids found' : '—'}
+                  {selectedBid ? (ar ? 'لم يتم العثور على عطاءات مماثلة' : 'No comparable bids found') : '—'}
                 </div>
               )}
             </div>
@@ -314,8 +326,10 @@ export default async function PredictorPage({
             {/* Score distribution chart */}
             <div className="card">
               <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
-                <span className="card-eyebrow"><span className="eyebrow-dot" />Score Distribution</span>
-                <span style={{ fontSize: 10, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace" }}>{allBids.length} bids</span>
+                <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'توزيع النقاط' : 'Score Distribution'}</span>
+                <span style={{ fontSize: 10, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace" }}>
+                  {ar ? `${allBids.length} عطاءات` : `${allBids.length} bids`}
+                </span>
               </div>
               <ScoreDistribution
                 bids={allBids.map(b => ({ id: b.id, totalScore: b.totalScore, outcome: b.outcome, name: b.name }))}

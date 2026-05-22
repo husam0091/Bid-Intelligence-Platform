@@ -59,3 +59,26 @@ screenshots/
 playwright-test/node_modules/
 playwright-test/.playwright-mcp/
 playwright-test/screenshots/
+
+# Dev / planning artifacts — not part of the app
+_bmad/
+_bmad-output/
+AGENT_PROMPT.md
+Black-Construction-Bid-Intelligence.html
+*.xlsx
+~$*.xlsx
+Business_Case_*.md
+Epics_and_User_Stories.md
+PRD_*.md
+SOLUTION_ARCHITECTURE.md
+.mcp.json
+
+# Root-level screenshots (dev tooling)
+*.png
+!public/**/*.png
+
+# Test results
+test-results/
+
+# Root-level loose test files
+test-app.mjs

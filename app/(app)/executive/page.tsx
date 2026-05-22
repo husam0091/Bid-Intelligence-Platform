@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth-options'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { Header } from '@/components/layout/Header'
 
 function BarChart({ data, height = 120 }: { data: { label: string; value: number; color?: string }[]; height?: number }) {
@@ -36,13 +37,17 @@ function BarChart({ data, height = 120 }: { data: { label: string; value: number
 }
 
 // Grouped bar chart: 3 bars per project (est / contract / actual spend)
-function GroupedSpendChart({ projects }: {
+function GroupedSpendChart({ projects, legendEst, legendContract, legendActual, emptyLabel }: {
   projects: { label: string; est: number; contract: number; actual: number }[]
+  legendEst: string
+  legendContract: string
+  legendActual: string
+  emptyLabel: string
 }) {
   if (projects.length === 0) {
     return (
       <div style={{ textAlign: 'center', color: '#6E6A62', fontSize: 12, fontFamily: "'JetBrains Mono',monospace", padding: '32px 0' }}>
-        No active projects
+        {emptyLabel}
       </div>
     )
   }
@@ -56,7 +61,7 @@ function GroupedSpendChart({ projects }: {
   return (
     <div>
       <div style={{ display: 'flex', gap: 14, marginBottom: 8, justifyContent: 'flex-end' }}>
-        {[{ k: 'est', label: 'Estimated' }, { k: 'contract', label: 'Contract' }, { k: 'actual', label: 'Actual' }].map(l => (
+        {[{ k: 'est', label: legendEst }, { k: 'contract', label: legendContract }, { k: 'actual', label: legendActual }].map(l => (
           <div key={l.k} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             <div style={{ width: 10, height: 10, borderRadius: 2, background: colors[l.k as keyof typeof colors] }} />
             <span style={{ fontSize: 10, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace" }}>{l.label}</span>
@@ -144,6 +149,8 @@ export default async function ExecutivePage() {
   if (!session) redirect('/login')
   const orgId = (session.user as any).orgId
 
+  const ar = (await cookies()).get('lang')?.value === 'ar'
+
   const [
     total, wonCount, lostCount, pendingCount,
     allBids, pendingBids,
@@ -221,20 +228,20 @@ export default async function ExecutivePage() {
 
         <div className="page-header">
           <div className="h-left">
-            <div className="h-kicker"><span className="dash" />02 · Executive</div>
-            <h1 className="h-title">Portfolio <em>At-a-Glance</em></h1>
-            <p className="h-sub">Consolidated executive view — contract values, win rate, pipeline decisions, and portfolio exposure.</p>
+            <div className="h-kicker"><span className="dash" />{ar ? '02 · التنفيذي' : '02 · Executive'}</div>
+            <h1 className="h-title">{ar ? 'محفظة' : 'Portfolio'} <em>{ar ? 'شاملة' : 'At-a-Glance'}</em></h1>
+            <p className="h-sub">{ar ? 'رؤية تنفيذية موحدة — قيم العقود ومعدل الفوز وقرارات خط الأنابيب وانكشاف المحفظة' : 'Consolidated executive view — contract values, win rate, pipeline decisions, and portfolio exposure.'}</p>
           </div>
         </div>
 
         {/* KPIs */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 14, marginBottom: 14 }}>
           {[
-            { label: 'Total Bids',     value: total,          accent: '' },
-            { label: 'Win Rate',       value: `${winRate}%`,  accent: winRate >= 60 ? 'accent-go' : 'accent-review' },
-            { label: 'Est. Total (M)', value: `${estTotal}M`, accent: 'accent-blue' },
-            { label: 'Contract (M)',   value: `${conTotal}M`, accent: '' },
-            { label: 'Actual Spend (M)', value: `${actTotal}M`, accent: '' },
+            { label: ar ? 'إجمالي العطاءات'       : 'Total Bids',        value: total,          accent: '' },
+            { label: ar ? 'معدل الفوز'             : 'Win Rate',          value: `${winRate}%`,  accent: winRate >= 60 ? 'accent-go' : 'accent-review' },
+            { label: ar ? 'الإجمالي التقديري (م)'  : 'Est. Total (M)',    value: `${estTotal}M`, accent: 'accent-blue' },
+            { label: ar ? 'العقد (م)'              : 'Contract (M)',      value: `${conTotal}M`, accent: '' },
+            { label: ar ? 'الإنفاق الفعلي (م)'     : 'Actual Spend (M)',  value: `${actTotal}M`, accent: '' },
           ].map(k => (
             <div key={k.label} className={`card kpi ${k.accent}`}>
               <span className="kpi-label">{k.label}</span>
@@ -248,23 +255,29 @@ export default async function ExecutivePage() {
 
           <div className="card">
             <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
-              <span className="card-eyebrow"><span className="eyebrow-dot" />Est. vs Contract vs Actual Spend (SAR M)</span>
+              <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'التقديري مقابل العقد مقابل الفعلي (ريال م)' : 'Est. vs Contract vs Actual Spend (SAR M)'}</span>
             </div>
-            <GroupedSpendChart projects={spendProjects} />
+            <GroupedSpendChart
+              projects={spendProjects}
+              legendEst={ar ? 'تقديري' : 'Estimated'}
+              legendContract={ar ? 'عقد' : 'Contract'}
+              legendActual={ar ? 'فعلي' : 'Actual'}
+              emptyLabel={ar ? 'لا توجد مشاريع نشطة' : 'No active projects'}
+            />
           </div>
 
           <div className="card">
             <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
-              <span className="card-eyebrow"><span className="eyebrow-dot" />Composite Score</span>
+              <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'النقاط الإجمالية' : 'Composite Score'}</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 8 }}>
               <ScoreGauge score={avgScore} max={135} />
               <div style={{ textAlign: 'center', marginTop: 8 }}>
                 <div style={{ fontSize: 11, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace" }}>
-                  Portfolio Average Score
+                  {ar ? 'متوسط نقاط المحفظة' : 'Portfolio Average Score'}
                 </div>
                 <div style={{ fontSize: 10, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace", marginTop: 2 }}>
-                  {allBids.length} bids · max 135
+                  {ar ? `${allBids.length} عطاءات · الحد الأقصى 135` : `${allBids.length} bids · max 135`}
                 </div>
               </div>
             </div>
@@ -277,14 +290,14 @@ export default async function ExecutivePage() {
 
           <div className="card">
             <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
-              <span className="card-eyebrow"><span className="eyebrow-dot" />Monthly Bids (Last 6 Mo)</span>
+              <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'العطاءات الشهرية (آخر 6 أشهر)' : 'Monthly Bids (Last 6 Mo)'}</span>
             </div>
             <BarChart data={months.map(m => ({ label: m.label, value: m.total, color: '#1B2B1E' }))} height={100} />
           </div>
 
           <div className="card">
             <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
-              <span className="card-eyebrow"><span className="eyebrow-dot" />Est. Value by Decision (SAR M)</span>
+              <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'القيمة التقديرية حسب القرار (ريال م)' : 'Est. Value by Decision (SAR M)'}</span>
             </div>
             <BarChart data={valueByDecision} height={100} />
           </div>
@@ -294,9 +307,9 @@ export default async function ExecutivePage() {
         {/* Currently in Execution table */}
         <div className="card">
           <div className="card-section-head" style={{ marginBottom: 12, paddingBottom: 10 }}>
-            <span className="card-eyebrow"><span className="eyebrow-dot" />Currently in Execution</span>
+            <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'قيد التنفيذ حالياً' : 'Currently in Execution'}</span>
             <span style={{ marginLeft: 'auto', fontSize: 11, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace" }}>
-              {pendingCount} pending
+              {ar ? `${pendingCount} معلق` : `${pendingCount} pending`}
             </span>
           </div>
           <div style={{ overflowX: 'auto' }}>
@@ -304,16 +317,16 @@ export default async function ExecutivePage() {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Project</th>
-                  <th>Contractor</th>
-                  <th>Type</th>
-                  <th>Decision</th>
-                  <th>Score</th>
-                  <th>Win%</th>
-                  <th>Est. SAR M</th>
-                  <th>Contract M</th>
-                  <th>Actual M</th>
-                  <th>Variance</th>
+                  <th>{ar ? 'المشروع' : 'Project'}</th>
+                  <th>{ar ? 'المقاول' : 'Contractor'}</th>
+                  <th>{ar ? 'النوع' : 'Type'}</th>
+                  <th>{ar ? 'القرار' : 'Decision'}</th>
+                  <th>{ar ? 'النقاط' : 'Score'}</th>
+                  <th>{ar ? '٪ الفوز' : 'Win%'}</th>
+                  <th>{ar ? 'تقديري ريال م' : 'Est. SAR M'}</th>
+                  <th>{ar ? 'عقد م' : 'Contract M'}</th>
+                  <th>{ar ? 'فعلي م' : 'Actual M'}</th>
+                  <th>{ar ? 'الفرق' : 'Variance'}</th>
                 </tr>
               </thead>
               <tbody>
@@ -361,7 +374,7 @@ export default async function ExecutivePage() {
                 {pendingBids.length === 0 && (
                   <tr>
                     <td colSpan={11} style={{ textAlign: 'center', color: '#6E6A62', padding: '24px 0', fontSize: 12, fontFamily: "'JetBrains Mono',monospace" }}>
-                      No pending bids
+                      {ar ? 'لا توجد عطاءات معلقة' : 'No pending bids'}
                     </td>
                   </tr>
                 )}

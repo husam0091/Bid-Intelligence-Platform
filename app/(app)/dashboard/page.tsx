@@ -3,8 +3,9 @@ import { authOptions } from '@/lib/auth-options'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { Header } from '@/components/layout/Header'
+import { cookies } from 'next/headers'
 
-function DonutChart({ segments }: { segments: { label: string; value: number; color: string }[] }) {
+function DonutChart({ segments, ar }: { segments: { label: string; value: number; color: string }[]; ar: boolean }) {
   const total = segments.reduce((s, d) => s + d.value, 0) || 1
   const R = 44; const cx = 60; const cy = 60; const stroke = 16
   let cumulative = 0
@@ -32,7 +33,7 @@ function DonutChart({ segments }: { segments: { label: string; value: number; co
         return <path key={seg.label} d={d} fill="none" stroke={seg.color} strokeWidth={stroke} />
       })}
       <text x={cx} y={cy - 5} textAnchor="middle" fontSize={18} fontWeight="800" fill="#1B2B1E" fontFamily="'Archivo Narrow',sans-serif">{total}</text>
-      <text x={cx} y={cy + 10} textAnchor="middle" fontSize={8} fill="#6E6A62" fontFamily="'JetBrains Mono',monospace">TOTAL</text>
+      <text x={cx} y={cy + 10} textAnchor="middle" fontSize={8} fill="#6E6A62" fontFamily="'JetBrains Mono',monospace">{ar ? 'الإجمالي' : 'TOTAL'}</text>
     </svg>
   )
 }
@@ -40,6 +41,9 @@ function DonutChart({ segments }: { segments: { label: string; value: number; co
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/login')
+
+  const cookieStore = await cookies()
+  const ar = cookieStore.get('lang')?.value === 'ar'
 
   const orgId = (session.user as any).orgId
 
@@ -132,20 +136,20 @@ export default async function DashboardPage() {
         {/* Page header */}
         <div className="page-header">
           <div className="h-left">
-            <div className="h-kicker"><span className="dash" />01 · Operations</div>
-            <h1 className="h-title">Pipeline <em>Command</em></h1>
-            <p className="h-sub">Live overview of all bids — decisions, risk exposure, and win performance across your portfolio.</p>
+            <div className="h-kicker"><span className="dash" />{ar ? '01 · العمليات' : '01 · Operations'}</div>
+            <h1 className="h-title">{ar ? 'خط الأنابيب' : 'Pipeline'} <em>{ar ? 'القيادة' : 'Command'}</em></h1>
+            <p className="h-sub">{ar ? 'نظرة حية على جميع العطاءات — القرارات والمخاطر ومعدل الفوز في محفظتك' : 'Live overview of all bids — decisions, risk exposure, and win performance across your portfolio.'}</p>
           </div>
         </div>
 
         {/* KPI strip */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 14, marginBottom: 14 }}>
           {[
-            { label: 'Total Projects', value: total,         accent: '' },
-            { label: 'Win Rate',       value: `${winRate}%`, accent: winRate >= 60 ? 'accent-go' : 'accent-review' },
-            { label: 'GO',             value: goCount,        accent: 'accent-go' },
-            { label: 'REVIEW',         value: reviewCount,    accent: 'accent-review' },
-            { label: 'High Risk',      value: highRisk,       accent: highRisk > 0 ? 'accent-nogo' : '' },
+            { label: ar ? 'إجمالي المشاريع' : 'Total Projects', value: total,         accent: '' },
+            { label: ar ? 'معدل الفوز' : 'Win Rate',            value: `${winRate}%`, accent: winRate >= 60 ? 'accent-go' : 'accent-review' },
+            { label: ar ? 'مقبول' : 'GO',                       value: goCount,        accent: 'accent-go' },
+            { label: ar ? 'مراجعة' : 'REVIEW',                  value: reviewCount,    accent: 'accent-review' },
+            { label: ar ? 'مخاطر عالية' : 'High Risk',          value: highRisk,       accent: highRisk > 0 ? 'accent-nogo' : '' },
           ].map(k => (
             <div key={k.label} className={`card kpi ${k.accent}`}>
               <span className="kpi-label">{k.label}</span>
@@ -162,10 +166,10 @@ export default async function DashboardPage() {
           {/* By Recommendation — donut */}
           <div className="card">
             <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
-              <span className="card-eyebrow"><span className="eyebrow-dot" />By Recommendation</span>
+              <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'حسب التوصية' : 'By Recommendation'}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-              <DonutChart segments={[
+              <DonutChart ar={ar} segments={[
                 { label: 'GO',     value: goCount,     color: '#1F6E45' },
                 { label: 'REVIEW', value: reviewCount, color: '#B07A1B' },
                 { label: 'NO GO',  value: nogoCount,   color: '#A8362A' },
@@ -192,7 +196,7 @@ export default async function DashboardPage() {
           {/* Bids Over Time — stacked bar */}
           <div className="card">
             <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
-              <span className="card-eyebrow"><span className="eyebrow-dot" />Bids Over Time</span>
+              <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'العطاءات بمرور الوقت' : 'Bids Over Time'}</span>
               <div style={{ display: 'flex', gap: 10, fontSize: 10, fontFamily: "'JetBrains Mono',monospace", color: 'var(--mute)' }}>
                 {[['#1F6E45','GO'],['#B07A1B','REVIEW'],['#A8362A','NO GO']].map(([c,l]) => (
                   <span key={l} style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
@@ -230,7 +234,7 @@ export default async function DashboardPage() {
           {/* Portfolio by Shape */}
           <div className="card">
             <div className="card-section-head" style={{ marginBottom: 12, paddingBottom: 8 }}>
-              <span className="card-eyebrow"><span className="eyebrow-dot" />Portfolio by Shape</span>
+              <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'المحفظة حسب الشكل' : 'Portfolio by Shape'}</span>
             </div>
             {[
               { label: 'LOW',    value: lowRisk,  color: '#1F6E45' },
@@ -250,7 +254,7 @@ export default async function DashboardPage() {
           {/* Win Dynamics */}
           <div className="card">
             <div className="card-section-head" style={{ marginBottom: 12, paddingBottom: 8 }}>
-              <span className="card-eyebrow"><span className="eyebrow-dot" />Win Dynamics</span>
+              <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'ديناميكيات الفوز' : 'Win Dynamics'}</span>
             </div>
             {winDynamics.map(row => (
               <div key={row.label} style={{ marginBottom: 10 }}>
@@ -268,7 +272,7 @@ export default async function DashboardPage() {
           {/* Bids by City */}
           <div className="card">
             <div className="card-section-head" style={{ marginBottom: 12, paddingBottom: 8 }}>
-              <span className="card-eyebrow"><span className="eyebrow-dot" />Bids by City</span>
+              <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'العطاءات حسب المدينة' : 'Bids by City'}</span>
             </div>
             {topCities.map(row => (
               <div key={row.city} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
@@ -286,23 +290,23 @@ export default async function DashboardPage() {
         {/* Currently in Execution */}
         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
           <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--hairline)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span className="card-eyebrow"><span className="eyebrow-dot" />Currently in Execution</span>
-            <span className="breadcrumb">Pending · {pendingBids.length} bid{pendingBids.length !== 1 ? 's' : ''}</span>
+            <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'قيد التنفيذ حالياً' : 'Currently in Execution'}</span>
+            <span className="breadcrumb">{ar ? 'معلق' : 'Pending'} · {pendingBids.length} bid{pendingBids.length !== 1 ? 's' : ''}</span>
           </div>
           <div style={{ overflowX: 'auto' }}>
             <table className="data-table">
               <thead>
                 <tr>
                   <th style={{ width: 36 }}>#</th>
-                  <th>Project</th>
-                  <th>Location</th>
-                  <th>Type</th>
-                  <th>Decision</th>
-                  <th>Risk</th>
-                  <th style={{ width: 55 }}>Win %</th>
-                  <th style={{ width: 50 }}>Score</th>
-                  <th>Est. Value (SAR)</th>
-                  <th>Date</th>
+                  <th>{ar ? 'المشروع' : 'Project'}</th>
+                  <th>{ar ? 'الموقع' : 'Location'}</th>
+                  <th>{ar ? 'النوع' : 'Type'}</th>
+                  <th>{ar ? 'القرار' : 'Decision'}</th>
+                  <th>{ar ? 'المخاطر' : 'Risk'}</th>
+                  <th style={{ width: 55 }}>{ar ? '٪ الفوز' : 'Win %'}</th>
+                  <th style={{ width: 50 }}>{ar ? 'النقاط' : 'Score'}</th>
+                  <th>{ar ? 'القيمة التقديرية (ريال)' : 'Est. Value (SAR)'}</th>
+                  <th>{ar ? 'التاريخ' : 'Date'}</th>
                 </tr>
               </thead>
               <tbody>
@@ -323,7 +327,7 @@ export default async function DashboardPage() {
                 {pendingBids.length === 0 && (
                   <tr>
                     <td colSpan={10} style={{ textAlign: 'center', color: '#6E6A62', padding: '32px 0', fontFamily: "'JetBrains Mono',monospace", fontSize: 12 }}>
-                      No pending bids in execution
+                      {ar ? 'لا توجد عطاءات قيد التنفيذ' : 'No pending bids in execution'}
                     </td>
                   </tr>
                 )}
