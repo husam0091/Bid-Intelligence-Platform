@@ -68,16 +68,15 @@ export default async function BidsPage({ searchParams }: Props) {
     <>
       <Header title="Bid History" titleAr="سجل العطاءات" />
 
-      <div className="page-content">
+      <div className="page-wrap">
 
-        {/* Page title block */}
-        <div className="h-block" style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between' }}>
-          <div>
-            <div className="h-kicker"><span className="h-dash" />04 · Bids</div>
+        <div className="page-header">
+          <div className="h-left">
+            <div className="h-kicker"><span className="dash" />04 · Bids</div>
             <h1 className="h-title">Bid <em>History</em></h1>
             <p className="h-sub">Every bid entered in plain English. Click any row to update its outcome.</p>
           </div>
-          <Link href="/bids/new" className="btn btn--primary" style={{ marginBottom: 4 }}>+ New Bid</Link>
+          <Link href="/bids/new" className="btn btn--primary" style={{ alignSelf: 'flex-end' }}>+ New Bid</Link>
         </div>
 
         {/* Filter chips — decisions + outcomes only, matching prototype */}

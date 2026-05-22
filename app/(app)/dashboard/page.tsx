@@ -128,12 +128,14 @@ export default async function DashboardPage() {
     <>
       <Header title="Operations Dashboard" titleAr="لوحة العمليات" />
 
-      <div className="page-content">
-        {/* Page title block */}
-        <div className="h-block">
-          <div className="h-kicker"><span className="h-dash" />01 · Operations</div>
-          <h1 className="h-title">Pipeline <em>Command</em></h1>
-          <p className="h-sub">Live overview of all bids — decisions, risk exposure, and win performance across your portfolio.</p>
+      <div className="page-wrap">
+        {/* Page header */}
+        <div className="page-header">
+          <div className="h-left">
+            <div className="h-kicker"><span className="dash" />01 · Operations</div>
+            <h1 className="h-title">Pipeline <em>Command</em></h1>
+            <p className="h-sub">Live overview of all bids — decisions, risk exposure, and win performance across your portfolio.</p>
+          </div>
         </div>
 
         {/* KPI strip */}
@@ -145,7 +147,7 @@ export default async function DashboardPage() {
             { label: 'REVIEW',         value: reviewCount,    accent: 'accent-review' },
             { label: 'High Risk',      value: highRisk,       accent: highRisk > 0 ? 'accent-nogo' : '' },
           ].map(k => (
-            <div key={k.label} className={`card kpi-card ${k.accent}`}>
+            <div key={k.label} className={`card kpi ${k.accent}`}>
               <span className="kpi-label">{k.label}</span>
               <span className={`kpi-value${k.accent === 'accent-go' ? ' text-go' : k.accent === 'accent-review' ? ' text-review' : k.accent === 'accent-nogo' ? ' text-nogo' : ''}`}>
                 {k.value}
@@ -199,7 +201,7 @@ export default async function DashboardPage() {
                 ))}
               </div>
             </div>
-            <svg viewBox={`0 0 ${6 * pitch} ${chartH + labelH}`} style={{ width: '100%', overflow: 'visible' }}>
+            <svg viewBox={`0 0 ${6 * pitch} ${chartH + labelH}`} style={{ width: '100%', maxHeight: 180, overflow: 'visible' }}>
               {months.map((m, i) => {
                 const x      = i * pitch
                 const goH    = Math.round((m.go     / maxBar) * chartH)
@@ -330,7 +332,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-      </div>
+      </div>{/* /page-wrap */}
     </>
   )
 }

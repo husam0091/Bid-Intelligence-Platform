@@ -86,17 +86,7 @@ function groupScore(group: typeof GROUPS[0], criteria: Record<string, number>) {
 
 function StepIndicator({ step }: { step: number }) {
   return (
-    <div style={{
-      display: 'flex',
-      background: 'var(--bg-card)',
-      border: '1px solid var(--hairline)',
-      borderRadius: 6,
-      overflow: 'hidden',
-      marginBottom: 18,
-      fontSize: 10,
-      fontFamily: "'JetBrains Mono',monospace",
-      letterSpacing: '0.06em',
-    }}>
+    <div className="steps">
       {STEP_LABELS.map((label, i) => {
         const num    = i + 1
         const active = step === num
@@ -105,19 +95,11 @@ function StepIndicator({ step }: { step: number }) {
         return (
           <div
             key={num}
-            style={{
-              flex: 1,
-              padding: '10px 4px',
-              textAlign: 'center',
-              borderRight: i < STEP_LABELS.length - 1 ? '1px solid var(--hairline)' : 'none',
-              background: active ? 'var(--ink)' : done ? 'var(--bg-card-alt, #F4F1E8)' : 'transparent',
-              color: active ? '#fff' : done ? 'var(--ink)' : 'var(--mute)',
-              transition: 'background 0.15s',
-              lineHeight: 1.4,
-            }}
+            className={`step${active ? ' current' : done ? ' done' : ''}`}
           >
-            <div style={{ fontWeight: active ? 700 : done ? 600 : 400, fontSize: 9 }}>{lines[0]}</div>
-            <div style={{ fontWeight: active ? 700 : 400, fontSize: 8, marginTop: 1 }}>{lines[1]}</div>
+            <div className="step-bar" />
+            <div className="step-num">{lines[0]}</div>
+            <div className="step-name">{lines[1]}</div>
           </div>
         )
       })}
@@ -255,11 +237,13 @@ export default function NewBidPage() {
     <>
       <Header title="New Bid Assessment" titleAr="تقييم عطاء جديد" />
 
-      <div className="page-content">
-        <div className="h-block">
-          <div className="h-kicker"><span className="h-dash" />03 · BID ENTRY</div>
-          <h1 className="h-title">Score a <em>New Tender</em></h1>
-          <p className="h-sub">Fill in project details and rate each of the 27 scoring criteria. The verdict panel updates live.</p>
+      <div className="page-wrap">
+        <div className="page-header">
+          <div className="h-left">
+            <div className="h-kicker"><span className="dash" />03 · BID ENTRY</div>
+            <h1 className="h-title">Score a <em>New Tender</em></h1>
+            <p className="h-sub">Fill in project details and rate each of the 27 scoring criteria. The verdict panel updates live.</p>
+          </div>
         </div>
 
         <StepIndicator step={step} />

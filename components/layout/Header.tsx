@@ -26,21 +26,28 @@ export function Header({ title, titleAr }: HeaderProps) {
   }, [])
 
   return (
-    <header className="app-header">
+    <header className="main-header">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/icononly_transparent.png" width={16} height={16} alt="" style={{ opacity:0.55, flexShrink:0 }} />
-      <span className="app-header-wordmark">Black</span>
-      <span className="app-header-divider" />
-      <span className="breadcrumb">Bid Intelligence · <b>{displayTitle.toUpperCase()}</b></span>
-      <div className="app-header-meta">
+      <img src="/icononly_transparent.png" width={16} height={16} alt="" className="wordmark" />
+      <span className="header-divider" />
+      <nav className="crumb">Bid Intelligence · <b>{displayTitle.toUpperCase()}</b></nav>
+      <div className="header-meta">
         {time && (
-          <span style={{ display:'flex', alignItems:'center', gap:5 }}>
-            <span style={{ width:6, height:6, borderRadius:'50%', background:'var(--go)', flexShrink:0, display:'inline-block' }} />
-            {time}
-          </span>
+          <div className="meta-cell">
+            <span className="lbl">STATUS</span>
+            <span className="val"><span className="live-dot" />{time}</span>
+          </div>
         )}
-        {user?.name && <span>User · {user.name}</span>}
-        <span>KSA · 2026</span>
+        {user?.name && (
+          <div className="meta-cell">
+            <span className="lbl">USER</span>
+            <span className="val">{user.name}</span>
+          </div>
+        )}
+        <div className="meta-cell">
+          <span className="lbl">REGION</span>
+          <span className="val">KSA · 2026</span>
+        </div>
       </div>
     </header>
   )

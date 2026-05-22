@@ -96,8 +96,8 @@ export default async function BidDetailPage({ params }: Props) {
     <>
       <Header title="Bid Detail" titleAr="تفاصيل العطاء" />
 
-      <div className="page-content">
-        <div style={{ padding: '0 24px 40px' }}>
+      <div className="page-wrap">
+        <div>
 
           {/* breadcrumb + actions */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>

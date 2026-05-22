@@ -179,13 +179,14 @@ export default async function AnalyticsPage() {
     <>
       <Header title="Analytics" titleAr="التحليلات" />
 
-      <div className="page-content">
+      <div className="page-wrap">
 
-        {/* Page title block */}
-        <div className="h-block">
-          <div className="h-kicker"><span className="h-dash" />06 · Intelligence</div>
-          <h1 className="h-title">Performance <em>Analytics</em></h1>
-          <p className="h-sub">Cut win rate across project type, client sector, and tender structure.</p>
+        <div className="page-header">
+          <div className="h-left">
+            <div className="h-kicker"><span className="dash" />06 · Intelligence</div>
+            <h1 className="h-title">Performance <em>Analytics</em></h1>
+            <p className="h-sub">Cut win rate across project type, client sector, and tender structure.</p>
+          </div>
         </div>
 
         {/* Summary KPIs — matching prototype: Total Bids / Total Wins / Win Rate / Avg Score Wins / Avg Score Losses */}
@@ -197,7 +198,7 @@ export default async function AnalyticsPage() {
             { label: 'Avg Score · Wins',  value: avgScoreWins,    accent: '' },
             { label: 'Avg Score · Losses',value: avgScoreLoss,    accent: '' },
           ].map(k => (
-            <div key={k.label} className={`kpi-card ${k.accent}`}>
+            <div key={k.label} className={`card kpi ${k.accent}`}>
               <span className="kpi-label">{k.label}</span>
               <span className={`kpi-value${k.accent === 'accent-go' ? ' text-go' : k.accent === 'accent-review' ? ' text-review' : ''}`}>{k.value}</span>
               {k.sub && <span style={{ fontSize:10, color:'var(--mute)', fontFamily:"'JetBrains Mono',monospace", marginTop:4 }}>{k.sub}</span>}
@@ -254,7 +255,7 @@ export default async function AnalyticsPage() {
             { label: 'Pending',  value: pendingCount,   accent: '' },
             { label: 'Rejected', value: rejectedCount,  accent: '' },
           ].map(k => (
-            <div key={k.label} className={`kpi-card ${k.accent}`}>
+            <div key={k.label} className={`card kpi ${k.accent}`}>
               <span className="card-eyebrow" style={{ marginBottom:8 }}><span className="eyebrow-dot" />{k.label}</span>
               <span className={`kpi-value${k.accent === 'accent-go' ? ' text-go' : k.accent === 'accent-nogo' ? ' text-nogo' : ''}`}>{k.value}</span>
               <span style={{ fontSize:10, color:'var(--mute)', fontFamily:"'JetBrains Mono',monospace", marginTop:4 }}>

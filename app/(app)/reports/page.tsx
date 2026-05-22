@@ -119,11 +119,13 @@ export default function ReportsPage() {
   const curYear = new Date().getFullYear()
 
   return (
-    <div className="page-content">
-      <div className="h-block">
-        <div className="h-kicker"><span className="h-dash" />06 · Intelligence</div>
-        <h1 className="h-title"><em>Reports</em></h1>
-        <p className="h-sub">Generate, configure, and export portfolio reports in PDF, Excel, or CSV.</p>
+    <div className="page-wrap">
+      <div className="page-header">
+        <div className="h-left">
+          <div className="h-kicker"><span className="dash" />06 · Intelligence</div>
+          <h1 className="h-title"><em>Reports</em></h1>
+          <p className="h-sub">Generate, configure, and export portfolio reports in PDF, Excel, or CSV.</p>
+        </div>
       </div>
 
       {/* 3+2 card grid */}

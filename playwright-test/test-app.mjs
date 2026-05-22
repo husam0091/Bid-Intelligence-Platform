@@ -65,7 +65,7 @@ console.log('  ✓ Login successful → /dashboard')
 console.log('\n[3] Dashboard content')
 await check('Sidebar present',      () => page.locator('.sidebar').waitFor())
 await check('Operations nav active',() => page.locator('.nav-item.active', { hasText: 'Pipeline' }).waitFor({ timeout: 3000 }))
-await check('KPI cards visible',    () => page.locator('.kpi-card').first().waitFor({ timeout: 3000 }))
+await check('KPI cards visible',    () => page.locator('.kpi').first().waitFor({ timeout: 3000 }))
 
 // ── 4. Bid History ────────────────────────────────────────────────────────────
 console.log('\n[4] Bid History (/bids)')
@@ -133,7 +133,7 @@ await check('User table visible',        () => page.locator('.data-table').waitF
 console.log('\n[10] Arabic RTL toggle')
 await page.goto(`${BASE}/dashboard`)
 await page.waitForSelector('.sidebar')
-await page.locator('.lang-btn', { hasText: 'AR' }).click()
+await page.locator('.lang-toggle button', { hasText: 'AR' }).click()
 await page.waitForTimeout(600)
 await shot('10-arabic-dashboard')
 await check('body.ar class added',       async () => {

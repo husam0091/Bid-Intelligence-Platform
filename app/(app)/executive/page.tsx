@@ -217,12 +217,14 @@ export default async function ExecutivePage() {
     <>
       <Header title="Executive" titleAr="التنفيذي" />
 
-      <div className="page-content">
+      <div className="page-wrap">
 
-        <div className="h-block">
-          <div className="h-kicker"><span className="h-dash" />02 · Executive</div>
-          <h1 className="h-title">Portfolio <em>At-a-Glance</em></h1>
-          <p className="h-sub">Consolidated executive view — contract values, win rate, pipeline decisions, and portfolio exposure.</p>
+        <div className="page-header">
+          <div className="h-left">
+            <div className="h-kicker"><span className="dash" />02 · Executive</div>
+            <h1 className="h-title">Portfolio <em>At-a-Glance</em></h1>
+            <p className="h-sub">Consolidated executive view — contract values, win rate, pipeline decisions, and portfolio exposure.</p>
+          </div>
         </div>
 
         {/* KPIs */}
@@ -234,7 +236,7 @@ export default async function ExecutivePage() {
             { label: 'Contract (M)',   value: `${conTotal}M`, accent: '' },
             { label: 'Actual Spend (M)', value: `${actTotal}M`, accent: '' },
           ].map(k => (
-            <div key={k.label} className={`kpi-card ${k.accent}`}>
+            <div key={k.label} className={`card kpi ${k.accent}`}>
               <span className="kpi-label">{k.label}</span>
               <span className={`kpi-value${k.accent === 'accent-go' ? ' text-go' : k.accent === 'accent-review' ? ' text-review' : ''}`}>{k.value}</span>
             </div>

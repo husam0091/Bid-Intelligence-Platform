@@ -86,22 +86,22 @@ export function Sidebar({ pipelineCount, historyCount }: { pipelineCount?: numbe
 
       <nav className={`sidebar${sideOpen ? ' open' : ''}`}>
         {/* Brand */}
-        <div className="sidebar-brand">
-          <div className="sidebar-brand-mark">
+        <div className="brand">
+          <div className="brand-mark">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icononly_transparent.png" width={22} height={22} alt="Black" style={{ filter: 'invert(1) brightness(2)', display: 'block' }} />
+            <img src="/icononly_transparent.png" width={22} height={22} alt="Black" />
           </div>
-          <div className="sidebar-brand-text">
-            <div className="sidebar-brand-name">Black</div>
-            <div className="sidebar-brand-sub">Bid Intelligence · 2026</div>
+          <div className="brand-text">
+            <div className="brand-name">Black</div>
+            <div className="brand-sub">Bid Intelligence · 2026</div>
           </div>
         </div>
 
         {/* Language + dark mode toggles */}
         <div style={{ padding: '10px 16px 4px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div className="lang-toggle" style={{ flex: 1 }}>
-            <button className={`lang-btn${lang === 'en' ? ' active' : ''}`} onClick={() => applyLang('en')}>EN</button>
-            <button className={`lang-btn${lang === 'ar' ? ' active' : ''}`} onClick={() => applyLang('ar')}>AR</button>
+          <div className={`lang-toggle ${lang === 'en' ? 'en-active' : 'ar-active'}`} style={{ flex: 1 }}>
+            <button className={lang === 'en' ? 'active' : ''} onClick={() => applyLang('en')}>EN</button>
+            <button className={lang === 'ar' ? 'active' : ''} onClick={() => applyLang('ar')}>AR</button>
           </div>
           <button
             onClick={toggleDark}
@@ -121,7 +121,7 @@ export function Sidebar({ pipelineCount, historyCount }: { pipelineCount?: numbe
         </div>
 
         {/* Nav */}
-        <div className="sidebar-nav">
+        <div className="nav">
           {NAV_GROUPS.map(group => {
             const visible = group.items.filter(i => i.roles.includes(role))
             if (!visible.length) return null
@@ -138,14 +138,10 @@ export function Sidebar({ pipelineCount, historyCount }: { pipelineCount?: numbe
                     <span className="nav-icon">{item.icon}</span>
                     <span style={{ flex: 1 }}>{ar ? item.labelAr : item.label}</span>
                     {item.href === '/dashboard' && pipelineCount != null && pipelineCount > 0 && (
-                      <span style={{ fontSize: 9, fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, background: 'rgba(27,43,30,0.15)', color: 'rgba(27,43,30,0.75)', padding: '1px 5px', borderRadius: 3, letterSpacing: '0.04em', flexShrink: 0 }}>
-                        {pipelineCount}
-                      </span>
+                      <span className="nav-count">{pipelineCount}</span>
                     )}
                     {item.href === '/bids' && historyCount != null && historyCount > 0 && (
-                      <span style={{ fontSize: 9, fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, background: 'rgba(27,43,30,0.15)', color: 'rgba(27,43,30,0.75)', padding: '1px 5px', borderRadius: 3, letterSpacing: '0.04em', flexShrink: 0 }}>
-                        {historyCount}
-                      </span>
+                      <span className="nav-count">{historyCount}</span>
                     )}
                   </Link>
                 ))}

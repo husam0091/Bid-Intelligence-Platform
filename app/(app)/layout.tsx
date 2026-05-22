@@ -18,11 +18,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <SessionProvider session={session}>
-      <div className="app-shell">
+      <div className="app">
         <Sidebar pipelineCount={pipelineCount} historyCount={historyCount} />
-        <div className="main-area">
+        <main>
           {children}
-        </div>
+        </main>
       </div>
       <AiChatPanel />
     </SessionProvider>

@@ -139,13 +139,14 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="page-content">
+    <div className="page-wrap">
 
-      {/* Page title block */}
-      <div className="h-block">
-        <div className="h-kicker"><span className="h-dash" />07 · System</div>
-        <h1 className="h-title"><em>Settings</em></h1>
-        <p className="h-sub">Manage team access, roles, and platform configuration.</p>
+      <div className="page-header">
+        <div className="h-left">
+          <div className="h-kicker"><span className="dash" />07 · System</div>
+          <h1 className="h-title"><em>Settings</em></h1>
+          <p className="h-sub">Manage team access, roles, and platform configuration.</p>
+        </div>
       </div>
 
       {/* Users section — ADMIN only */}

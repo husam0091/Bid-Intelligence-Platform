@@ -155,12 +155,14 @@ export default async function PredictorPage({
     <>
       <Header title="Win Predictor" titleAr="توقع الفوز" />
 
-      <div className="page-content">
+      <div className="page-wrap">
 
-        <div className="h-block">
-          <div className="h-kicker"><span className="h-dash" />05 · Intelligence</div>
-          <h1 className="h-title">Win <em>Predictor</em></h1>
-          <p className="h-sub">Benchmark this project against historical wins and losses. Surface comparable past bids.</p>
+        <div className="page-header">
+          <div className="h-left">
+            <div className="h-kicker"><span className="dash" />05 · Intelligence</div>
+            <h1 className="h-title">Win <em>Predictor</em></h1>
+            <p className="h-sub">Benchmark this project against historical wins and losses. Surface comparable past bids.</p>
+          </div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'start' }}>
