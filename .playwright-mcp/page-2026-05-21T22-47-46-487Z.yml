@@ -1,0 +1,216 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - img "Black" [ref=e6]
+        - generic [ref=e7]:
+          - generic [ref=e8]: Black
+          - generic [ref=e9]: Bid Intelligence · 2026
+      - generic [ref=e11]:
+        - button "EN" [ref=e12] [cursor=pointer]
+        - button "AR" [ref=e13] [cursor=pointer]
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Operations
+          - link "▦ Pipeline" [ref=e17] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e18]: ▦
+            - generic [ref=e19]: Pipeline
+          - link "◈ Executive" [ref=e20] [cursor=pointer]:
+            - /url: /executive
+            - generic [ref=e21]: ◈
+            - generic [ref=e22]: Executive
+        - generic [ref=e23]:
+          - generic [ref=e24]: Bids
+          - link "+ New Bid" [ref=e25] [cursor=pointer]:
+            - /url: /bids/new
+            - generic [ref=e26]: +
+            - generic [ref=e27]: New Bid
+          - link "≡ Bid History" [ref=e28] [cursor=pointer]:
+            - /url: /bids
+            - generic [ref=e29]: ≡
+            - generic [ref=e30]: Bid History
+        - generic [ref=e31]:
+          - generic [ref=e32]: Intelligence
+          - link "◎ Win Predictor" [ref=e33] [cursor=pointer]:
+            - /url: /predictor
+            - generic [ref=e34]: ◎
+            - generic [ref=e35]: Win Predictor
+          - link "∿ Analytics" [ref=e36] [cursor=pointer]:
+            - /url: /analytics
+            - generic [ref=e37]: ∿
+            - generic [ref=e38]: Analytics
+        - generic [ref=e39]:
+          - generic [ref=e40]: System
+          - link "✦ AI Chat" [ref=e41] [cursor=pointer]:
+            - /url: /ai
+            - generic [ref=e42]: ✦
+            - generic [ref=e43]: AI Chat
+          - link "⚙ Settings" [ref=e44] [cursor=pointer]:
+            - /url: /settings
+            - generic [ref=e45]: ⚙
+            - generic [ref=e46]: Settings
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - generic [ref=e49]: Admin · ADMIN
+          - generic [ref=e50]: KSA · 2026
+        - button "Sign out" [ref=e51] [cursor=pointer]
+    - generic [ref=e52]:
+      - banner [ref=e53]:
+        - generic [ref=e54]: Black
+        - generic [ref=e56]: Bid Intelligence · EXECUTIVE
+        - generic [ref=e57]:
+          - generic [ref=e58]: 01:47
+          - generic [ref=e60]: User · Admin
+          - generic [ref=e61]: KSA · 2026
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]: 02 · Executive
+          - heading "Portfolio At-a-Glance" [level=1] [ref=e66]:
+            - text: Portfolio
+            - emphasis [ref=e67]: At-a-Glance
+          - paragraph [ref=e68]: Consolidated executive view — contract values, win rate, pipeline decisions, and portfolio exposure.
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - generic [ref=e71]: Total Bids
+            - generic [ref=e72]: "22"
+          - generic [ref=e73]:
+            - generic [ref=e74]: Win Rate
+            - generic [ref=e75]: 75%
+          - generic [ref=e76]:
+            - generic [ref=e77]: Est. Total (M)
+            - generic [ref=e78]: 75M
+          - generic [ref=e79]:
+            - generic [ref=e80]: Contract (M)
+            - generic [ref=e81]: 57M
+          - generic [ref=e82]:
+            - generic [ref=e83]: Actual Spend (M)
+            - generic [ref=e84]: 0M
+        - generic [ref=e85]:
+          - generic [ref=e86]:
+            - generic [ref=e88]: Est. vs Contract vs Actual Spend (SAR M)
+            - generic [ref=e90]:
+              - generic [ref=e91]:
+                - generic [ref=e94]: Estimated
+                - generic [ref=e97]: Contract
+                - generic [ref=e100]: Actual
+              - img [ref=e101]:
+                - generic [ref=e106]: Kharj
+                - generic [ref=e111]: Dahran
+                - generic [ref=e116]: Hail
+                - generic [ref=e121]: Jubail
+          - generic [ref=e122]:
+            - generic [ref=e124]: Composite Score
+            - generic [ref=e126]:
+              - img [ref=e127]:
+                - generic [ref=e130]: "76"
+                - generic [ref=e131]: / 135
+                - generic [ref=e132]: "0"
+                - generic [ref=e133]: "135"
+              - generic [ref=e134]:
+                - generic [ref=e135]: Portfolio Average Score
+                - generic [ref=e136]: 22 bids · max 135
+        - generic [ref=e137]:
+          - generic [ref=e138]:
+            - generic [ref=e140]: Monthly Bids (Last 6 Mo)
+            - img [ref=e142]:
+              - generic [ref=e143]:
+                - generic [ref=e145]: Dec
+                - generic [ref=e146]: "1"
+              - generic [ref=e147]:
+                - generic [ref=e149]: Jan
+                - generic [ref=e150]: "1"
+              - generic [ref=e151]:
+                - generic [ref=e153]: Feb
+                - generic [ref=e154]: "1"
+              - generic [ref=e157]: Mar
+              - generic [ref=e160]: Apr
+              - generic [ref=e161]:
+                - generic [ref=e163]: May
+                - generic [ref=e164]: "1"
+          - generic [ref=e165]:
+            - generic [ref=e167]: Est. Value by Decision (SAR M)
+            - img [ref=e169]:
+              - generic [ref=e170]:
+                - generic [ref=e172]: GO
+                - generic [ref=e173]: "31"
+              - generic [ref=e174]:
+                - generic [ref=e176]: REVIEW
+                - generic [ref=e177]: "24"
+              - generic [ref=e178]:
+                - generic [ref=e180]: NO GO
+                - generic [ref=e181]: "20"
+        - generic [ref=e182]:
+          - generic [ref=e183]:
+            - generic [ref=e184]: Currently in Execution
+            - generic [ref=e186]: 4 pending
+          - table [ref=e188]:
+            - rowgroup [ref=e189]:
+              - row "# Project Contractor Type Decision Score Win% Est. SAR M Contract M Actual M Variance" [ref=e190]:
+                - columnheader "#" [ref=e191]
+                - columnheader "Project" [ref=e192]
+                - columnheader "Contractor" [ref=e193]
+                - columnheader "Type" [ref=e194]
+                - columnheader "Decision" [ref=e195]
+                - columnheader "Score" [ref=e196]
+                - columnheader "Win%" [ref=e197]
+                - columnheader "Est. SAR M" [ref=e198]
+                - columnheader "Contract M" [ref=e199]
+                - columnheader "Actual M" [ref=e200]
+                - columnheader "Variance" [ref=e201]
+            - rowgroup [ref=e202]:
+              - row "1 Kharj AECOM BUILDING GO 118 75% 3.0 2.8 0.0 -2.8" [ref=e203]:
+                - cell "1" [ref=e204]
+                - cell "Kharj" [ref=e205]
+                - cell "AECOM" [ref=e206]
+                - cell "BUILDING" [ref=e207]
+                - cell "GO" [ref=e208]:
+                  - generic [ref=e209]: GO
+                - cell "118" [ref=e210]
+                - cell "75%" [ref=e211]
+                - cell "3.0" [ref=e212]
+                - cell "2.8" [ref=e213]
+                - cell "0.0" [ref=e214]
+                - cell "-2.8" [ref=e215]
+              - row "2 Dahran AECOM INDUSTRIAL GO 106 75% 0.8 0.2 0.0 -0.2" [ref=e216]:
+                - cell "2" [ref=e217]
+                - cell "Dahran" [ref=e218]
+                - cell "AECOM" [ref=e219]
+                - cell "INDUSTRIAL" [ref=e220]
+                - cell "GO" [ref=e221]:
+                  - generic [ref=e222]: GO
+                - cell "106" [ref=e223]
+                - cell "75%" [ref=e224]
+                - cell "0.8" [ref=e225]
+                - cell "0.2" [ref=e226]
+                - cell "0.0" [ref=e227]
+                - cell "-0.2" [ref=e228]
+              - row "3 Hail AECOM INDUSTRIAL GO 87 60% 6.5 6.3 0.0 -6.3" [ref=e229]:
+                - cell "3" [ref=e230]
+                - cell "Hail" [ref=e231]
+                - cell "AECOM" [ref=e232]
+                - cell "INDUSTRIAL" [ref=e233]
+                - cell "GO" [ref=e234]:
+                  - generic [ref=e235]: GO
+                - cell "87" [ref=e236]
+                - cell "60%" [ref=e237]
+                - cell "6.5" [ref=e238]
+                - cell "6.3" [ref=e239]
+                - cell "0.0" [ref=e240]
+                - cell "-6.3" [ref=e241]
+              - row "4 Jubail AECOM INFRASTRUCTURE REVIEW 74 38% 8.0 4.5 0.0 -4.5" [ref=e242]:
+                - cell "4" [ref=e243]
+                - cell "Jubail" [ref=e244]
+                - cell "AECOM" [ref=e245]
+                - cell "INFRASTRUCTURE" [ref=e246]
+                - cell "REVIEW" [ref=e247]:
+                  - generic [ref=e248]: REVIEW
+                - cell "74" [ref=e249]
+                - cell "38%" [ref=e250]
+                - cell "8.0" [ref=e251]
+                - cell "4.5" [ref=e252]
+                - cell "0.0" [ref=e253]
+                - cell "-4.5" [ref=e254]
+  - button "AI Chat" [ref=e255] [cursor=pointer]:
+    - img [ref=e256]
+  - alert [ref=e258]

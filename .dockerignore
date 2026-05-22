@@ -1,0 +1,48 @@
+# Git
+.git
+.gitignore
+.github
+
+# Dependencies (rebuilt in Docker)
+node_modules
+
+# Build output
+.next
+out
+
+# Environment files
+.env
+.env.local
+.env*.local
+
+# Dev / editor
+.vscode
+.idea
+*.swp
+
+# Docs (not needed in image)
+docs
+*.md
+!README.md
+
+# Test
+coverage
+__tests__
+*.test.ts
+*.spec.ts
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Office temp files
+~$*
+*.tmp
+
+# Test scripts and screenshots
+playwright-test
+test-screenshots
+test-app.mjs

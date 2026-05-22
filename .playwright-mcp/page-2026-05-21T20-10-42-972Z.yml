@@ -1,0 +1,499 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e393]:
+        - img "Black Construction" [ref=e395]
+        - generic [ref=e396]:
+          - generic [ref=e397]: BLACK
+          - generic [ref=e398]: BID INTELLIGENCE · 2026
+      - generic [ref=e399] [cursor=pointer]:
+        - button "EN" [ref=e400]
+        - button "AR" [ref=e401]
+      - navigation [ref=e402]:
+        - generic [ref=e403]:
+          - generic [ref=e404]: Operations
+          - button "Pipeline 1" [ref=e405] [cursor=pointer]:
+            - img [ref=e407]
+            - generic [ref=e412]: Pipeline
+            - generic [ref=e413]: "1"
+          - button "Executive 11" [ref=e414] [cursor=pointer]:
+            - img [ref=e416]
+            - generic [ref=e418]: Executive
+            - generic [ref=e419]: "11"
+        - generic [ref=e420]:
+          - generic [ref=e421]: Bids
+          - button "New Bid" [ref=e422] [cursor=pointer]:
+            - img [ref=e424]
+            - generic [ref=e426]: New Bid
+          - button "Bid History 22" [ref=e427] [cursor=pointer]:
+            - img [ref=e429]
+            - generic [ref=e433]: Bid History
+            - generic [ref=e434]: "22"
+        - generic [ref=e435]:
+          - generic [ref=e436]: Intelligence
+          - button "Win Predictor" [ref=e437] [cursor=pointer]:
+            - img [ref=e439]
+            - generic [ref=e441]: Win Predictor
+          - button "Analytics" [ref=e442] [cursor=pointer]:
+            - img [ref=e444]
+            - generic [ref=e446]: Analytics
+        - generic [ref=e447]:
+          - generic [ref=e448]: System
+          - button "Settings" [ref=e449] [cursor=pointer]:
+            - img [ref=e451]
+            - generic [ref=e454]: Settings
+      - generic [ref=e455]:
+        - generic [ref=e456]: M. ADEEL · QS
+        - generic [ref=e457]: +966 55 063 4001
+        - generic [ref=e458]: KSA · 2026
+    - main [ref=e70]:
+      - generic [ref=e71]:
+        - img "Black Construction" [ref=e459]
+        - generic [ref=e461]: BID INTELLIGENCE · Bid History
+        - generic [ref=e462]:
+          - generic [ref=e463]:
+            - generic [ref=e464]: Last sync
+            - generic [ref=e465]: 23:10
+          - generic [ref=e467]:
+            - generic [ref=e468]: User
+            - generic [ref=e469]: M. ADEEL
+          - generic [ref=e470]:
+            - generic [ref=e471]: KSA
+            - generic [ref=e472]: "2026"
+      - generic [ref=e473]:
+        - generic [ref=e475]:
+          - generic [ref=e476]: 04 · AUDIT TRAIL
+          - heading "Bid History" [level=1] [ref=e478]:
+            - text: Bid
+            - emphasis [ref=e479]: History
+          - generic [ref=e480]: Every bid ever scored — searchable in plain language. Click any row to update its outcome.
+        - generic [ref=e481]:
+          - generic [ref=e482]:
+            - generic [ref=e483]:
+              - generic:
+                - img
+              - generic: ⌘ AI
+              - textbox "Ask in plain English…" [ref=e484]
+            - button "Summary" [ref=e485] [cursor=pointer]
+            - generic [ref=e486]:
+              - button "All" [ref=e487] [cursor=pointer]
+              - button "Won" [ref=e488] [cursor=pointer]
+              - button "Lost" [ref=e489] [cursor=pointer]
+              - button "Pending" [ref=e490] [cursor=pointer]
+              - button "Rejected" [ref=e491] [cursor=pointer]
+          - generic [ref=e492]: "Try: \"won bids in Riyadh 2025\", \"Mecca Gov over 50M\", \"high risk losses\""
+        - generic [ref=e493]:
+          - generic [ref=e495]:
+            - generic [ref=e496]: Bid
+            - generic [ref=e498]: Showing 22 of 22
+          - generic [ref=e499]:
+            - generic [ref=e500]:
+              - generic [ref=e501]: "#"
+              - generic [ref=e502]: Project
+              - generic [ref=e503]: Location
+              - generic [ref=e504]: Type
+              - generic [ref=e505]: Date
+              - generic [ref=e506]: Score
+              - generic [ref=e507]: Decision
+              - generic [ref=e508]: Risk
+              - generic [ref=e509]: Outcome
+              - generic [ref=e510]: Value
+            - generic [ref=e511]:
+              - generic [ref=e512]: "22"
+              - generic [ref=e513]:
+                - generic [ref=e514]: Jeddah Bay
+                - generic [ref=e515]: Government · Open
+              - generic [ref=e516]: Al Qasim
+              - generic [ref=e517]: Infrastructure
+              - generic [ref=e518]: Sept 26
+              - generic [ref=e519]: "88"
+              - generic [ref=e521]: GO
+              - generic [ref=e523]: MEDIUM
+              - combobox [ref=e525]:
+                - option "Won"
+                - option "Lost" [selected]
+                - option "Pending"
+                - option "Rejected"
+              - generic [ref=e526]: SAR 3.00M
+              - button "×" [ref=e528] [cursor=pointer]
+            - generic [ref=e529]:
+              - generic [ref=e530]: "21"
+              - generic [ref=e531]:
+                - generic [ref=e532]: Hofuf
+                - generic [ref=e533]: Government · Negotiated
+              - generic [ref=e534]: Jubail
+              - generic [ref=e535]: Infrastructure
+              - generic [ref=e536]: Aug 26
+              - generic [ref=e537]: "90"
+              - generic [ref=e539]: GO
+              - generic [ref=e541]: LOW
+              - combobox [ref=e543]:
+                - option "Won" [selected]
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected"
+              - generic [ref=e544]: SAR 6.50M
+              - button "×" [ref=e546] [cursor=pointer]
+            - generic [ref=e547]:
+              - generic [ref=e548]: "20"
+              - generic [ref=e549]:
+                - generic [ref=e550]: Jubail
+                - generic [ref=e551]: Semi-Gov · Open
+              - generic [ref=e552]: Ras Tanura
+              - generic [ref=e553]: Infrastructure
+              - generic [ref=e554]: Jul 26
+              - generic [ref=e555]: "74"
+              - generic [ref=e557]: REVIEW
+              - generic [ref=e559]: LOW
+              - combobox [ref=e561]:
+                - option "Won"
+                - option "Lost"
+                - option "Pending" [selected]
+                - option "Rejected"
+              - generic [ref=e562]: SAR 8.00M
+              - button "×" [ref=e564] [cursor=pointer]
+            - generic [ref=e565]:
+              - generic [ref=e566]: "19"
+              - generic [ref=e567]:
+                - generic [ref=e568]: Ras Tanura
+                - generic [ref=e569]: Private · Negotiated
+              - generic [ref=e570]: Al-Ula
+              - generic [ref=e571]: Infrastructure
+              - generic [ref=e572]: Jun 26
+              - generic [ref=e573]: "49"
+              - generic [ref=e575]: NO GO
+              - generic [ref=e577]: MEDIUM
+              - combobox [ref=e579]:
+                - option "Won"
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected" [selected]
+              - generic [ref=e580]: SAR 9.00M
+              - button "×" [ref=e582] [cursor=pointer]
+            - generic [ref=e583]:
+              - generic [ref=e584]: "18"
+              - generic [ref=e585]:
+                - generic [ref=e586]: Ula
+                - generic [ref=e587]: Government · Open
+              - generic [ref=e588]: Al-Kharj
+              - generic [ref=e589]: Infrastructure
+              - generic [ref=e590]: May 26
+              - generic [ref=e591]: "82"
+              - generic [ref=e593]: GO
+              - generic [ref=e595]: MEDIUM
+              - combobox [ref=e597]:
+                - option "Won"
+                - option "Lost" [selected]
+                - option "Pending"
+                - option "Rejected"
+              - generic [ref=e598]: SAR 2.00M
+              - button "×" [ref=e600] [cursor=pointer]
+            - generic [ref=e601]:
+              - generic [ref=e602]: "17"
+              - generic [ref=e603]:
+                - generic [ref=e604]: Jizan
+                - generic [ref=e605]: Private · Limited
+              - generic [ref=e606]: Jazan
+              - generic [ref=e607]: Infrastructure
+              - generic [ref=e608]: Feb 26
+              - generic [ref=e609]: "85"
+              - generic [ref=e611]: GO
+              - generic [ref=e613]: LOW
+              - combobox [ref=e615]:
+                - option "Won" [selected]
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected"
+              - generic [ref=e616]: SAR 2.00M
+              - button "×" [ref=e618] [cursor=pointer]
+            - generic [ref=e619]:
+              - generic [ref=e620]: "16"
+              - generic [ref=e621]:
+                - generic [ref=e622]: Bahah
+                - generic [ref=e623]: Private · Open
+              - generic [ref=e624]: Al-Bahah
+              - generic [ref=e625]: Building
+              - generic [ref=e626]: Jan 26
+              - generic [ref=e627]: "76"
+              - generic [ref=e629]: GO
+              - generic [ref=e631]: LOW
+              - combobox [ref=e633]:
+                - option "Won" [selected]
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected"
+              - generic [ref=e634]: SAR 800K
+              - button "×" [ref=e636] [cursor=pointer]
+            - generic [ref=e637]:
+              - generic [ref=e638]: "15"
+              - generic [ref=e639]:
+                - generic [ref=e640]: Najran
+                - generic [ref=e641]: Semi-Gov · Open
+              - generic [ref=e642]: Najran
+              - generic [ref=e643]: Infrastructure
+              - generic [ref=e644]: Dec 25
+              - generic [ref=e645]: "87"
+              - generic [ref=e647]: GO
+              - generic [ref=e649]: LOW
+              - combobox [ref=e651]:
+                - option "Won" [selected]
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected"
+              - generic [ref=e652]: SAR 660K
+              - button "×" [ref=e654] [cursor=pointer]
+            - generic [ref=e655]:
+              - generic [ref=e656]: "14"
+              - generic [ref=e657]:
+                - generic [ref=e658]: Yanbu
+                - generic [ref=e659]: Private · Negotiated
+              - generic [ref=e660]: Yanbu
+              - generic [ref=e661]: Building
+              - generic [ref=e662]: Nov 25
+              - generic [ref=e663]: "53"
+              - generic [ref=e665]: NO GO
+              - generic [ref=e667]: MEDIUM
+              - combobox [ref=e669]:
+                - option "Won"
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected" [selected]
+              - generic [ref=e670]: SAR 3.00M
+              - button "×" [ref=e672] [cursor=pointer]
+            - generic [ref=e673]:
+              - generic [ref=e674]: "13"
+              - generic [ref=e675]:
+                - generic [ref=e676]: Qatif
+                - generic [ref=e677]: Private · Open
+              - generic [ref=e678]: Al-Qatif
+              - generic [ref=e679]: Building
+              - generic [ref=e680]: Oct 25
+              - generic [ref=e681]: "75"
+              - generic [ref=e683]: GO
+              - generic [ref=e685]: MEDIUM
+              - combobox [ref=e687]:
+                - option "Won" [selected]
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected"
+              - generic [ref=e688]: SAR 1.00M
+              - button "×" [ref=e690] [cursor=pointer]
+            - generic [ref=e691]:
+              - generic [ref=e692]: "12"
+              - generic [ref=e693]:
+                - generic [ref=e694]: Ahasa
+                - generic [ref=e695]: Semi-Gov · Open
+              - generic [ref=e696]: Al-Ahsa
+              - generic [ref=e697]: Building
+              - generic [ref=e698]: Mar 25
+              - generic [ref=e699]: "25"
+              - generic [ref=e701]: NO GO
+              - generic [ref=e703]: MEDIUM
+              - combobox [ref=e705]:
+                - option "Won"
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected" [selected]
+              - generic [ref=e706]: SAR 900K
+              - button "×" [ref=e708] [cursor=pointer]
+            - generic [ref=e709]:
+              - generic [ref=e710]: "11"
+              - generic [ref=e711]:
+                - generic [ref=e712]: Hail
+                - generic [ref=e713]: Semi-Gov · Limited
+              - generic [ref=e714]: Ha'il
+              - generic [ref=e715]: Industrial
+              - generic [ref=e716]: Apr 25
+              - generic [ref=e717]: "87"
+              - generic [ref=e719]: GO
+              - generic [ref=e721]: LOW
+              - combobox [ref=e723]:
+                - option "Won"
+                - option "Lost"
+                - option "Pending" [selected]
+                - option "Rejected"
+              - generic [ref=e724]: SAR 6.54M
+              - button "×" [ref=e726] [cursor=pointer]
+            - generic [ref=e727]:
+              - generic [ref=e728]: "10"
+              - generic [ref=e729]:
+                - generic [ref=e730]: Abha
+                - generic [ref=e731]: Semi-Gov · Open
+              - generic [ref=e732]: Umluj
+              - generic [ref=e733]: Industrial
+              - generic [ref=e734]: Feb 24
+              - generic [ref=e735]: "74"
+              - generic [ref=e737]: REVIEW
+              - generic [ref=e739]: MEDIUM
+              - combobox [ref=e741]:
+                - option "Won" [selected]
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected"
+              - generic [ref=e742]: SAR 6.46M
+              - button "×" [ref=e744] [cursor=pointer]
+            - generic [ref=e745]:
+              - generic [ref=e746]: "9"
+              - generic [ref=e747]:
+                - generic [ref=e748]: Dahran
+                - generic [ref=e749]: Government · Open
+              - generic [ref=e750]: Abha
+              - generic [ref=e751]: Industrial
+              - generic [ref=e752]: Feb 24
+              - generic [ref=e753]: "106"
+              - generic [ref=e755]: GO
+              - generic [ref=e757]: LOW
+              - combobox [ref=e759]:
+                - option "Won"
+                - option "Lost"
+                - option "Pending" [selected]
+                - option "Rejected"
+              - generic [ref=e760]: SAR 800K
+              - button "×" [ref=e762] [cursor=pointer]
+            - generic [ref=e763]:
+              - generic [ref=e764]: "8"
+              - generic [ref=e765]:
+                - generic [ref=e766]: Khobar
+                - generic [ref=e767]: Private · Negotiated
+              - generic [ref=e768]: Tabuk
+              - generic [ref=e769]: Industrial
+              - generic [ref=e770]: Feb 24
+              - generic [ref=e771]: "62"
+              - generic [ref=e773]: REVIEW
+              - generic [ref=e775]: MEDIUM
+              - combobox [ref=e777]:
+                - option "Won"
+                - option "Lost" [selected]
+                - option "Pending"
+                - option "Rejected"
+              - generic [ref=e778]: SAR 6.54M
+              - button "×" [ref=e780] [cursor=pointer]
+            - generic [ref=e781]:
+              - generic [ref=e782]: "7"
+              - generic [ref=e783]:
+                - generic [ref=e784]: Tabuk
+                - generic [ref=e785]: Private · Limited
+              - generic [ref=e786]: Dhahran
+              - generic [ref=e787]: Industrial
+              - generic [ref=e788]: Feb 24
+              - generic [ref=e789]: "80"
+              - generic [ref=e791]: GO
+              - generic [ref=e793]: MEDIUM
+              - combobox [ref=e795]:
+                - option "Won" [selected]
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected"
+              - generic [ref=e796]: SAR 3.00M
+              - button "×" [ref=e798] [cursor=pointer]
+            - generic [ref=e799]:
+              - generic [ref=e800]: "6"
+              - generic [ref=e801]:
+                - generic [ref=e802]: Umluj
+                - generic [ref=e803]: Government · Negotiated
+              - generic [ref=e804]: Al-Khobar
+              - generic [ref=e805]: Building
+              - generic [ref=e806]: Jan 23
+              - generic [ref=e807]: "64"
+              - generic [ref=e809]: REVIEW
+              - generic [ref=e811]: LOW
+              - combobox [ref=e813]:
+                - option "Won" [selected]
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected"
+              - generic [ref=e814]: SAR 3.00M
+              - button "×" [ref=e816] [cursor=pointer]
+            - generic [ref=e817]:
+              - generic [ref=e818]: "5"
+              - generic [ref=e819]:
+                - generic [ref=e820]: Kharj
+                - generic [ref=e821]: Private · Limited
+              - generic [ref=e822]: Dammam
+              - generic [ref=e823]: Building
+              - generic [ref=e824]: Jan 23
+              - generic [ref=e825]: "118"
+              - generic [ref=e827]: GO
+              - generic [ref=e829]: LOW
+              - combobox [ref=e831]:
+                - option "Won"
+                - option "Lost"
+                - option "Pending" [selected]
+                - option "Rejected"
+              - generic [ref=e832]: SAR 3.00M
+              - button "×" [ref=e834] [cursor=pointer]
+            - generic [ref=e835]:
+              - generic [ref=e836]: "4"
+              - generic [ref=e837]:
+                - generic [ref=e838]: Dammam
+                - generic [ref=e839]: Private · Open
+              - generic [ref=e840]: Medina
+              - generic [ref=e841]: Building
+              - generic [ref=e842]: Jan 23
+              - generic [ref=e843]: "52"
+              - generic [ref=e845]: NO GO
+              - generic [ref=e847]: MEDIUM
+              - combobox [ref=e849]:
+                - option "Won"
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected" [selected]
+              - generic [ref=e850]: SAR 3.00M
+              - button "×" [ref=e852] [cursor=pointer]
+            - generic [ref=e853]:
+              - generic [ref=e854]: "3"
+              - generic [ref=e855]:
+                - generic [ref=e856]: Riyadh Central
+                - generic [ref=e857]: Government · Open
+              - generic [ref=e858]: Mecca
+              - generic [ref=e859]: Infrastructure
+              - generic [ref=e860]: Jan 22
+              - generic [ref=e861]: "54"
+              - generic [ref=e863]: NO GO
+              - generic [ref=e865]: MEDIUM
+              - combobox [ref=e867]:
+                - option "Won"
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected" [selected]
+              - generic [ref=e868]: SAR 3.00M
+              - button "×" [ref=e870] [cursor=pointer]
+            - generic [ref=e871]:
+              - generic [ref=e872]: "2"
+              - generic [ref=e873]:
+                - generic [ref=e874]: Al Qasim
+                - generic [ref=e875]: Government · Limited
+              - generic [ref=e876]: Jeddah
+              - generic [ref=e877]: Industrial
+              - generic [ref=e878]: Jan 22
+              - generic [ref=e879]: "135"
+              - generic [ref=e881]: GO
+              - generic [ref=e883]: LOW
+              - combobox [ref=e885]:
+                - option "Won" [selected]
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected"
+              - generic [ref=e886]: SAR 2.00M
+              - button "×" [ref=e888] [cursor=pointer]
+            - generic [ref=e889]:
+              - generic [ref=e890]: "1"
+              - generic [ref=e891]:
+                - generic [ref=e892]: Al Rimal
+                - generic [ref=e893]: Government · Negotiated
+              - generic [ref=e894]: Riyadh
+              - generic [ref=e895]: Building
+              - generic [ref=e896]: Jan 22
+              - generic [ref=e897]: "51"
+              - generic [ref=e899]: NO GO
+              - generic [ref=e901]: HIGH
+              - combobox [ref=e903]:
+                - option "Won"
+                - option "Lost"
+                - option "Pending"
+                - option "Rejected" [selected]
+              - generic [ref=e904]: SAR 1.00M
+              - button "×" [ref=e906] [cursor=pointer]
+  - button "Tweaks" [ref=e388] [cursor=pointer]:
+    - img [ref=e390]
+    - text: Tweaks

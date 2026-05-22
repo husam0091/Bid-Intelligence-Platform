@@ -1,0 +1,405 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - img "Black" [ref=e6]
+        - generic [ref=e7]:
+          - generic [ref=e8]: Black
+          - generic [ref=e9]: Bid Intelligence · 2026
+      - generic [ref=e11]:
+        - button "EN" [ref=e12] [cursor=pointer]
+        - button "AR" [ref=e13] [cursor=pointer]
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Operations
+          - link "▦ Pipeline" [ref=e17] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e18]: ▦
+            - generic [ref=e19]: Pipeline
+          - link "◈ Executive" [ref=e20] [cursor=pointer]:
+            - /url: /executive
+            - generic [ref=e21]: ◈
+            - generic [ref=e22]: Executive
+        - generic [ref=e23]:
+          - generic [ref=e24]: Bids
+          - link "+ New Bid" [ref=e25] [cursor=pointer]:
+            - /url: /bids/new
+            - generic [ref=e26]: +
+            - generic [ref=e27]: New Bid
+          - link "≡ Bid History" [ref=e28] [cursor=pointer]:
+            - /url: /bids
+            - generic [ref=e29]: ≡
+            - generic [ref=e30]: Bid History
+        - generic [ref=e31]:
+          - generic [ref=e32]: Intelligence
+          - link "◎ Win Predictor" [ref=e33] [cursor=pointer]:
+            - /url: /predictor
+            - generic [ref=e34]: ◎
+            - generic [ref=e35]: Win Predictor
+          - link "∿ Analytics" [ref=e36] [cursor=pointer]:
+            - /url: /analytics
+            - generic [ref=e37]: ∿
+            - generic [ref=e38]: Analytics
+        - generic [ref=e39]:
+          - generic [ref=e40]: System
+          - link "✦ AI Chat" [ref=e41] [cursor=pointer]:
+            - /url: /ai
+            - generic [ref=e42]: ✦
+            - generic [ref=e43]: AI Chat
+          - link "⚙ Settings" [ref=e44] [cursor=pointer]:
+            - /url: /settings
+            - generic [ref=e45]: ⚙
+            - generic [ref=e46]: Settings
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - generic [ref=e49]: Admin · ADMIN
+          - generic [ref=e50]: KSA · 2026
+        - button "Sign out" [ref=e51] [cursor=pointer]
+    - generic [ref=e52]:
+      - banner [ref=e53]:
+        - generic [ref=e54]: Black
+        - generic [ref=e56]: Bid Intelligence · WIN PREDICTOR
+        - generic [ref=e57]:
+          - generic [ref=e58]: 00:58
+          - generic [ref=e60]: User · Admin
+          - generic [ref=e61]: KSA · 2026
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - generic [ref=e65]: 05 · Intelligence
+            - heading "Win Predictor" [level=1] [ref=e67]:
+              - text: Win
+              - emphasis [ref=e68]: Predictor
+            - paragraph [ref=e69]: Benchmark this project against historical wins and losses. Surface comparable past bids.
+          - generic [ref=e70]:
+            - button "All 0" [ref=e71] [cursor=pointer]
+            - button "Reset" [ref=e72] [cursor=pointer]
+            - button "All 5" [ref=e73] [cursor=pointer]
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - generic [ref=e77]:
+                - generic [ref=e78]: Strategic Fit
+                - generic [ref=e79]: 30/50
+              - generic [ref=e80]:
+                - generic [ref=e81]: Relationship Strength
+                - generic [ref=e82]: Fair
+                - generic [ref=e83]:
+                  - button "0" [ref=e84] [cursor=pointer]
+                  - button "1" [ref=e85] [cursor=pointer]
+                  - button "2" [ref=e86] [cursor=pointer]
+                  - button "3" [ref=e87] [cursor=pointer]
+                  - button "4" [ref=e88] [cursor=pointer]
+                  - button "5" [ref=e89] [cursor=pointer]
+              - generic [ref=e90]:
+                - generic [ref=e91]: Budget Known
+                - generic [ref=e92]: Fair
+                - generic [ref=e93]:
+                  - button "0" [ref=e94] [cursor=pointer]
+                  - button "1" [ref=e95] [cursor=pointer]
+                  - button "2" [ref=e96] [cursor=pointer]
+                  - button "3" [ref=e97] [cursor=pointer]
+                  - button "4" [ref=e98] [cursor=pointer]
+                  - button "5" [ref=e99] [cursor=pointer]
+              - generic [ref=e100]:
+                - generic [ref=e101]: Competitor Landscape
+                - generic [ref=e102]: Fair
+                - generic [ref=e103]:
+                  - button "0" [ref=e104] [cursor=pointer]
+                  - button "1" [ref=e105] [cursor=pointer]
+                  - button "2" [ref=e106] [cursor=pointer]
+                  - button "3" [ref=e107] [cursor=pointer]
+                  - button "4" [ref=e108] [cursor=pointer]
+                  - button "5" [ref=e109] [cursor=pointer]
+              - generic [ref=e110]:
+                - generic [ref=e111]: Limited Invitations
+                - generic [ref=e112]: Fair
+                - generic [ref=e113]:
+                  - button "0" [ref=e114] [cursor=pointer]
+                  - button "1" [ref=e115] [cursor=pointer]
+                  - button "2" [ref=e116] [cursor=pointer]
+                  - button "3" [ref=e117] [cursor=pointer]
+                  - button "4" [ref=e118] [cursor=pointer]
+                  - button "5" [ref=e119] [cursor=pointer]
+              - generic [ref=e120]:
+                - generic [ref=e121]: Similar Experience
+                - generic [ref=e122]: Fair
+                - generic [ref=e123]:
+                  - button "0" [ref=e124] [cursor=pointer]
+                  - button "1" [ref=e125] [cursor=pointer]
+                  - button "2" [ref=e126] [cursor=pointer]
+                  - button "3" [ref=e127] [cursor=pointer]
+                  - button "4" [ref=e128] [cursor=pointer]
+                  - button "5" [ref=e129] [cursor=pointer]
+              - generic [ref=e130]:
+                - generic [ref=e131]: No Price Breakers
+                - generic [ref=e132]: Fair
+                - generic [ref=e133]:
+                  - button "0" [ref=e134] [cursor=pointer]
+                  - button "1" [ref=e135] [cursor=pointer]
+                  - button "2" [ref=e136] [cursor=pointer]
+                  - button "3" [ref=e137] [cursor=pointer]
+                  - button "4" [ref=e138] [cursor=pointer]
+                  - button "5" [ref=e139] [cursor=pointer]
+              - generic [ref=e140]:
+                - generic [ref=e141]: Technical Advantage
+                - generic [ref=e142]: Fair
+                - generic [ref=e143]:
+                  - button "0" [ref=e144] [cursor=pointer]
+                  - button "1" [ref=e145] [cursor=pointer]
+                  - button "2" [ref=e146] [cursor=pointer]
+                  - button "3" [ref=e147] [cursor=pointer]
+                  - button "4" [ref=e148] [cursor=pointer]
+                  - button "5" [ref=e149] [cursor=pointer]
+              - generic [ref=e150]:
+                - generic [ref=e151]: Within Expertise
+                - generic [ref=e152]: Fair
+                - generic [ref=e153]:
+                  - button "0" [ref=e154] [cursor=pointer]
+                  - button "1" [ref=e155] [cursor=pointer]
+                  - button "2" [ref=e156] [cursor=pointer]
+                  - button "3" [ref=e157] [cursor=pointer]
+                  - button "4" [ref=e158] [cursor=pointer]
+                  - button "5" [ref=e159] [cursor=pointer]
+              - generic [ref=e160]:
+                - generic [ref=e161]: Low Change Orders Risk
+                - generic [ref=e162]: Fair
+                - generic [ref=e163]:
+                  - button "0" [ref=e164] [cursor=pointer]
+                  - button "1" [ref=e165] [cursor=pointer]
+                  - button "2" [ref=e166] [cursor=pointer]
+                  - button "3" [ref=e167] [cursor=pointer]
+                  - button "4" [ref=e168] [cursor=pointer]
+                  - button "5" [ref=e169] [cursor=pointer]
+              - generic [ref=e170]:
+                - generic [ref=e171]: Good Location
+                - generic [ref=e172]: Fair
+                - generic [ref=e173]:
+                  - button "0" [ref=e174] [cursor=pointer]
+                  - button "1" [ref=e175] [cursor=pointer]
+                  - button "2" [ref=e176] [cursor=pointer]
+                  - button "3" [ref=e177] [cursor=pointer]
+                  - button "4" [ref=e178] [cursor=pointer]
+                  - button "5" [ref=e179] [cursor=pointer]
+            - generic [ref=e180]:
+              - generic [ref=e181]:
+                - generic [ref=e182]: Capacity
+                - generic [ref=e183]: 15/25
+              - generic [ref=e184]:
+                - generic [ref=e185]: Team Availability
+                - generic [ref=e186]: Fair
+                - generic [ref=e187]:
+                  - button "0" [ref=e188] [cursor=pointer]
+                  - button "1" [ref=e189] [cursor=pointer]
+                  - button "2" [ref=e190] [cursor=pointer]
+                  - button "3" [ref=e191] [cursor=pointer]
+                  - button "4" [ref=e192] [cursor=pointer]
+                  - button "5" [ref=e193] [cursor=pointer]
+              - generic [ref=e194]:
+                - generic [ref=e195]: Equipment Availability
+                - generic [ref=e196]: Fair
+                - generic [ref=e197]:
+                  - button "0" [ref=e198] [cursor=pointer]
+                  - button "1" [ref=e199] [cursor=pointer]
+                  - button "2" [ref=e200] [cursor=pointer]
+                  - button "3" [ref=e201] [cursor=pointer]
+                  - button "4" [ref=e202] [cursor=pointer]
+                  - button "5" [ref=e203] [cursor=pointer]
+              - generic [ref=e204]:
+                - generic [ref=e205]: Cash Flow
+                - generic [ref=e206]: Fair
+                - generic [ref=e207]:
+                  - button "0" [ref=e208] [cursor=pointer]
+                  - button "1" [ref=e209] [cursor=pointer]
+                  - button "2" [ref=e210] [cursor=pointer]
+                  - button "3" [ref=e211] [cursor=pointer]
+                  - button "4" [ref=e212] [cursor=pointer]
+                  - button "5" [ref=e213] [cursor=pointer]
+              - generic [ref=e214]:
+                - generic [ref=e215]: Current Workload
+                - generic [ref=e216]: Fair
+                - generic [ref=e217]:
+                  - button "0" [ref=e218] [cursor=pointer]
+                  - button "1" [ref=e219] [cursor=pointer]
+                  - button "2" [ref=e220] [cursor=pointer]
+                  - button "3" [ref=e221] [cursor=pointer]
+                  - button "4" [ref=e222] [cursor=pointer]
+                  - button "5" [ref=e223] [cursor=pointer]
+              - generic [ref=e224]:
+                - generic [ref=e225]: No Impact on Running Projects
+                - generic [ref=e226]: Fair
+                - generic [ref=e227]:
+                  - button "0" [ref=e228] [cursor=pointer]
+                  - button "1" [ref=e229] [cursor=pointer]
+                  - button "2" [ref=e230] [cursor=pointer]
+                  - button "3" [ref=e231] [cursor=pointer]
+                  - button "4" [ref=e232] [cursor=pointer]
+                  - button "5" [ref=e233] [cursor=pointer]
+            - generic [ref=e234]:
+              - generic [ref=e235]:
+                - generic [ref=e236]: Risk / Compliance
+                - generic [ref=e237]: 12/20
+              - generic [ref=e238]:
+                - generic [ref=e239]: Liquidated Damages
+                - generic [ref=e240]: Fair
+                - generic [ref=e241]:
+                  - button "0" [ref=e242] [cursor=pointer]
+                  - button "1" [ref=e243] [cursor=pointer]
+                  - button "2" [ref=e244] [cursor=pointer]
+                  - button "3" [ref=e245] [cursor=pointer]
+                  - button "4" [ref=e246] [cursor=pointer]
+                  - button "5" [ref=e247] [cursor=pointer]
+              - generic [ref=e248]:
+                - generic [ref=e249]: Advance Payment Guarantee
+                - generic [ref=e250]: Fair
+                - generic [ref=e251]:
+                  - button "0" [ref=e252] [cursor=pointer]
+                  - button "1" [ref=e253] [cursor=pointer]
+                  - button "2" [ref=e254] [cursor=pointer]
+                  - button "3" [ref=e255] [cursor=pointer]
+                  - button "4" [ref=e256] [cursor=pointer]
+                  - button "5" [ref=e257] [cursor=pointer]
+              - generic [ref=e258]:
+                - generic [ref=e259]: Performance Bond
+                - generic [ref=e260]: Fair
+                - generic [ref=e261]:
+                  - button "0" [ref=e262] [cursor=pointer]
+                  - button "1" [ref=e263] [cursor=pointer]
+                  - button "2" [ref=e264] [cursor=pointer]
+                  - button "3" [ref=e265] [cursor=pointer]
+                  - button "4" [ref=e266] [cursor=pointer]
+                  - button "5" [ref=e267] [cursor=pointer]
+              - generic [ref=e268]:
+                - generic [ref=e269]: Retention Terms
+                - generic [ref=e270]: Fair
+                - generic [ref=e271]:
+                  - button "0" [ref=e272] [cursor=pointer]
+                  - button "1" [ref=e273] [cursor=pointer]
+                  - button "2" [ref=e274] [cursor=pointer]
+                  - button "3" [ref=e275] [cursor=pointer]
+                  - button "4" [ref=e276] [cursor=pointer]
+                  - button "5" [ref=e277] [cursor=pointer]
+            - generic [ref=e278]:
+              - generic [ref=e279]:
+                - generic [ref=e280]: Complexity
+                - generic [ref=e281]: 9/15
+              - generic [ref=e282]:
+                - generic [ref=e283]: New Systems Required
+                - generic [ref=e284]: Fair
+                - generic [ref=e285]:
+                  - button "0" [ref=e286] [cursor=pointer]
+                  - button "1" [ref=e287] [cursor=pointer]
+                  - button "2" [ref=e288] [cursor=pointer]
+                  - button "3" [ref=e289] [cursor=pointer]
+                  - button "4" [ref=e290] [cursor=pointer]
+                  - button "5" [ref=e291] [cursor=pointer]
+              - generic [ref=e292]:
+                - generic [ref=e293]: Complex MEP
+                - generic [ref=e294]: Fair
+                - generic [ref=e295]:
+                  - button "0" [ref=e296] [cursor=pointer]
+                  - button "1" [ref=e297] [cursor=pointer]
+                  - button "2" [ref=e298] [cursor=pointer]
+                  - button "3" [ref=e299] [cursor=pointer]
+                  - button "4" [ref=e300] [cursor=pointer]
+                  - button "5" [ref=e301] [cursor=pointer]
+              - generic [ref=e302]:
+                - generic [ref=e303]: Special Authorities
+                - generic [ref=e304]: Fair
+                - generic [ref=e305]:
+                  - button "0" [ref=e306] [cursor=pointer]
+                  - button "1" [ref=e307] [cursor=pointer]
+                  - button "2" [ref=e308] [cursor=pointer]
+                  - button "3" [ref=e309] [cursor=pointer]
+                  - button "4" [ref=e310] [cursor=pointer]
+                  - button "5" [ref=e311] [cursor=pointer]
+            - generic [ref=e312]:
+              - generic [ref=e313]:
+                - generic [ref=e314]: Commercial / Financial
+                - generic [ref=e315]: 15/25
+              - generic [ref=e316]:
+                - generic [ref=e317]: Client Reputation
+                - generic [ref=e318]: Fair
+                - generic [ref=e319]:
+                  - button "0" [ref=e320] [cursor=pointer]
+                  - button "1" [ref=e321] [cursor=pointer]
+                  - button "2" [ref=e322] [cursor=pointer]
+                  - button "3" [ref=e323] [cursor=pointer]
+                  - button "4" [ref=e324] [cursor=pointer]
+                  - button "5" [ref=e325] [cursor=pointer]
+              - generic [ref=e326]:
+                - generic [ref=e327]: Clear Drawings
+                - generic [ref=e328]: Fair
+                - generic [ref=e329]:
+                  - button "0" [ref=e330] [cursor=pointer]
+                  - button "1" [ref=e331] [cursor=pointer]
+                  - button "2" [ref=e332] [cursor=pointer]
+                  - button "3" [ref=e333] [cursor=pointer]
+                  - button "4" [ref=e334] [cursor=pointer]
+                  - button "5" [ref=e335] [cursor=pointer]
+              - generic [ref=e336]:
+                - generic [ref=e337]: Advance Payment
+                - generic [ref=e338]: Fair
+                - generic [ref=e339]:
+                  - button "0" [ref=e340] [cursor=pointer]
+                  - button "1" [ref=e341] [cursor=pointer]
+                  - button "2" [ref=e342] [cursor=pointer]
+                  - button "3" [ref=e343] [cursor=pointer]
+                  - button "4" [ref=e344] [cursor=pointer]
+                  - button "5" [ref=e345] [cursor=pointer]
+              - generic [ref=e346]:
+                - generic [ref=e347]: Payment Terms
+                - generic [ref=e348]: Fair
+                - generic [ref=e349]:
+                  - button "0" [ref=e350] [cursor=pointer]
+                  - button "1" [ref=e351] [cursor=pointer]
+                  - button "2" [ref=e352] [cursor=pointer]
+                  - button "3" [ref=e353] [cursor=pointer]
+                  - button "4" [ref=e354] [cursor=pointer]
+                  - button "5" [ref=e355] [cursor=pointer]
+              - generic [ref=e356]:
+                - generic [ref=e357]: Financial Duration
+                - generic [ref=e358]: Fair
+                - generic [ref=e359]:
+                  - button "0" [ref=e360] [cursor=pointer]
+                  - button "1" [ref=e361] [cursor=pointer]
+                  - button "2" [ref=e362] [cursor=pointer]
+                  - button "3" [ref=e363] [cursor=pointer]
+                  - button "4" [ref=e364] [cursor=pointer]
+                  - button "5" [ref=e365] [cursor=pointer]
+          - generic [ref=e366]:
+            - generic [ref=e367]:
+              - generic [ref=e369]: Prediction
+              - img [ref=e372]:
+                - generic [ref=e375]: "81"
+                - generic [ref=e376]: / 135
+              - generic [ref=e378]: GO
+              - generic [ref=e380]: MEDIUM RISK
+              - generic [ref=e381]: 51%
+              - generic [ref=e382]: WIN PROBABILITY
+            - generic [ref=e383]:
+              - generic [ref=e385]: Section Scores
+              - generic [ref=e388]:
+                - generic [ref=e389]: Strategic Fit
+                - generic [ref=e390]: 30/50
+              - generic [ref=e394]:
+                - generic [ref=e395]: Capacity
+                - generic [ref=e396]: 15/25
+              - generic [ref=e400]:
+                - generic [ref=e401]: Risk / Compliance
+                - generic [ref=e402]: 12/20
+              - generic [ref=e406]:
+                - generic [ref=e407]: Complexity
+                - generic [ref=e408]: 9/15
+              - generic [ref=e412]:
+                - generic [ref=e413]: Commercial / Financial
+                - generic [ref=e414]: 15/25
+              - generic [ref=e417]:
+                - generic [ref=e418]: ≥90 → GO (75% / 60%)
+                - generic [ref=e419]: 75–89 → GO (60% / 51%)
+                - generic [ref=e420]: 60–74 → REVIEW
+                - generic [ref=e421]: <60 → NO GO
+                - generic [ref=e422]: CFR<13 → hard stop
+  - button "AI Chat" [ref=e423] [cursor=pointer]:
+    - img [ref=e424]
+  - alert [ref=e426]

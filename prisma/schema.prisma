@@ -1,0 +1,219 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Org {
+  id            String         @id @default(uuid())
+  name          String
+  slug          String         @unique
+  createdAt     DateTime       @default(now())
+  users         User[]
+  bids          Bid[]
+  conversations Conversation[]
+}
+
+model User {
+  id            String         @id @default(uuid())
+  orgId         String
+  name          String
+  email         String         @unique
+  passwordHash  String
+  role          Role           @default(ESTIMATOR)
+  active        Boolean        @default(true)
+  mustChange    Boolean        @default(true)
+  org           Org            @relation(fields: [orgId], references: [id])
+  bids          Bid[]          @relation("CreatedBids")
+  conversations Conversation[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+enum Role {
+  ESTIMATOR
+  MANAGER
+  EXECUTIVE
+  ADMIN
+}
+
+model Bid {
+  id             String         @id @default(uuid())
+  sr             Int
+  orgId          String
+  org            Org            @relation(fields: [orgId], references: [id])
+
+  name           String
+  location       String
+  type           ProjectType
+  size           ProjectSize
+  duration       String
+  tenderType     TenderType
+  clientCategory ClientCategory
+  consultant     String         @default("")
+  pmc            String         @default("")
+  estValue       Float
+  contractValue  Float          @default(0)
+  actualSpend    Float          @default(0)
+  date           DateTime
+  bidDate        DateTime       @default(now())
+  outcome        Outcome        @default(PENDING)
+  pipelineStatus PipelineStatus @default(ACTIVE)
+  remarks        String         @default("")
+  links          String         @default("")
+  grossMarginPct Float?
+  mainCompetitor String         @default("")
+
+  relStrength     Int @default(0)
+  budgetKnown     Int @default(0)
+  competitors     Int @default(0)
+  limitedInv      Int @default(0)
+  similarExp      Int @default(0)
+  noPriceBreakers Int @default(0)
+  techAdv         Int @default(0)
+  withinExpertise Int @default(0)
+  lowChanges      Int @default(0)
+  goodLocation    Int @default(0)
+
+  teamAvail       Int @default(0)
+  equipAvail      Int @default(0)
+  cashFlow        Int @default(0)
+  currWorkload    Int @default(0)
+  noImpactRunning Int @default(0)
+
+  ld              Int @default(0)
+  apg             Int @default(0)
+  perfBond        Int @default(0)
+  retention       Int @default(0)
+
+  newSystem       Int @default(0)
+  complexMEP      Int @default(0)
+  specialAuth     Int @default(0)
+
+  clientRep       Int @default(0)
+  clearDwgs       Int @default(0)
+  advPayment      Int @default(0)
+  payments        Int @default(0)
+  finDuration     Int @default(0)
+
+  totalScore      Int       @default(0)
+  riskIndex       RiskIndex @default(HIGH)
+  decision        Decision  @default(NO_GO)
+  expectWin       Float     @default(0.09)
+  hardStop        Boolean   @default(false)
+
+  createdBy  String
+  creator    User     @relation("CreatedBids", fields: [createdBy], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  aiCache    AiCache[]
+
+  @@unique([orgId, sr])
+  @@index([orgId, outcome])
+  @@index([orgId, decision])
+  @@index([orgId, date])
+}
+
+model AiCache {
+  id        String   @id @default(uuid())
+  bidId     String
+  bid       Bid      @relation(fields: [bidId], references: [id], onDelete: Cascade)
+  lang      String
+  feature   String
+  cacheKey  String   @unique
+  response  String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
+enum ProjectType {
+  BUILDING
+  INFRASTRUCTURE
+  INDUSTRIAL
+}
+
+enum ProjectSize {
+  MEDIUM_SMALL
+  LARGE
+  MEGA
+}
+
+enum TenderType {
+  OPEN
+  LIMITED
+  NEGOTIATED
+}
+
+enum ClientCategory {
+  GOV
+  PRIVATE
+  SEMI
+}
+
+enum Outcome {
+  WON
+  LOST
+  PENDING
+  REJECTED
+}
+
+enum Decision {
+  GO
+  REVIEW
+  NO_GO
+}
+
+enum RiskIndex {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum PipelineStatus {
+  ACTIVE
+  AWAITING
+}
+
+model Conversation {
+  id        String    @id @default(uuid())
+  orgId     String
+  userId    String
+  title     String    @default("New conversation")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  org       Org       @relation(fields: [orgId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+  messages  Message[]
+  @@index([userId, updatedAt])
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  role           MessageRole
+  content        String       @db.Text
+  createdAt      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  @@index([conversationId, createdAt])
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+model ReportLog {
+  id        String   @id @default(uuid())
+  orgId     String
+  userId    String
+  type      String
+  format    String
+  filename  String
+  createdAt DateTime @default(now())
+  @@index([userId, createdAt])
+}

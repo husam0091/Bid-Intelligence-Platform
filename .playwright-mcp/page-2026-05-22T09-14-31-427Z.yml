@@ -1,0 +1,250 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - img "Black" [ref=e6]
+        - generic [ref=e7]:
+          - generic [ref=e8]: Black
+          - generic [ref=e9]: Bid Intelligence · 2026
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - button "EN" [ref=e12] [cursor=pointer]
+          - button "AR" [ref=e13] [cursor=pointer]
+        - button "◐" [active] [ref=e299] [cursor=pointer]
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]: Operations
+          - link "▦ Pipeline 4" [ref=e18] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e19]: ▦
+            - generic [ref=e20]: Pipeline
+            - generic [ref=e21]: "4"
+          - link "◈ Executive" [ref=e22] [cursor=pointer]:
+            - /url: /executive
+            - generic [ref=e23]: ◈
+            - generic [ref=e24]: Executive
+        - generic [ref=e25]:
+          - generic [ref=e26]: Bids
+          - link "+ New Bid" [ref=e27] [cursor=pointer]:
+            - /url: /bids/new
+            - generic [ref=e28]: +
+            - generic [ref=e29]: New Bid
+          - link "≡ Bid History 22" [ref=e30] [cursor=pointer]:
+            - /url: /bids
+            - generic [ref=e31]: ≡
+            - generic [ref=e32]: Bid History
+            - generic [ref=e33]: "22"
+        - generic [ref=e34]:
+          - generic [ref=e35]: Intelligence
+          - link "◎ Win Predictor" [ref=e36] [cursor=pointer]:
+            - /url: /predictor
+            - generic [ref=e37]: ◎
+            - generic [ref=e38]: Win Predictor
+          - link "∿ Analytics" [ref=e39] [cursor=pointer]:
+            - /url: /analytics
+            - generic [ref=e40]: ∿
+            - generic [ref=e41]: Analytics
+          - link "▤ Reports" [ref=e42] [cursor=pointer]:
+            - /url: /reports
+            - generic [ref=e43]: ▤
+            - generic [ref=e44]: Reports
+        - generic [ref=e45]:
+          - generic [ref=e46]: System
+          - link "✦ AI Chat" [ref=e47] [cursor=pointer]:
+            - /url: /ai
+            - generic [ref=e48]: ✦
+            - generic [ref=e49]: AI Chat
+          - link "⚙ Settings" [ref=e50] [cursor=pointer]:
+            - /url: /settings
+            - generic [ref=e51]: ⚙
+            - generic [ref=e52]: Settings
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - generic [ref=e55]: Admin · ADMIN
+          - generic [ref=e56]: KSA · 2026
+        - button "Sign out" [ref=e57] [cursor=pointer]
+    - generic [ref=e58]:
+      - banner [ref=e59]:
+        - generic [ref=e60]: Black
+        - generic [ref=e62]: Bid Intelligence · OPERATIONS DASHBOARD
+        - generic [ref=e63]:
+          - generic [ref=e64]: 12:14
+          - generic [ref=e66]: User · Admin
+          - generic [ref=e67]: KSA · 2026
+      - generic [ref=e68]:
+        - generic [ref=e69]:
+          - generic [ref=e70]: 01 · Operations
+          - heading "Pipeline Command" [level=1] [ref=e72]:
+            - text: Pipeline
+            - emphasis [ref=e73]: Command
+          - paragraph [ref=e74]: Live overview of all bids — decisions, risk exposure, and win performance across your portfolio.
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - generic [ref=e77]: Total Projects
+            - generic [ref=e78]: "22"
+          - generic [ref=e79]:
+            - generic [ref=e80]: Win Rate
+            - generic [ref=e81]: 75%
+          - generic [ref=e82]:
+            - generic [ref=e83]: GO
+            - generic [ref=e84]: "12"
+          - generic [ref=e85]:
+            - generic [ref=e86]: REVIEW
+            - generic [ref=e87]: "4"
+          - generic [ref=e88]:
+            - generic [ref=e89]: High Risk
+            - generic [ref=e90]: "1"
+        - generic [ref=e91]:
+          - generic [ref=e92]:
+            - generic [ref=e94]: By Recommendation
+            - generic [ref=e96]:
+              - img [ref=e97]:
+                - generic [ref=e101]: "22"
+                - generic [ref=e102]: TOTAL
+              - generic [ref=e103]:
+                - generic [ref=e104]:
+                  - generic [ref=e106]: GO
+                  - generic [ref=e107]: "12"
+                  - generic [ref=e108]: 55%
+                - generic [ref=e109]:
+                  - generic [ref=e111]: REVIEW
+                  - generic [ref=e112]: "4"
+                  - generic [ref=e113]: 18%
+                - generic [ref=e114]:
+                  - generic [ref=e116]: NO GO
+                  - generic [ref=e117]: "6"
+                  - generic [ref=e118]: 27%
+          - generic [ref=e119]:
+            - generic [ref=e120]:
+              - generic [ref=e121]: Bids Over Time
+              - generic [ref=e123]:
+                - generic [ref=e124]: GO
+                - generic [ref=e126]: REVIEW
+                - generic [ref=e128]: NO GO
+            - img [ref=e130]:
+              - generic [ref=e131]:
+                - generic [ref=e133]: Dec
+                - generic [ref=e134]: "1"
+              - generic [ref=e135]:
+                - generic [ref=e137]: Jan
+                - generic [ref=e138]: "1"
+              - generic [ref=e139]:
+                - generic [ref=e141]: Feb
+                - generic [ref=e142]: "1"
+              - generic [ref=e144]: Mar
+              - generic [ref=e146]: Apr
+              - generic [ref=e147]:
+                - generic [ref=e149]: May
+                - generic [ref=e150]: "1"
+        - generic [ref=e151]:
+          - generic [ref=e152]:
+            - generic [ref=e154]: Portfolio by Shape
+            - generic [ref=e156]:
+              - generic [ref=e157]: LOW
+              - generic [ref=e160]: "10"
+            - generic [ref=e161]:
+              - generic [ref=e162]: MEDIUM
+              - generic [ref=e165]: "11"
+            - generic [ref=e166]:
+              - generic [ref=e167]: HIGH
+              - generic [ref=e170]: "1"
+          - generic [ref=e171]:
+            - generic [ref=e173]: Win Dynamics
+            - generic [ref=e176]:
+              - generic [ref=e177]: Government
+              - generic [ref=e178]: 38%
+            - generic [ref=e182]:
+              - generic [ref=e183]: Private
+              - generic [ref=e184]: 44%
+            - generic [ref=e188]:
+              - generic [ref=e189]: Semi-Gov
+              - generic [ref=e190]: 40%
+          - generic [ref=e193]:
+            - generic [ref=e195]: Bids by City
+            - generic [ref=e197]:
+              - generic [ref=e198]: Riyadh
+              - generic [ref=e201]: "1"
+            - generic [ref=e202]:
+              - generic [ref=e203]: Jeddah
+              - generic [ref=e206]: "1"
+            - generic [ref=e207]:
+              - generic [ref=e208]: Mecca (Makkah)
+              - generic [ref=e211]: "1"
+            - generic [ref=e212]:
+              - generic [ref=e213]: Dammam
+              - generic [ref=e216]: "1"
+            - generic [ref=e217]:
+              - generic [ref=e218]: Medina (Madinah)
+              - generic [ref=e221]: "1"
+            - generic [ref=e222]:
+              - generic [ref=e223]: Al-Khobar
+              - generic [ref=e226]: "1"
+        - generic [ref=e227]:
+          - generic [ref=e228]:
+            - generic [ref=e229]: Currently in Execution
+            - generic [ref=e231]: Pending · 4 bids
+          - table [ref=e233]:
+            - rowgroup [ref=e234]:
+              - row "# Project Location Type Decision Risk Win % Score Est. Value (SAR) Date" [ref=e235]:
+                - columnheader "#" [ref=e236]
+                - columnheader "Project" [ref=e237]
+                - columnheader "Location" [ref=e238]
+                - columnheader "Type" [ref=e239]
+                - columnheader "Decision" [ref=e240]
+                - columnheader "Risk" [ref=e241]
+                - columnheader "Win %" [ref=e242]
+                - columnheader "Score" [ref=e243]
+                - columnheader "Est. Value (SAR)" [ref=e244]
+                - columnheader "Date" [ref=e245]
+            - rowgroup [ref=e246]:
+              - row "20 Jubail Ras Tanura INFRASTRUCTURE REVIEW LOW 38% 74 8,000,000 7/15/2026" [ref=e247]:
+                - cell "20" [ref=e248]
+                - cell "Jubail" [ref=e249]
+                - cell "Ras Tanura" [ref=e250]
+                - cell "INFRASTRUCTURE" [ref=e251]
+                - cell "REVIEW" [ref=e252]:
+                  - generic [ref=e253]: REVIEW
+                - cell "LOW" [ref=e254]
+                - cell "38%" [ref=e255]
+                - cell "74" [ref=e256]
+                - cell "8,000,000" [ref=e257]
+                - cell "7/15/2026" [ref=e258]
+              - row "11 Hail Ha'il INDUSTRIAL GO LOW 60% 87 6,540,000 4/16/2025" [ref=e259]:
+                - cell "11" [ref=e260]
+                - cell "Hail" [ref=e261]
+                - cell "Ha'il" [ref=e262]
+                - cell "INDUSTRIAL" [ref=e263]
+                - cell "GO" [ref=e264]:
+                  - generic [ref=e265]: GO
+                - cell "LOW" [ref=e266]
+                - cell "60%" [ref=e267]
+                - cell "87" [ref=e268]
+                - cell "6,540,000" [ref=e269]
+                - cell "4/16/2025" [ref=e270]
+              - row "9 Dahran Abha INDUSTRIAL GO LOW 75% 106 800,000 2/10/2024" [ref=e271]:
+                - cell "9" [ref=e272]
+                - cell "Dahran" [ref=e273]
+                - cell "Abha" [ref=e274]
+                - cell "INDUSTRIAL" [ref=e275]
+                - cell "GO" [ref=e276]:
+                  - generic [ref=e277]: GO
+                - cell "LOW" [ref=e278]
+                - cell "75%" [ref=e279]
+                - cell "106" [ref=e280]
+                - cell "800,000" [ref=e281]
+                - cell "2/10/2024" [ref=e282]
+              - row "5 Kharj Dammam BUILDING GO LOW 75% 118 3,000,000 1/18/2023" [ref=e283]:
+                - cell "5" [ref=e284]
+                - cell "Kharj" [ref=e285]
+                - cell "Dammam" [ref=e286]
+                - cell "BUILDING" [ref=e287]
+                - cell "GO" [ref=e288]:
+                  - generic [ref=e289]: GO
+                - cell "LOW" [ref=e290]
+                - cell "75%" [ref=e291]
+                - cell "118" [ref=e292]
+                - cell "3,000,000" [ref=e293]
+                - cell "1/18/2023" [ref=e294]
+  - button "AI Chat" [ref=e295] [cursor=pointer]:
+    - img [ref=e296]
+  - alert [ref=e298]
