@@ -284,20 +284,20 @@ export default function SettingsPage() {
             </div>
             {resetDone !== null ? (
               <p style={{ fontSize: 13, color: 'var(--go)', fontWeight: 600 }}>
-                Done — {resetDone} bid{resetDone !== 1 ? 's' : ''} deleted.
+                Done — {resetDone} record{resetDone !== 1 ? 's' : ''} deleted. All data has been cleared.
               </p>
             ) : (
               <>
                 <p style={{ fontSize: 13, color: 'var(--mute)', marginBottom: 14, lineHeight: 1.6 }}>
-                  Permanently delete <strong>all bids</strong> in this organisation. This cannot be undone.
-                  Download a backup first.
+                  Permanently delete <strong>all bids, AI conversations, and report logs</strong> in this organisation.
+                  This cannot be undone. Download a backup first.
                 </p>
                 <button
                   className="btn btn--sm"
                   onClick={() => setResetModal(true)}
                   style={{ background: 'var(--nogo)', color: '#fff', border: 'none' }}
                 >
-                  Reset all bids…
+                  Reset all data…
                 </button>
               </>
             )}
@@ -360,35 +360,49 @@ export default function SettingsPage() {
       {/* Reset confirmation modal */}
       {resetModal && (
         <div className="modal-backdrop" onClick={() => { setResetModal(false); setResetPhrase('') }}>
-          <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 420 }}>
-            <div className="modal-header" style={{ borderBottom: '1px solid var(--nogo)' }}>
-              <span style={{ color: 'var(--nogo)', fontWeight: 700 }}>Reset all bids</span>
+          <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 440 }}>
+            <div className="modal-header" style={{ borderBottom: '2px solid var(--nogo)' }}>
+              <span style={{ color: 'var(--nogo)', fontWeight: 700 }}>Reset all data</span>
               <button className="ai-chat-close" onClick={() => { setResetModal(false); setResetPhrase('') }}>✕</button>
             </div>
             <div style={{ padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', gap: 14 }}>
               <p style={{ fontSize: 13, color: 'var(--ink)', lineHeight: 1.6 }}>
-                This will permanently delete <strong>all bids</strong> in your organisation.
-                There is no undo. Type <strong>RESET BIDS</strong> to confirm.
+                This will permanently delete <strong>all bids, AI conversations, and report logs</strong> for your organisation.
+                There is no undo.
+              </p>
+              <p style={{ fontSize: 12, color: 'var(--nogo)', fontFamily: 'var(--font-mono)', letterSpacing: '0.06em' }}>
+                Type <strong>RESET ALL DATA</strong> below to confirm.
               </p>
               <input
                 className="field"
-                placeholder="Type RESET BIDS"
+                placeholder="RESET ALL DATA"
                 value={resetPhrase}
                 onChange={e => setResetPhrase(e.target.value)}
-                style={{ fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.05em' }}
+                style={{ fontFamily: 'var(--font-mono)', letterSpacing: '0.08em', textTransform: 'uppercase' }}
+                autoFocus
               />
-              <button
-                className="btn"
-                disabled={resetPhrase !== 'RESET BIDS' || resetLoading}
-                onClick={confirmReset}
-                style={{
-                  background: resetPhrase === 'RESET BIDS' ? 'var(--nogo)' : 'var(--surface-3)',
-                  color: resetPhrase === 'RESET BIDS' ? '#fff' : 'var(--mute)',
-                  border: 'none', transition: 'all 0.15s',
-                }}
-              >
-                {resetLoading ? 'Deleting…' : 'Delete all bids permanently'}
-              </button>
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+                <button
+                  className="btn btn--sm"
+                  onClick={() => { setResetModal(false); setResetPhrase('') }}
+                  style={{ background: 'var(--surface-3)', color: 'var(--mute)', border: '1px solid var(--hairline)' }}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn btn--sm"
+                  disabled={resetPhrase !== 'RESET ALL DATA' || resetLoading}
+                  onClick={confirmReset}
+                  style={{
+                    background: resetPhrase === 'RESET ALL DATA' ? 'var(--nogo)' : 'var(--surface-3)',
+                    color: resetPhrase === 'RESET ALL DATA' ? '#fff' : 'var(--mute)',
+                    border: 'none', transition: 'all 0.15s',
+                    cursor: resetPhrase === 'RESET ALL DATA' ? 'pointer' : 'default',
+                  }}
+                >
+                  {resetLoading ? 'Deleting…' : 'Delete everything permanently'}
+                </button>
+              </div>
             </div>
           </div>
         </div>

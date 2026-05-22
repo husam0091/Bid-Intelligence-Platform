@@ -48,6 +48,13 @@ next-env.d.ts
 # Claude Code internal files
 .claude/
 
+# Playwright MCP internal snapshots (Claude Code tooling)
+.playwright-mcp/
+console-*.log
+
+# Comparison screenshots (dev tooling, not part of app)
+screenshots/
+
 # Playwright test runner
 playwright-test/node_modules/
 playwright-test/.playwright-mcp/
