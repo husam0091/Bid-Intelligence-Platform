@@ -1,0 +1,517 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - img "Black" [ref=e6]
+        - generic [ref=e7]:
+          - generic [ref=e8]: Black
+          - generic [ref=e9]: Bid Intelligence · 2026
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - button "EN" [ref=e12] [cursor=pointer]
+          - button "AR" [ref=e13] [cursor=pointer]
+        - button "◑" [ref=e14] [cursor=pointer]
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]: Operations
+          - link "▦ Pipeline 4" [ref=e18] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e19]: ▦
+            - generic [ref=e20]: Pipeline
+            - generic [ref=e21]: "4"
+          - link "◈ Executive" [ref=e22] [cursor=pointer]:
+            - /url: /executive
+            - generic [ref=e23]: ◈
+            - generic [ref=e24]: Executive
+        - generic [ref=e25]:
+          - generic [ref=e26]: Bids
+          - link "+ New Bid" [ref=e27] [cursor=pointer]:
+            - /url: /bids/new
+            - generic [ref=e28]: +
+            - generic [ref=e29]: New Bid
+          - link "≡ Bid History 22" [ref=e30] [cursor=pointer]:
+            - /url: /bids
+            - generic [ref=e31]: ≡
+            - generic [ref=e32]: Bid History
+            - generic [ref=e33]: "22"
+        - generic [ref=e34]:
+          - generic [ref=e35]: Intelligence
+          - link "◎ Win Predictor" [ref=e36] [cursor=pointer]:
+            - /url: /predictor
+            - generic [ref=e37]: ◎
+            - generic [ref=e38]: Win Predictor
+          - link "∿ Analytics" [ref=e39] [cursor=pointer]:
+            - /url: /analytics
+            - generic [ref=e40]: ∿
+            - generic [ref=e41]: Analytics
+          - link "▤ Reports" [ref=e42] [cursor=pointer]:
+            - /url: /reports
+            - generic [ref=e43]: ▤
+            - generic [ref=e44]: Reports
+        - generic [ref=e45]:
+          - generic [ref=e46]: System
+          - link "✦ AI Chat" [ref=e47] [cursor=pointer]:
+            - /url: /ai
+            - generic [ref=e48]: ✦
+            - generic [ref=e49]: AI Chat
+          - link "⚙ Settings" [ref=e50] [cursor=pointer]:
+            - /url: /settings
+            - generic [ref=e51]: ⚙
+            - generic [ref=e52]: Settings
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - generic [ref=e55]: Admin · ADMIN
+          - generic [ref=e56]: KSA · 2026
+        - button "Sign out" [ref=e57] [cursor=pointer]
+    - generic [ref=e58]:
+      - banner [ref=e59]:
+        - generic [ref=e60]: Black
+        - generic [ref=e62]: Bid Intelligence · BID HISTORY
+        - generic [ref=e63]:
+          - generic [ref=e64]: 12:35
+          - generic [ref=e66]: User · Admin
+          - generic [ref=e67]: KSA · 2026
+      - generic [ref=e68]:
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - generic [ref=e71]: 04 · Bids
+            - heading "Bid History" [level=1] [ref=e73]:
+              - text: Bid
+              - emphasis [ref=e74]: History
+            - paragraph [ref=e75]: Every bid entered in plain English. Click any row to update its outcome.
+          - link "+ New Bid" [ref=e76] [cursor=pointer]:
+            - /url: /bids/new
+        - generic [ref=e77]:
+          - generic [ref=e78]: Filter
+          - link "All" [ref=e79] [cursor=pointer]:
+            - /url: /bids
+          - link "GO" [ref=e80] [cursor=pointer]:
+            - /url: /bids?decision=GO
+          - link "REVIEW" [ref=e81] [cursor=pointer]:
+            - /url: /bids?decision=REVIEW
+          - link "NO GO" [ref=e82] [cursor=pointer]:
+            - /url: /bids?decision=NO_GO
+          - link "PENDING" [ref=e84] [cursor=pointer]:
+            - /url: /bids?outcome=PENDING
+          - link "WON" [ref=e85] [cursor=pointer]:
+            - /url: /bids?outcome=WON
+          - link "LOST" [ref=e86] [cursor=pointer]:
+            - /url: /bids?outcome=LOST
+          - link "REJECTED" [ref=e87] [cursor=pointer]:
+            - /url: /bids?outcome=REJECTED
+        - table [ref=e90]:
+          - rowgroup [ref=e91]:
+            - row "# Project Location Type Score Decision Risk Win % Outcome Est. Value (SAR) Date" [ref=e92]:
+              - columnheader "#" [ref=e93]
+              - columnheader "Project" [ref=e94]
+              - columnheader "Location" [ref=e95]
+              - columnheader "Type" [ref=e96]
+              - columnheader "Score" [ref=e97]
+              - columnheader "Decision" [ref=e98]
+              - columnheader "Risk" [ref=e99]
+              - columnheader "Win %" [ref=e100]
+              - columnheader "Outcome" [ref=e101]
+              - columnheader "Est. Value (SAR)" [ref=e102]
+              - columnheader "Date" [ref=e103]
+              - columnheader [ref=e104]
+          - rowgroup [ref=e105]:
+            - row "22 Jeddah Al Qasim INFRASTRUCTURE 88 GO MEDIUM 51% LOST 3,000,000 9/9/2026 View" [ref=e106]:
+              - cell "22" [ref=e107]
+              - cell "Jeddah" [ref=e108]
+              - cell "Al Qasim" [ref=e109]
+              - cell "INFRASTRUCTURE" [ref=e110]
+              - cell "88" [ref=e111]
+              - cell "GO" [ref=e112]:
+                - generic [ref=e113]: GO
+              - cell "MEDIUM" [ref=e114]:
+                - generic [ref=e115]: MEDIUM
+              - cell "51%" [ref=e116]
+              - cell "LOST" [ref=e117]:
+                - generic [ref=e118]: LOST
+              - cell "3,000,000" [ref=e119]
+              - cell "9/9/2026" [ref=e120]
+              - cell "View" [ref=e121]:
+                - link "View" [ref=e122] [cursor=pointer]:
+                  - /url: /bids/d758284d-8155-489a-a502-d43d286dce9a
+            - row "21 Hofuf Jubail INFRASTRUCTURE 90 GO LOW 75% WON 6,500,000 8/12/2026 View" [ref=e123]:
+              - cell "21" [ref=e124]
+              - cell "Hofuf" [ref=e125]
+              - cell "Jubail" [ref=e126]
+              - cell "INFRASTRUCTURE" [ref=e127]
+              - cell "90" [ref=e128]
+              - cell "GO" [ref=e129]:
+                - generic [ref=e130]: GO
+              - cell "LOW" [ref=e131]:
+                - generic [ref=e132]: LOW
+              - cell "75%" [ref=e133]
+              - cell "WON" [ref=e134]:
+                - generic [ref=e135]: WON
+              - cell "6,500,000" [ref=e136]
+              - cell "8/12/2026" [ref=e137]
+              - cell "View" [ref=e138]:
+                - link "View" [ref=e139] [cursor=pointer]:
+                  - /url: /bids/e3cbe276-c2d0-4500-b4c1-c84e10da835f
+            - row "20 Jubail Ras Tanura INFRASTRUCTURE 74 REVIEW LOW 38% PENDING 8,000,000 7/15/2026 View" [ref=e140]:
+              - cell "20" [ref=e141]
+              - cell "Jubail" [ref=e142]
+              - cell "Ras Tanura" [ref=e143]
+              - cell "INFRASTRUCTURE" [ref=e144]
+              - cell "74" [ref=e145]
+              - cell "REVIEW" [ref=e146]:
+                - generic [ref=e147]: REVIEW
+              - cell "LOW" [ref=e148]:
+                - generic [ref=e149]: LOW
+              - cell "38%" [ref=e150]
+              - cell "PENDING" [ref=e151]:
+                - generic [ref=e152]: PENDING
+              - cell "8,000,000" [ref=e153]
+              - cell "7/15/2026" [ref=e154]
+              - cell "View" [ref=e155]:
+                - link "View" [ref=e156] [cursor=pointer]:
+                  - /url: /bids/57a96061-097d-44fd-8e84-9ba908b2b3f1
+            - row "19 Ras Tanura Al-Ula INFRASTRUCTURE 49 NO GO MEDIUM 9% REJECTED 9,000,000 6/10/2026 View" [ref=e157]:
+              - cell "19" [ref=e158]
+              - cell "Ras Tanura" [ref=e159]
+              - cell "Al-Ula" [ref=e160]
+              - cell "INFRASTRUCTURE" [ref=e161]
+              - cell "49" [ref=e162]
+              - cell "NO GO" [ref=e163]:
+                - generic [ref=e164]: NO GO
+              - cell "MEDIUM" [ref=e165]:
+                - generic [ref=e166]: MEDIUM
+              - cell "9%" [ref=e167]
+              - cell "REJECTED" [ref=e168]:
+                - generic [ref=e169]: REJECTED
+              - cell "9,000,000" [ref=e170]
+              - cell "6/10/2026" [ref=e171]
+              - cell "View" [ref=e172]:
+                - link "View" [ref=e173] [cursor=pointer]:
+                  - /url: /bids/faddad84-1009-4fe4-a9a5-f20c0deb6172
+            - row "18 Ula Al-Kharj INFRASTRUCTURE 82 GO MEDIUM 51% LOST 2,000,000 5/6/2026 View" [ref=e174]:
+              - cell "18" [ref=e175]
+              - cell "Ula" [ref=e176]
+              - cell "Al-Kharj" [ref=e177]
+              - cell "INFRASTRUCTURE" [ref=e178]
+              - cell "82" [ref=e179]
+              - cell "GO" [ref=e180]:
+                - generic [ref=e181]: GO
+              - cell "MEDIUM" [ref=e182]:
+                - generic [ref=e183]: MEDIUM
+              - cell "51%" [ref=e184]
+              - cell "LOST" [ref=e185]:
+                - generic [ref=e186]: LOST
+              - cell "2,000,000" [ref=e187]
+              - cell "5/6/2026" [ref=e188]
+              - cell "View" [ref=e189]:
+                - link "View" [ref=e190] [cursor=pointer]:
+                  - /url: /bids/b52ebbb7-f4c0-43b8-97e6-b8eeca83d8a5
+            - row "17 Jizan Jazan (Jizan) INFRASTRUCTURE 85 GO LOW 60% WON 2,000,000 2/11/2026 View" [ref=e191]:
+              - cell "17" [ref=e192]
+              - cell "Jizan" [ref=e193]
+              - cell "Jazan (Jizan)" [ref=e194]
+              - cell "INFRASTRUCTURE" [ref=e195]
+              - cell "85" [ref=e196]
+              - cell "GO" [ref=e197]:
+                - generic [ref=e198]: GO
+              - cell "LOW" [ref=e199]:
+                - generic [ref=e200]: LOW
+              - cell "60%" [ref=e201]
+              - cell "WON" [ref=e202]:
+                - generic [ref=e203]: WON
+              - cell "2,000,000" [ref=e204]
+              - cell "2/11/2026" [ref=e205]
+              - cell "View" [ref=e206]:
+                - link "View" [ref=e207] [cursor=pointer]:
+                  - /url: /bids/2014addd-6d8e-4294-b7f5-5e655fb5fec3
+            - row "16 Bahah Al-Bahah BUILDING 76 GO LOW 60% WON 800,000 1/14/2026 View" [ref=e208]:
+              - cell "16" [ref=e209]
+              - cell "Bahah" [ref=e210]
+              - cell "Al-Bahah" [ref=e211]
+              - cell "BUILDING" [ref=e212]
+              - cell "76" [ref=e213]
+              - cell "GO" [ref=e214]:
+                - generic [ref=e215]: GO
+              - cell "LOW" [ref=e216]:
+                - generic [ref=e217]: LOW
+              - cell "60%" [ref=e218]
+              - cell "WON" [ref=e219]:
+                - generic [ref=e220]: WON
+              - cell "800,000" [ref=e221]
+              - cell "1/14/2026" [ref=e222]
+              - cell "View" [ref=e223]:
+                - link "View" [ref=e224] [cursor=pointer]:
+                  - /url: /bids/d2df1b17-8e7a-485c-a664-6e460cc51189
+            - row "15 Najran Najran INFRASTRUCTURE 87 GO LOW 60% WON 660,000 12/19/2025 View" [ref=e225]:
+              - cell "15" [ref=e226]
+              - cell "Najran" [ref=e227]
+              - cell "Najran" [ref=e228]
+              - cell "INFRASTRUCTURE" [ref=e229]
+              - cell "87" [ref=e230]
+              - cell "GO" [ref=e231]:
+                - generic [ref=e232]: GO
+              - cell "LOW" [ref=e233]:
+                - generic [ref=e234]: LOW
+              - cell "60%" [ref=e235]
+              - cell "WON" [ref=e236]:
+                - generic [ref=e237]: WON
+              - cell "660,000" [ref=e238]
+              - cell "12/19/2025" [ref=e239]
+              - cell "View" [ref=e240]:
+                - link "View" [ref=e241] [cursor=pointer]:
+                  - /url: /bids/f3f0d257-630f-4879-9e0d-f1ba554ce361
+            - row "14 Yanbu Yanbu BUILDING 53 NO GO MEDIUM 18% REJECTED 3,000,000 11/12/2025 View" [ref=e242]:
+              - cell "14" [ref=e243]
+              - cell "Yanbu" [ref=e244]
+              - cell "Yanbu" [ref=e245]
+              - cell "BUILDING" [ref=e246]
+              - cell "53" [ref=e247]
+              - cell "NO GO" [ref=e248]:
+                - generic [ref=e249]: NO GO
+              - cell "MEDIUM" [ref=e250]:
+                - generic [ref=e251]: MEDIUM
+              - cell "18%" [ref=e252]
+              - cell "REJECTED" [ref=e253]:
+                - generic [ref=e254]: REJECTED
+              - cell "3,000,000" [ref=e255]
+              - cell "11/12/2025" [ref=e256]
+              - cell "View" [ref=e257]:
+                - link "View" [ref=e258] [cursor=pointer]:
+                  - /url: /bids/432d59e5-bb9f-47b5-b048-89c00dd3c563
+            - row "13 Qatif Al-Qatif BUILDING 75 GO MEDIUM 51% WON 1,000,000 10/8/2025 View" [ref=e259]:
+              - cell "13" [ref=e260]
+              - cell "Qatif" [ref=e261]
+              - cell "Al-Qatif" [ref=e262]
+              - cell "BUILDING" [ref=e263]
+              - cell "75" [ref=e264]
+              - cell "GO" [ref=e265]:
+                - generic [ref=e266]: GO
+              - cell "MEDIUM" [ref=e267]:
+                - generic [ref=e268]: MEDIUM
+              - cell "51%" [ref=e269]
+              - cell "WON" [ref=e270]:
+                - generic [ref=e271]: WON
+              - cell "1,000,000" [ref=e272]
+              - cell "10/8/2025" [ref=e273]
+              - cell "View" [ref=e274]:
+                - link "View" [ref=e275] [cursor=pointer]:
+                  - /url: /bids/6d0742cd-25f5-449b-8c3f-245d9f02ac11
+            - row "11 Hail Ha'il INDUSTRIAL 87 GO LOW 60% PENDING 6,540,000 4/16/2025 View" [ref=e276]:
+              - cell "11" [ref=e277]
+              - cell "Hail" [ref=e278]
+              - cell "Ha'il" [ref=e279]
+              - cell "INDUSTRIAL" [ref=e280]
+              - cell "87" [ref=e281]
+              - cell "GO" [ref=e282]:
+                - generic [ref=e283]: GO
+              - cell "LOW" [ref=e284]:
+                - generic [ref=e285]: LOW
+              - cell "60%" [ref=e286]
+              - cell "PENDING" [ref=e287]:
+                - generic [ref=e288]: PENDING
+              - cell "6,540,000" [ref=e289]
+              - cell "4/16/2025" [ref=e290]
+              - cell "View" [ref=e291]:
+                - link "View" [ref=e292] [cursor=pointer]:
+                  - /url: /bids/10162033-4fe5-4621-93e1-91b3b1a69490
+            - row "12 Ahasa Al-Ahsa (Hofuf) BUILDING 25 NO GO MEDIUM 9% REJECTED 900,000 3/2/2025 View" [ref=e293]:
+              - cell "12" [ref=e294]
+              - cell "Ahasa" [ref=e295]
+              - cell "Al-Ahsa (Hofuf)" [ref=e296]
+              - cell "BUILDING" [ref=e297]
+              - cell "25" [ref=e298]
+              - cell "NO GO" [ref=e299]:
+                - generic [ref=e300]: NO GO
+              - cell "MEDIUM" [ref=e301]:
+                - generic [ref=e302]: MEDIUM
+              - cell "9%" [ref=e303]
+              - cell "REJECTED" [ref=e304]:
+                - generic [ref=e305]: REJECTED
+              - cell "900,000" [ref=e306]
+              - cell "3/2/2025" [ref=e307]
+              - cell "View" [ref=e308]:
+                - link "View" [ref=e309] [cursor=pointer]:
+                  - /url: /bids/7cd14c47-39a7-400d-a649-265189a9c38e
+            - row "10 Abha Umluj INDUSTRIAL 74 REVIEW MEDIUM 38% WON 6,464,000 2/22/2024 View" [ref=e310]:
+              - cell "10" [ref=e311]
+              - cell "Abha" [ref=e312]
+              - cell "Umluj" [ref=e313]
+              - cell "INDUSTRIAL" [ref=e314]
+              - cell "74" [ref=e315]
+              - cell "REVIEW" [ref=e316]:
+                - generic [ref=e317]: REVIEW
+              - cell "MEDIUM" [ref=e318]:
+                - generic [ref=e319]: MEDIUM
+              - cell "38%" [ref=e320]
+              - cell "WON" [ref=e321]:
+                - generic [ref=e322]: WON
+              - cell "6,464,000" [ref=e323]
+              - cell "2/22/2024" [ref=e324]
+              - cell "View" [ref=e325]:
+                - link "View" [ref=e326] [cursor=pointer]:
+                  - /url: /bids/03970b03-bc8c-493c-b7b7-cdf3ca422c74
+            - row "9 Dahran Abha INDUSTRIAL 106 GO LOW 75% PENDING 800,000 2/10/2024 View" [ref=e327]:
+              - cell "9" [ref=e328]
+              - cell "Dahran" [ref=e329]
+              - cell "Abha" [ref=e330]
+              - cell "INDUSTRIAL" [ref=e331]
+              - cell "106" [ref=e332]
+              - cell "GO" [ref=e333]:
+                - generic [ref=e334]: GO
+              - cell "LOW" [ref=e335]:
+                - generic [ref=e336]: LOW
+              - cell "75%" [ref=e337]
+              - cell "PENDING" [ref=e338]:
+                - generic [ref=e339]: PENDING
+              - cell "800,000" [ref=e340]
+              - cell "2/10/2024" [ref=e341]
+              - cell "View" [ref=e342]:
+                - link "View" [ref=e343] [cursor=pointer]:
+                  - /url: /bids/e114cc6f-54c0-4886-af3e-f87957ed3905
+            - row "8 Khobar Tabuk INDUSTRIAL 62 REVIEW MEDIUM 38% LOST 6,540,000 2/6/2024 View" [ref=e344]:
+              - cell "8" [ref=e345]
+              - cell "Khobar" [ref=e346]
+              - cell "Tabuk" [ref=e347]
+              - cell "INDUSTRIAL" [ref=e348]
+              - cell "62" [ref=e349]
+              - cell "REVIEW" [ref=e350]:
+                - generic [ref=e351]: REVIEW
+              - cell "MEDIUM" [ref=e352]:
+                - generic [ref=e353]: MEDIUM
+              - cell "38%" [ref=e354]
+              - cell "LOST" [ref=e355]:
+                - generic [ref=e356]: LOST
+              - cell "6,540,000" [ref=e357]
+              - cell "2/6/2024" [ref=e358]
+              - cell "View" [ref=e359]:
+                - link "View" [ref=e360] [cursor=pointer]:
+                  - /url: /bids/6e248408-f91b-44ff-8b86-14ba3f1dc701
+            - row "7 Tabuk Dhahran INDUSTRIAL 80 GO MEDIUM 51% WON 3,000,000 2/2/2024 View" [ref=e361]:
+              - cell "7" [ref=e362]
+              - cell "Tabuk" [ref=e363]
+              - cell "Dhahran" [ref=e364]
+              - cell "INDUSTRIAL" [ref=e365]
+              - cell "80" [ref=e366]
+              - cell "GO" [ref=e367]:
+                - generic [ref=e368]: GO
+              - cell "MEDIUM" [ref=e369]:
+                - generic [ref=e370]: MEDIUM
+              - cell "51%" [ref=e371]
+              - cell "WON" [ref=e372]:
+                - generic [ref=e373]: WON
+              - cell "3,000,000" [ref=e374]
+              - cell "2/2/2024" [ref=e375]
+              - cell "View" [ref=e376]:
+                - link "View" [ref=e377] [cursor=pointer]:
+                  - /url: /bids/6e487e54-a345-411d-84a7-ea18314861fc
+            - row "6 Umluj Al-Khobar BUILDING 64 REVIEW LOW 38% WON 3,000,000 1/31/2023 View" [ref=e378]:
+              - cell "6" [ref=e379]
+              - cell "Umluj" [ref=e380]
+              - cell "Al-Khobar" [ref=e381]
+              - cell "BUILDING" [ref=e382]
+              - cell "64" [ref=e383]
+              - cell "REVIEW" [ref=e384]:
+                - generic [ref=e385]: REVIEW
+              - cell "LOW" [ref=e386]:
+                - generic [ref=e387]: LOW
+              - cell "38%" [ref=e388]
+              - cell "WON" [ref=e389]:
+                - generic [ref=e390]: WON
+              - cell "3,000,000" [ref=e391]
+              - cell "1/31/2023" [ref=e392]
+              - cell "View" [ref=e393]:
+                - link "View" [ref=e394] [cursor=pointer]:
+                  - /url: /bids/287ab9e5-7a4c-4b73-b3f5-25e3414666e1
+            - row "4 Dammam Medina (Madinah) BUILDING 52 NO GO MEDIUM 18% REJECTED 3,000,000 1/22/2023 View" [ref=e395]:
+              - cell "4" [ref=e396]
+              - cell "Dammam" [ref=e397]
+              - cell "Medina (Madinah)" [ref=e398]
+              - cell "BUILDING" [ref=e399]
+              - cell "52" [ref=e400]
+              - cell "NO GO" [ref=e401]:
+                - generic [ref=e402]: NO GO
+              - cell "MEDIUM" [ref=e403]:
+                - generic [ref=e404]: MEDIUM
+              - cell "18%" [ref=e405]
+              - cell "REJECTED" [ref=e406]:
+                - generic [ref=e407]: REJECTED
+              - cell "3,000,000" [ref=e408]
+              - cell "1/22/2023" [ref=e409]
+              - cell "View" [ref=e410]:
+                - link "View" [ref=e411] [cursor=pointer]:
+                  - /url: /bids/b1804186-e979-49b3-a02e-694f90aa5da4
+            - row "5 Kharj Dammam BUILDING 118 GO LOW 75% PENDING 3,000,000 1/18/2023 View" [ref=e412]:
+              - cell "5" [ref=e413]
+              - cell "Kharj" [ref=e414]
+              - cell "Dammam" [ref=e415]
+              - cell "BUILDING" [ref=e416]
+              - cell "118" [ref=e417]
+              - cell "GO" [ref=e418]:
+                - generic [ref=e419]: GO
+              - cell "LOW" [ref=e420]:
+                - generic [ref=e421]: LOW
+              - cell "75%" [ref=e422]
+              - cell "PENDING" [ref=e423]:
+                - generic [ref=e424]: PENDING
+              - cell "3,000,000" [ref=e425]
+              - cell "1/18/2023" [ref=e426]
+              - cell "View" [ref=e427]:
+                - link "View" [ref=e428] [cursor=pointer]:
+                  - /url: /bids/8d92e702-bc1d-47c5-8a67-06e6e0c8c93f
+            - row "3 Riyadh Mecca (Makkah) INFRASTRUCTURE 54 NO GO MEDIUM 18% REJECTED 3,000,000 1/7/2022 View" [ref=e429]:
+              - cell "3" [ref=e430]
+              - cell "Riyadh" [ref=e431]
+              - cell "Mecca (Makkah)" [ref=e432]
+              - cell "INFRASTRUCTURE" [ref=e433]
+              - cell "54" [ref=e434]
+              - cell "NO GO" [ref=e435]:
+                - generic [ref=e436]: NO GO
+              - cell "MEDIUM" [ref=e437]:
+                - generic [ref=e438]: MEDIUM
+              - cell "18%" [ref=e439]
+              - cell "REJECTED" [ref=e440]:
+                - generic [ref=e441]: REJECTED
+              - cell "3,000,000" [ref=e442]
+              - cell "1/7/2022" [ref=e443]
+              - cell "View" [ref=e444]:
+                - link "View" [ref=e445] [cursor=pointer]:
+                  - /url: /bids/b303ca0e-3e30-4ea5-8ec3-9d79bb707fd0
+            - row "2 Al Qasim Jeddah INDUSTRIAL 135 GO LOW 75% WON 2,000,000 1/2/2022 View" [ref=e446]:
+              - cell "2" [ref=e447]
+              - cell "Al Qasim" [ref=e448]
+              - cell "Jeddah" [ref=e449]
+              - cell "INDUSTRIAL" [ref=e450]
+              - cell "135" [ref=e451]
+              - cell "GO" [ref=e452]:
+                - generic [ref=e453]: GO
+              - cell "LOW" [ref=e454]:
+                - generic [ref=e455]: LOW
+              - cell "75%" [ref=e456]
+              - cell "WON" [ref=e457]:
+                - generic [ref=e458]: WON
+              - cell "2,000,000" [ref=e459]
+              - cell "1/2/2022" [ref=e460]
+              - cell "View" [ref=e461]:
+                - link "View" [ref=e462] [cursor=pointer]:
+                  - /url: /bids/0ab0f306-91db-4038-89c8-e21513e57d66
+            - row "1 Al Rimal Riyadh BUILDING 51 NO GO HIGH 18% REJECTED 1,000,000 1/1/2022 View" [ref=e463]:
+              - cell "1" [ref=e464]
+              - cell "Al Rimal" [ref=e465]
+              - cell "Riyadh" [ref=e466]
+              - cell "BUILDING" [ref=e467]
+              - cell "51" [ref=e468]
+              - cell "NO GO" [ref=e469]:
+                - generic [ref=e470]: NO GO
+              - cell "HIGH" [ref=e471]:
+                - generic [ref=e472]: HIGH
+              - cell "18%" [ref=e473]
+              - cell "REJECTED" [ref=e474]:
+                - generic [ref=e475]: REJECTED
+              - cell "1,000,000" [ref=e476]
+              - cell "1/1/2022" [ref=e477]
+              - cell "View" [ref=e478]:
+                - link "View" [ref=e479] [cursor=pointer]:
+                  - /url: /bids/4e046830-f522-450f-938a-0babd3c70861
+        - generic [ref=e480]: 22 bids
+  - button "AI Chat" [ref=e481] [cursor=pointer]:
+    - img [ref=e482]
+  - alert [ref=e484]
