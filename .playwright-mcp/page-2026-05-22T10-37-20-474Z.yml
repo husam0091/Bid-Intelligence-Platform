@@ -1,0 +1,82 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e17]
+  - generic [ref=e19]:
+    - navigation [ref=e20]:
+      - generic [ref=e21]:
+        - img "Black" [ref=e23]
+        - generic [ref=e24]:
+          - generic [ref=e25]: Black
+          - generic [ref=e26]: Bid Intelligence · 2026
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - button "EN" [ref=e29] [cursor=pointer]
+          - button "AR" [ref=e30] [cursor=pointer]
+        - button "◑" [ref=e31] [cursor=pointer]
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]: Operations
+          - link "▦ Pipeline 4" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e36]: ▦
+            - generic [ref=e37]: Pipeline
+            - generic [ref=e38]: "4"
+          - link "◈ Executive" [ref=e39] [cursor=pointer]:
+            - /url: /executive
+            - generic [ref=e40]: ◈
+            - generic [ref=e41]: Executive
+        - generic [ref=e42]:
+          - generic [ref=e43]: Bids
+          - link "+ New Bid" [ref=e44] [cursor=pointer]:
+            - /url: /bids/new
+            - generic [ref=e45]: +
+            - generic [ref=e46]: New Bid
+          - link "≡ Bid History 22" [ref=e47] [cursor=pointer]:
+            - /url: /bids
+            - generic [ref=e48]: ≡
+            - generic [ref=e49]: Bid History
+            - generic [ref=e50]: "22"
+        - generic [ref=e51]:
+          - generic [ref=e52]: Intelligence
+          - link "◎ Win Predictor" [ref=e53] [cursor=pointer]:
+            - /url: /predictor
+            - generic [ref=e54]: ◎
+            - generic [ref=e55]: Win Predictor
+          - link "∿ Analytics" [ref=e56] [cursor=pointer]:
+            - /url: /analytics
+            - generic [ref=e57]: ∿
+            - generic [ref=e58]: Analytics
+          - link "▤ Reports" [ref=e59] [cursor=pointer]:
+            - /url: /reports
+            - generic [ref=e60]: ▤
+            - generic [ref=e61]: Reports
+        - generic [ref=e62]:
+          - generic [ref=e63]: System
+          - link "✦ AI Chat" [ref=e64] [cursor=pointer]:
+            - /url: /ai
+            - generic [ref=e65]: ✦
+            - generic [ref=e66]: AI Chat
+          - link "⚙ Settings" [ref=e67] [cursor=pointer]:
+            - /url: /settings
+            - generic [ref=e68]: ⚙
+            - generic [ref=e69]: Settings
+      - generic [ref=e70]:
+        - generic [ref=e71]:
+          - generic [ref=e72]: Admin · ADMIN
+          - generic [ref=e73]: KSA · 2026
+        - button "Sign out" [ref=e74] [cursor=pointer]
+    - generic [ref=e76]:
+      - heading "Set a new password" [level=1] [ref=e77]
+      - paragraph [ref=e78]: Your account requires a password change before you can continue.
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - text: Current password
+          - textbox "Current password" [ref=e81]
+        - generic [ref=e82]:
+          - text: New password
+          - textbox "New password" [ref=e83]
+        - generic [ref=e84]:
+          - text: Confirm new password
+          - textbox "Confirm new password" [ref=e85]
+        - button "Save password" [ref=e86] [cursor=pointer]
+  - button "AI Chat" [ref=e87] [cursor=pointer]:
+    - img [ref=e88]

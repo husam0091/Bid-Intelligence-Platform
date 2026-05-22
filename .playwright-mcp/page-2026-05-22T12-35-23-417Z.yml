@@ -1,0 +1,200 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - img "Black" [ref=e6]
+        - generic [ref=e7]:
+          - generic [ref=e8]: Black
+          - generic [ref=e9]: Bid Intelligence · 2026
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - button "EN" [ref=e12] [cursor=pointer]
+          - button "AR" [ref=e13] [cursor=pointer]
+        - button "◑" [ref=e14] [cursor=pointer]
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]: Operations
+          - link "▦ Pipeline 4" [ref=e18] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e19]: ▦
+            - generic [ref=e20]: Pipeline
+            - generic [ref=e21]: "4"
+          - link "◈ Executive" [ref=e22] [cursor=pointer]:
+            - /url: /executive
+            - generic [ref=e23]: ◈
+            - generic [ref=e24]: Executive
+        - generic [ref=e25]:
+          - generic [ref=e26]: Bids
+          - link "+ New Bid" [ref=e27] [cursor=pointer]:
+            - /url: /bids/new
+            - generic [ref=e28]: +
+            - generic [ref=e29]: New Bid
+          - link "≡ Bid History 22" [ref=e30] [cursor=pointer]:
+            - /url: /bids
+            - generic [ref=e31]: ≡
+            - generic [ref=e32]: Bid History
+            - generic [ref=e33]: "22"
+        - generic [ref=e34]:
+          - generic [ref=e35]: Intelligence
+          - link "◎ Win Predictor" [ref=e36] [cursor=pointer]:
+            - /url: /predictor
+            - generic [ref=e37]: ◎
+            - generic [ref=e38]: Win Predictor
+          - link "∿ Analytics" [ref=e39] [cursor=pointer]:
+            - /url: /analytics
+            - generic [ref=e40]: ∿
+            - generic [ref=e41]: Analytics
+          - link "▤ Reports" [ref=e42] [cursor=pointer]:
+            - /url: /reports
+            - generic [ref=e43]: ▤
+            - generic [ref=e44]: Reports
+        - generic [ref=e45]:
+          - generic [ref=e46]: System
+          - link "✦ AI Chat" [ref=e47] [cursor=pointer]:
+            - /url: /ai
+            - generic [ref=e48]: ✦
+            - generic [ref=e49]: AI Chat
+          - link "⚙ Settings" [ref=e50] [cursor=pointer]:
+            - /url: /settings
+            - generic [ref=e51]: ⚙
+            - generic [ref=e52]: Settings
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - generic [ref=e55]: Admin · ADMIN
+          - generic [ref=e56]: KSA · 2026
+        - button "Sign out" [ref=e57] [cursor=pointer]
+    - generic [ref=e58]:
+      - banner [ref=e59]:
+        - generic [ref=e60]: Black
+        - generic [ref=e62]: Bid Intelligence · ANALYTICS
+        - generic [ref=e63]:
+          - generic [ref=e64]: 12:35
+          - generic [ref=e66]: User · Admin
+          - generic [ref=e67]: KSA · 2026
+      - generic [ref=e68]:
+        - generic [ref=e69]:
+          - generic [ref=e70]: 06 · Intelligence
+          - heading "Performance Analytics" [level=1] [ref=e72]:
+            - text: Performance
+            - emphasis [ref=e73]: Analytics
+          - paragraph [ref=e74]: Cut win rate across project type, client sector, and tender structure.
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - generic [ref=e77]: Total Bids
+            - generic [ref=e78]: "22"
+          - generic [ref=e79]:
+            - generic [ref=e80]: Total Wins
+            - generic [ref=e81]: "9"
+          - generic [ref=e82]:
+            - generic [ref=e83]: Win Rate
+            - generic [ref=e84]: 75%
+            - generic [ref=e85]: target ≥ 45%
+          - generic [ref=e86]:
+            - generic [ref=e87]: Avg Score · Wins
+            - generic [ref=e88]: "85"
+          - generic [ref=e89]:
+            - generic [ref=e90]: Avg Score · Losses
+            - generic [ref=e91]: "77"
+        - generic [ref=e92]:
+          - generic [ref=e93]:
+            - generic [ref=e95]: By Project Type
+            - generic [ref=e97]: WIN RATE
+            - img [ref=e98]:
+              - generic [ref=e99]:
+                - generic [ref=e101]: Building
+                - generic [ref=e102]: "100"
+              - generic [ref=e103]:
+                - generic [ref=e105]: Infrastructure
+                - generic [ref=e106]: "60"
+              - generic [ref=e107]:
+                - generic [ref=e109]: Industrial
+                - generic [ref=e110]: "75"
+          - generic [ref=e111]:
+            - generic [ref=e113]: By Client Sector
+            - generic [ref=e115]: WIN RATE
+            - img [ref=e116]:
+              - generic [ref=e117]:
+                - generic [ref=e119]: Private
+                - generic [ref=e120]: "80"
+              - generic [ref=e121]:
+                - generic [ref=e123]: Government
+                - generic [ref=e124]: "60"
+              - generic [ref=e125]:
+                - generic [ref=e127]: Semi-Gov
+                - generic [ref=e128]: "100"
+          - generic [ref=e129]:
+            - generic [ref=e131]: By Tender Type
+            - generic [ref=e133]: WIN RATE
+            - img [ref=e134]:
+              - generic [ref=e135]:
+                - generic [ref=e137]: Open
+                - generic [ref=e138]: "67"
+              - generic [ref=e139]:
+                - generic [ref=e141]: Negotiated
+                - generic [ref=e142]: "67"
+              - generic [ref=e143]:
+                - generic [ref=e145]: Limited
+                - generic [ref=e146]: "100"
+        - generic [ref=e147]:
+          - generic [ref=e148]:
+            - generic [ref=e149]: Won
+            - generic [ref=e151]: "9"
+            - generic [ref=e152]: 41% of portfolio
+          - generic [ref=e153]:
+            - generic [ref=e154]: Lost
+            - generic [ref=e156]: "3"
+            - generic [ref=e157]: 14% of portfolio
+          - generic [ref=e158]:
+            - generic [ref=e159]: Pending
+            - generic [ref=e161]: "4"
+            - generic [ref=e162]: 18% of portfolio
+          - generic [ref=e163]:
+            - generic [ref=e164]: Rejected
+            - generic [ref=e166]: "6"
+            - generic [ref=e167]: 27% of portfolio
+        - generic [ref=e168]:
+          - generic [ref=e170]: Decision Breakdown by Project Type
+          - table [ref=e173]:
+            - rowgroup [ref=e174]:
+              - row "Type Total GO REVIEW NO GO Win Rate GO Ratio" [ref=e175]:
+                - columnheader "Type" [ref=e176]
+                - columnheader "Total" [ref=e177]
+                - columnheader "GO" [ref=e178]
+                - columnheader "REVIEW" [ref=e179]
+                - columnheader "NO GO" [ref=e180]
+                - columnheader "Win Rate" [ref=e181]
+                - columnheader "GO Ratio" [ref=e182]
+            - rowgroup [ref=e183]:
+              - row "BUILDING 8 3 1 4 100% 38%" [ref=e184]:
+                - cell "BUILDING" [ref=e185]
+                - cell "8" [ref=e186]
+                - cell "3" [ref=e187]
+                - cell "1" [ref=e188]
+                - cell "4" [ref=e189]
+                - cell "100%" [ref=e190]:
+                  - generic [ref=e191]: 100%
+                - cell "38%" [ref=e192]:
+                  - generic [ref=e196]: 38%
+              - row "INFRASTRUCTURE 8 5 1 2 60% 63%" [ref=e197]:
+                - cell "INFRASTRUCTURE" [ref=e198]
+                - cell "8" [ref=e199]
+                - cell "5" [ref=e200]
+                - cell "1" [ref=e201]
+                - cell "2" [ref=e202]
+                - cell "60%" [ref=e203]:
+                  - generic [ref=e204]: 60%
+                - cell "63%" [ref=e205]:
+                  - generic [ref=e209]: 63%
+              - row "INDUSTRIAL 6 4 2 0 75% 67%" [ref=e210]:
+                - cell "INDUSTRIAL" [ref=e211]
+                - cell "6" [ref=e212]
+                - cell "4" [ref=e213]
+                - cell "2" [ref=e214]
+                - cell "0" [ref=e215]
+                - cell "75%" [ref=e216]:
+                  - generic [ref=e217]: 75%
+                - cell "67%" [ref=e218]:
+                  - generic [ref=e222]: 67%
+  - button "AI Chat" [ref=e223] [cursor=pointer]:
+    - img [ref=e224]
+  - alert [ref=e226]
