@@ -52,3 +52,6 @@ next-env.d.ts
 playwright-test/node_modules/
 playwright-test/.playwright-mcp/
 playwright-test/screenshots/
+
+# Playwright MCP scratch dir
+.playwright-mcp/
