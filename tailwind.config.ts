@@ -22,10 +22,10 @@ const config: Config = {
         steel:       '#3D5D85',
       },
       fontFamily: {
-        display: ['Archivo Narrow', 'sans-serif'],
-        body:    ['Inter Tight', 'sans-serif'],
-        mono:    ['JetBrains Mono', 'monospace'],
-        arabic:  ['IBM Plex Sans Arabic', 'sans-serif'],
+        display: ['var(--font-archivo-narrow)', 'sans-serif'],
+        body:    ['var(--font-inter-tight)', 'sans-serif'],
+        mono:    ['var(--font-jetbrains-mono)', 'monospace'],
+        arabic:  ['var(--font-ibm-plex-arabic)', 'sans-serif'],
       },
       fontSize: {
         'body': ['13.5px', '1.5'],

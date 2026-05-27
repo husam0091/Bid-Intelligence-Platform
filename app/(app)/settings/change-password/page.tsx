@@ -42,6 +42,9 @@ export default function ChangePasswordPage() {
       <form onSubmit={submit} className="form-card" style={{ display: 'flex', flexDirection: 'column', gap: 16, background: 'var(--surface)', border: '1px solid var(--hairline)', borderRadius: 10, padding: 28 }}>
         {error && <p style={{ color: 'var(--nogo)', fontSize: 13 }}>{error}</p>}
 
+        {/* Hidden username field so password managers can associate the new password with the account */}
+        <input type="email" name="username" autoComplete="username" tabIndex={-1} aria-hidden="true" readOnly value="" style={{ display: 'none' }} />
+
         <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 13, fontWeight: 500 }}>
           Current password
           <input
