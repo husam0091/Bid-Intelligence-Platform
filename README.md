@@ -5,7 +5,7 @@
 ```
   ██████╗
   ██╔══██╗
-  ██████╔╝   BLACK — BID INTELLIGENCE
+      ██████╔╝   BLACK — BID INTELLIGENCE
   ██╔══██╗
   ██████╔╝
   ╚═════╝
