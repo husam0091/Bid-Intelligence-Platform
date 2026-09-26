@@ -3,7 +3,8 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Header } from '@/components/layout/Header'
-import { computeDecision } from '@/lib/decision'
+import { computeDecision, DEFAULT_SCORING, normaliseScoring, type ScoringConfig } from '@/lib/decision'
+import { PROFILE_HELP, CRITERIA_HELP, GROUP_HELP } from '@/lib/criteria-help'
 import { renderMd } from '@/lib/render-md'
 import { useAr } from '@/hooks/useAr'
 
@@ -79,6 +80,12 @@ function groupScore(group: typeof GROUPS[0], criteria: Record<string, number>) {
   return group.fields.reduce((s, f) => s + (criteria[f.key] ?? 0), 0)
 }
 
+function FieldHelp({ k, ar }: { k: string; ar: boolean }) {
+  const h = PROFILE_HELP[k]
+  if (!h) return null
+  return <span className="field-help">{ar ? h.ar : h.en}</span>
+}
+
 function StepIndicator({ step, ar }: { step: number; ar: boolean }) {
   return (
     <div className="steps">
@@ -121,6 +128,14 @@ export default function NewBidPage() {
 
   const [criteria,    setCriteria]    = useState<Record<string, number>>(defaultCriteria)
   const [comparables, setComparables] = useState<ComparableBid[]>([])
+  const [scoring,     setScoring]     = useState<ScoringConfig>(DEFAULT_SCORING)
+
+  useEffect(() => {
+    fetch('/api/scoring-config')
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (d?.config) setScoring(normaliseScoring(d.config)) })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     fetch(`/api/bids?type=${info.type}`)
@@ -185,7 +200,7 @@ export default function NewBidPage() {
     } catch {}
   }
 
-  const result = useMemo(() => computeDecision(criteria), [criteria])
+  const result = useMemo(() => computeDecision(criteria, scoring), [criteria, scoring])
 
   const decisionClass =
     result.decision === 'GO'     ? 'go'     :
@@ -286,18 +301,21 @@ export default function NewBidPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: 12, marginBottom: 12 }}>
                       <label className="input-label">
                         {ar ? 'اسم المشروع *' : 'Project Name *'}
+                        <FieldHelp k="name" ar={ar} />
                         <input className="field" required value={info.name}
                           onChange={e => setField('name', e.target.value)}
                           placeholder={ar ? 'مثال: برج الرياض - المبنى ج' : 'e.g. Al Riyadh Tower Block C'} />
                       </label>
                       <label className="input-label">
                         {ar ? 'الموقع *' : 'Location *'}
+                        <FieldHelp k="location" ar={ar} />
                         <input className="field" required value={info.location}
                           onChange={e => setField('location', e.target.value)}
                           placeholder={ar ? 'المدينة / المنطقة' : 'City / Region'} />
                       </label>
                       <label className="input-label">
                         {ar ? 'النوع' : 'Type'}
+                        <FieldHelp k="type" ar={ar} />
                         <select className="field" value={info.type} onChange={e => setField('type', e.target.value)}>
                           <option value="BUILDING">{ar ? 'مباني' : 'Building'}</option>
                           <option value="INFRASTRUCTURE">{ar ? 'بنية تحتية' : 'Infrastructure'}</option>
@@ -308,11 +326,13 @@ export default function NewBidPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12, marginBottom: 12 }}>
                       <label className="input-label">
                         {ar ? 'القيمة التقديرية (ريال) *' : 'Est. Value (SAR) *'}
+                        <FieldHelp k="estValue" ar={ar} />
                         <input className="field" required type="number" min="1" value={info.estValue}
                           onChange={e => setField('estValue', e.target.value)} placeholder="0" />
                       </label>
                       <label className="input-label">
                         {ar ? 'الحجم' : 'Size'}
+                        <FieldHelp k="size" ar={ar} />
                         <select className="field" value={info.size} onChange={e => setField('size', e.target.value)}>
                           <option value="MEDIUM_SMALL">Medium / Small</option>
                           <option value="LARGE">Large</option>
@@ -321,12 +341,14 @@ export default function NewBidPage() {
                       </label>
                       <label className="input-label">
                         {ar ? 'المدة' : 'Duration'}
+                        <FieldHelp k="duration" ar={ar} />
                         <input className="field" value={info.duration}
                           onChange={e => setField('duration', e.target.value)}
                           placeholder={ar ? 'مثال: 24 شهرًا' : 'e.g. 24 months'} />
                       </label>
                       <label className="input-label">
                         {ar ? 'نوع المناقصة' : 'Tender Type'}
+                        <FieldHelp k="tenderType" ar={ar} />
                         <select className="field" value={info.tenderType} onChange={e => setField('tenderType', e.target.value)}>
                           <option value="OPEN">{ar ? 'مفتوح' : 'OPEN'}</option>
                           <option value="LIMITED">{ar ? 'محدود' : 'LIMITED'}</option>
@@ -335,6 +357,7 @@ export default function NewBidPage() {
                       </label>
                       <label className="input-label">
                         {ar ? 'تاريخ العطاء' : 'Bid Date'}
+                        <FieldHelp k="date" ar={ar} />
                         <input className="field" type="date" value={info.date}
                           onChange={e => setField('date', e.target.value)} />
                       </label>
@@ -342,6 +365,7 @@ export default function NewBidPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
                       <label className="input-label">
                         {ar ? 'فئة العميل' : 'Client Category'}
+                        <FieldHelp k="clientCategory" ar={ar} />
                         <select className="field" value={info.clientCategory} onChange={e => setField('clientCategory', e.target.value)}>
                           <option value="GOV">{ar ? 'حكومي' : 'GOVERNMENT'}</option>
                           <option value="PRIVATE">{ar ? 'خاص' : 'PRIVATE'}</option>
@@ -350,12 +374,14 @@ export default function NewBidPage() {
                       </label>
                       <label className="input-label">
                         {ar ? 'الاستشاري' : 'Consultant'}
+                        <FieldHelp k="consultant" ar={ar} />
                         <input className="field" value={info.consultant}
                           onChange={e => setField('consultant', e.target.value)}
                           placeholder={ar ? 'مثال: إيكوم' : 'e.g. AECOM'} />
                       </label>
                       <label className="input-label">
                         {ar ? 'المنافس الرئيسي' : 'Main Competitor'}
+                        <FieldHelp k="mainCompetitor" ar={ar} />
                         <input className="field" value={info.mainCompetitor}
                           onChange={e => setField('mainCompetitor', e.target.value)} />
                       </label>
@@ -406,6 +432,12 @@ export default function NewBidPage() {
                         <span className="eyebrow-dot" style={{ background: currentGroup.color }} />
                         {ar ? currentGroup.labelAr : currentGroup.label}
                       </span>
+                      {GROUP_HELP[currentGroup.key] && (
+                        <div className="criteria-help" style={{ marginTop: 6 }}>
+                          {ar ? GROUP_HELP[currentGroup.key].ar : GROUP_HELP[currentGroup.key].en}
+                          {' '}{ar ? '· المقياس: 0 = غير منطبق، 1 = ضعيف جداً … 5 = ممتاز' : '· Scale: 0 = N/A, 1 = very poor … 5 = excellent'}
+                        </div>
+                      )}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
                       <span style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: 18, color: currentGroup.color }}>
@@ -419,7 +451,12 @@ export default function NewBidPage() {
 
                   {currentGroup.fields.map((f, fi) => (
                     <div key={f.key} className="criteria-row" style={{ borderBottom: fi < currentGroup.fields.length - 1 ? '1px dashed var(--hairline-soft)' : 'none' }}>
-                      <div className="criteria-name">{ar ? f.labelAr : f.label}</div>
+                      <div className="criteria-name">
+                        {ar ? f.labelAr : f.label}
+                        {CRITERIA_HELP[f.key] && (
+                          <div className="criteria-help">{ar ? CRITERIA_HELP[f.key].ar : CRITERIA_HELP[f.key].en}</div>
+                        )}
+                      </div>
                       <span className="criteria-score-label">
                         {ratingLabel(criteria[f.key])}
                       </span>
@@ -613,7 +650,7 @@ export default function NewBidPage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, margin: '16px 0' }}>
                 <div>
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 9.5, color: 'var(--mute)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 5 }}>
-                    {ar ? 'مخاطر التجارية والمالية' : 'CFR Risk'}
+                    {ar ? 'المخاطر' : 'Risk'}
                   </div>
                   <span className={`pill pill-${result.riskIndex.toLowerCase()}`}>{result.riskIndex}</span>
                 </div>
@@ -632,12 +669,12 @@ export default function NewBidPage() {
                   <span style={{ fontSize: 14 }}>⚠</span>
                   <div>
                     <div style={{ fontWeight: 600, marginBottom: 2 }}>
-                      {ar ? 'إيقاف إجباري — مخاطر تجارية' : 'Hard Stop — Commercial Risk'}
+                      {ar ? 'تنبيه تجاري' : 'Commercial Flag'}
                     </div>
                     <div>
                       {ar
-                        ? 'نقاط المخاطر التجارية أدنى من الحد المطلوب. تم تصنيف العطاء كـ مرفوض بغض النظر عن المجموع الكلي'
-                        : 'CFR score below threshold. Bid forced to NO GO regardless of total score.'}
+                        ? `نقاط المخاطر التجارية والمالية أقل من ${scoring.cfrFlagMin}. راجع شروط الدفع قبل الالتزام.`
+                        : `Commercial & Financial score is below ${scoring.cfrFlagMin}. Review payment terms before committing.`}
                     </div>
                   </div>
                 </div>
@@ -662,11 +699,14 @@ export default function NewBidPage() {
               </div>
 
               <div style={{ marginTop: 14, borderTop: '1px solid var(--hairline-soft)', paddingTop: 12, fontFamily: "'JetBrains Mono',monospace", fontSize: 9.5, color: 'var(--mute)', lineHeight: 1.9, letterSpacing: '0.05em' }}>
-                <div>≥90 → GO &nbsp;&nbsp;(75% · 60%)</div>
-                <div>75–89 → GO &nbsp;(60% · 51%)</div>
-                <div>60–74 → REVIEW (38%)</div>
-                <div>&lt;60 &nbsp;→ NO GO (18%)</div>
-                <div style={{ marginTop: 4, color: 'var(--nogo)' }}>CFR &lt;13 → hard stop</div>
+                <div>≥{scoring.goMin} → GO · LOW risk</div>
+                <div>{scoring.reviewMin}–{scoring.goMin - 1} → REVIEW · MEDIUM risk</div>
+                <div>&lt;{scoring.reviewMin} → NO GO · HIGH risk</div>
+                <div style={{ marginTop: 4 }}>
+                  {ar ? 'احتمالية الفوز: ' : 'Win %: '}
+                  {scoring.winBands.map(b => `≥${b.min}→${Math.round(b.p * 100)}%`).join(' · ')}
+                </div>
+                <div style={{ marginTop: 4, color: 'var(--review)' }}>{ar ? 'تنبيه تجاري' : 'Commercial flag'} &lt; {scoring.cfrFlagMin}</div>
               </div>
             </div>
 

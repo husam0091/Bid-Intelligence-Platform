@@ -32,7 +32,7 @@ const NAV_GROUPS = [
     label: 'System', labelAr: 'النظام',
     items: [
       { href: '/ai',       label: 'AI Chat',  labelAr: 'مساعد الذكاء', icon: '✦', roles: ['ESTIMATOR','MANAGER','EXECUTIVE','ADMIN'] },
-      { href: '/settings', label: 'Settings', labelAr: 'الإعدادات',    icon: '⚙', roles: ['ADMIN'] },
+      { href: '/settings', label: 'Settings', labelAr: 'الإعدادات',    icon: '⚙', roles: ['ESTIMATOR','MANAGER','EXECUTIVE','ADMIN'] },
     ],
   },
 ]
@@ -96,10 +96,10 @@ export function Sidebar({ pipelineCount, historyCount }: { pipelineCount?: numbe
         <div className="brand">
           <div className="brand-mark">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icononly_transparent.png" width={22} height={22} alt="Black" />
+            <img src="/icononly_transparent.png" width={22} height={22} alt="Black Construction" />
           </div>
           <div className="brand-text">
-            <div className="brand-name">Black</div>
+            <div className="brand-name">Black Construction</div>
             <div className="brand-sub">Bid Intelligence · 2026</div>
           </div>
         </div>

@@ -15,6 +15,8 @@ model Org {
   users         User[]
   bids          Bid[]
   conversations Conversation[]
+  scoringConfig ScoringConfig?
+  auditLogs     AuditLog[]
 }
 
 model User {
@@ -216,4 +218,38 @@ model ReportLog {
   filename  String
   createdAt DateTime @default(now())
   @@index([userId, createdAt])
+}
+
+/// Org-wide scoring thresholds. Only ADMIN may edit; everyone may view.
+model ScoringConfig {
+  id         String   @id @default(uuid())
+  orgId      String   @unique
+  org        Org      @relation(fields: [orgId], references: [id])
+  goMin      Int      @default(80)
+  reviewMin  Int      @default(65)
+  cfrFlagMin Int      @default(13)
+  winBands   Json
+  updatedBy  String?
+  updatedAt  DateTime @updatedAt
+}
+
+/// Immutable audit trail of every create / update / delete. Visible to ADMIN only.
+model AuditLog {
+  id        String   @id @default(uuid())
+  orgId     String
+  org       Org      @relation(fields: [orgId], references: [id])
+  userId    String
+  userName  String
+  userEmail String
+  action    String
+  entity    String
+  entityId  String?
+  bidSr     Int?
+  summary   String   @default("")
+  changes   Json?
+  createdAt DateTime @default(now())
+
+  @@index([orgId, createdAt])
+  @@index([orgId, userId])
+  @@index([orgId, bidSr])
 }

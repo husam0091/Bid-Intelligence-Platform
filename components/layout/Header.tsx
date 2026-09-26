@@ -28,7 +28,7 @@ export function Header({ title, titleAr }: HeaderProps) {
   return (
     <header className="main-header">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/icononly_transparent.png" width={16} height={16} alt="" className="wordmark" />
+      <img src="/fulllogo_transparent_nobuffer.png" alt="Black Construction" className="wordmark" />
       <span className="header-divider" />
       <nav className="crumb">Bid Intelligence · <b>{displayTitle.toUpperCase()}</b></nav>
       <div className="header-meta">

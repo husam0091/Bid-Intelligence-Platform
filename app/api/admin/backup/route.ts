@@ -1,14 +1,13 @@
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth-options'
 import { prisma } from '@/lib/prisma'
+import { requireAdmin } from '@/lib/rbac'
+import { logAudit } from '@/lib/audit'
 
 export async function GET() {
-  const session = await getServerSession(authOptions)
-  if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  if ((session.user as any).role !== 'ADMIN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  const actor = await requireAdmin()
+  if (actor instanceof NextResponse) return actor
 
-  const orgId = (session.user as any).orgId
+  const orgId = actor.orgId
   const [org, bids] = await Promise.all([
     prisma.org.findUnique({ where: { id: orgId }, select: { slug: true } }),
     prisma.bid.findMany({ where: { orgId }, orderBy: { sr: 'asc' } }),
@@ -17,6 +16,11 @@ export async function GET() {
   const date = new Date().toISOString().split('T')[0]
   const filename = `black-backup-${org?.slug ?? orgId}-${date}.json`
   const json = JSON.stringify({ exportedAt: new Date().toISOString(), orgId, bids }, null, 2)
+
+  await logAudit(actor, {
+    action: 'BACKUP_EXPORT', entity: 'SYSTEM',
+    summary: `Exported backup of ${bids.length} bid(s)`,
+  })
 
   return new NextResponse(json, {
     headers: {

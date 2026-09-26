@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth-options'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
+import { requireAdmin } from '@/lib/rbac'
+import { logAudit } from '@/lib/audit'
 
 const CreateSchema = z.object({
   name:     z.string().min(2).max(80),
@@ -12,23 +12,23 @@ const CreateSchema = z.object({
   password: z.string().min(8).max(72),
 })
 
-export async function GET(req: Request) {
-  const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'ADMIN')
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+const USER_SELECT = { id: true, name: true, email: true, role: true, active: true, mustChange: true, createdAt: true } as const
+
+export async function GET() {
+  const actor = await requireAdmin()
+  if (actor instanceof NextResponse) return actor
 
   const users = await prisma.user.findMany({
-    where:   { orgId: session.user.orgId },
-    select:  { id: true, name: true, email: true, role: true, active: true, mustChange: true, createdAt: true },
+    where:   { orgId: actor.orgId },
+    select:  USER_SELECT,
     orderBy: { createdAt: 'asc' },
   })
   return NextResponse.json({ users })
 }
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions)
-  if (!session || session.user.role !== 'ADMIN')
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  const actor = await requireAdmin()
+  if (actor instanceof NextResponse) return actor
 
   const body = await req.json()
   const parsed = CreateSchema.safeParse(body)
@@ -40,8 +40,18 @@ export async function POST(req: Request) {
 
   const passwordHash = await bcrypt.hash(password, 12)
   const user = await prisma.user.create({
-    data:   { orgId: session.user.orgId, name, email, passwordHash, role, mustChange: true },
-    select: { id: true, name: true, email: true, role: true, active: true, mustChange: true, createdAt: true },
+    data:   { orgId: actor.orgId, name, email, passwordHash, role, mustChange: true },
+    select: USER_SELECT,
+  })
+
+  await logAudit(actor, {
+    action: 'USER_CREATE', entity: 'USER', entityId: user.id,
+    summary: `Created user ${user.name} <${user.email}> as ${user.role}`,
+    changes: [
+      { field: 'name',  from: null, to: user.name },
+      { field: 'email', from: null, to: user.email },
+      { field: 'role',  from: null, to: user.role },
+    ],
   })
   return NextResponse.json({ user }, { status: 201 })
 }

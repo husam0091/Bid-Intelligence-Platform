@@ -25,8 +25,17 @@ function riskPill(r: string) {
   return 'pill pill-high'
 }
 
+type FilterKey = 'decision' | 'outcome' | 'clientCategory' | 'type'
+
 interface Props {
-  searchParams: { decision?: string; outcome?: string; riskIndex?: string }
+  searchParams: Partial<Record<FilterKey | 'riskIndex', string>>
+}
+
+const FILTERS: Record<FilterKey, string[]> = {
+  decision:       ['GO', 'REVIEW', 'NO_GO'],
+  outcome:        ['PENDING', 'WON', 'LOST', 'REJECTED'],
+  clientCategory: ['GOV', 'PRIVATE', 'SEMI'],
+  type:           ['BUILDING', 'INFRASTRUCTURE', 'INDUSTRIAL'],
 }
 
 export default async function BidsPage({ searchParams }: Props) {
@@ -37,32 +46,38 @@ export default async function BidsPage({ searchParams }: Props) {
   const ar = cookieStore.get('lang')?.value === 'ar'
 
   const orgId     = (session.user as any).orgId
-  const { decision, outcome, riskIndex } = searchParams
-
-  const where: Record<string, unknown> = { orgId }
-  if (decision)  where.decision  = decision
-  if (outcome)   where.outcome   = outcome
-  if (riskIndex) where.riskIndex = riskIndex
+  // Only accept known enum values from the query string.
+  const active: Partial<Record<FilterKey | 'riskIndex', string>> = {}
+  ;(Object.keys(FILTERS) as FilterKey[]).forEach(k => {
+    const v = searchParams[k]
+    if (v && FILTERS[k].includes(v)) active[k] = v
+  })
+  if (searchParams.riskIndex && ['LOW', 'MEDIUM', 'HIGH'].includes(searchParams.riskIndex)) active.riskIndex = searchParams.riskIndex
+  const anyFilter = Object.keys(active).length > 0
 
   const bids = await prisma.bid.findMany({
-    where,
-    orderBy: { date: 'desc' },
+    where:   { orgId, ...active } as any,
+    orderBy: { sr: 'asc' },
     select: {
-      id: true, sr: true, name: true, location: true, type: true,
+      id: true, sr: true, name: true, location: true, type: true, clientCategory: true,
       decision: true, riskIndex: true, expectWin: true, outcome: true,
       estValue: true, date: true, totalScore: true,
     },
   })
 
-  const DECISIONS  = ['GO', 'REVIEW', 'NO_GO']
-  const OUTCOMES   = ['PENDING', 'WON', 'LOST', 'REJECTED']
-  const RISKS      = ['LOW', 'MEDIUM', 'HIGH']
+  function toHref(p: Record<string, string>) {
+    const qs = new URLSearchParams(p).toString()
+    return qs ? `/bids?${qs}` : '/bids'
+  }
+
+  function clearHref(key: string) {
+    const p: Record<string, string> = { ...(active as Record<string, string>) }
+    delete p[key]
+    return toHref(p)
+  }
 
   function filterHref(key: string, val: string) {
-    const p: Record<string, string> = {}
-    if (decision)  p.decision  = decision
-    if (outcome)   p.outcome   = outcome
-    if (riskIndex) p.riskIndex = riskIndex
+    const p: Record<string, string> = { ...(active as Record<string, string>) }
     if (p[key] === val) delete p[key]; else p[key] = val
     const qs = new URLSearchParams(p).toString()
     return qs ? `/bids?${qs}` : '/bids'
@@ -84,6 +99,25 @@ export default async function BidsPage({ searchParams }: Props) {
     return o
   }
 
+  function categoryLabel(c: string) {
+    if (c === 'GOV')     return ar ? 'حكومي'     : 'Gov'
+    if (c === 'PRIVATE') return ar ? 'خاص'       : 'Private'
+    return ar ? 'شبه حكومي' : 'Semi'
+  }
+
+  function typeLabel(t: string) {
+    if (t === 'BUILDING')       return ar ? 'مباني'      : 'Building'
+    if (t === 'INFRASTRUCTURE') return ar ? 'بنية تحتية' : 'Infrastructure'
+    return ar ? 'صناعي' : 'Industrial'
+  }
+
+  const GROUPS: { key: FilterKey; label: string; fmt: (v: string) => string }[] = [
+    { key: 'decision',       label: ar ? 'القرار'     : 'Decision', fmt: decisionLabel },
+    { key: 'outcome',        label: ar ? 'النتيجة'    : 'Outcome',  fmt: outcomeLabel },
+    { key: 'clientCategory', label: ar ? 'العميل'     : 'Client',   fmt: categoryLabel },
+    { key: 'type',           label: ar ? 'نوع المشروع' : 'Type',     fmt: typeLabel },
+  ]
+
   return (
     <>
       <Header title="Bid History" titleAr="سجل العطاءات" />
@@ -101,8 +135,8 @@ export default async function BidsPage({ searchParams }: Props) {
             </h1>
             <p className="h-sub">
               {ar
-                ? 'جميع العطاءات المُدخلة في عرض واضح. انقر على أي صف لتحديث نتيجته'
-                : 'Every bid entered in plain view. Click any row to update its outcome'}
+                ? 'جميع العطاءات المُدخلة مرتبة حسب الرقم التسلسلي. افتح أي عطاء لتحديث نتيجته وقيم العقد'
+                : 'Every bid entered, in serial order. Open any bid to update its outcome and contract values.'}
             </p>
           </div>
           <Link href="/bids/new" className="btn btn--primary" style={{ alignSelf: 'flex-end' }}>
@@ -110,32 +144,27 @@ export default async function BidsPage({ searchParams }: Props) {
           </Link>
         </div>
 
-        {/* Filter chips — decisions + outcomes only, matching prototype */}
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 14, alignItems: 'center' }}>
-          <span className="breadcrumb" style={{ marginRight: 6 }}>
-            {ar ? 'تصفية' : 'Filter'}
-          </span>
-          <Link href="/bids"
-            className={`btn btn--xs ${!decision && !outcome && !riskIndex ? 'btn--primary' : 'btn--secondary'}`}>
-            {ar ? 'الكل' : 'All'}
-          </Link>
-          {DECISIONS.map(d => (
-            <Link key={d} href={filterHref('decision', d)}
-              className={`btn btn--xs ${decision === d ? 'btn--primary' : 'btn--secondary'}`}>
-              {decisionLabel(d)}
-            </Link>
+        {/* Filters — one row per dimension; chips combine (AND) across rows */}
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14, padding: '12px 16px' }}>
+          {GROUPS.map(g => (
+            <div key={g.key} className="filter-group">
+              <span className="filter-group-label">{g.label}</span>
+              <Link href={clearHref(g.key)}
+                className={`btn btn--xs ${!active[g.key] ? 'btn--primary' : 'btn--secondary'}`}>
+                {ar ? 'الكل' : 'All'}
+              </Link>
+              {FILTERS[g.key].map(v => (
+                <Link key={v} href={filterHref(g.key, v)}
+                  className={`btn btn--xs ${active[g.key] === v ? 'btn--primary' : 'btn--secondary'}`}>
+                  {g.fmt(v)}
+                </Link>
+              ))}
+            </div>
           ))}
-          <span style={{ width: 1, height: 18, background: 'var(--hairline)', margin: '0 2px', display: 'inline-block' }} />
-          {OUTCOMES.map(o => (
-            <Link key={o} href={filterHref('outcome', o)}
-              className={`btn btn--xs ${outcome === o ? 'btn--primary' : 'btn--secondary'}`}>
-              {outcomeLabel(o)}
-            </Link>
-          ))}
-          {(decision || outcome || riskIndex) && (
-            <Link href="/bids" className="btn btn--xs btn--ghost" style={{ marginLeft: 4 }}>
-              ✕ {ar ? 'مسح' : 'Clear'}
-            </Link>
+          {anyFilter && (
+            <div>
+              <Link href="/bids" className="btn btn--xs btn--ghost">✕ {ar ? 'مسح كل الفلاتر' : 'Clear all filters'}</Link>
+            </div>
           )}
         </div>
 
@@ -149,6 +178,7 @@ export default async function BidsPage({ searchParams }: Props) {
                     <th>{ar ? 'المشروع' : 'Project'}</th>
                     <th>{ar ? 'الموقع' : 'Location'}</th>
                     <th>{ar ? 'النوع' : 'Type'}</th>
+                    <th>{ar ? 'العميل' : 'Client'}</th>
                     <th style={{ width: 60 }}>{ar ? 'النقاط' : 'Score'}</th>
                     <th>{ar ? 'القرار' : 'Decision'}</th>
                     <th>{ar ? 'المخاطر' : 'Risk'}</th>
@@ -170,7 +200,10 @@ export default async function BidsPage({ searchParams }: Props) {
                       </td>
                       <td style={{ fontSize: 12 }}>{bid.location}</td>
                       <td style={{ fontSize: 11, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace" }}>
-                        {bid.type}
+                        {typeLabel(bid.type)}
+                      </td>
+                      <td style={{ fontSize: 11, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace" }}>
+                        {categoryLabel(bid.clientCategory)}
                       </td>
                       <td className="mono" style={{ fontWeight: 700 }}>{bid.totalScore}</td>
                       <td><span className={decisionPill(bid.decision)}>{decisionLabel(bid.decision)}</span></td>
@@ -193,7 +226,7 @@ export default async function BidsPage({ searchParams }: Props) {
                   })}
                   {bids.length === 0 && (
                     <tr>
-                      <td colSpan={12} style={{ textAlign: 'center', color: '#6E6A62', padding: '40px 0', fontFamily: "'JetBrains Mono',monospace", fontSize: 12 }}>
+                      <td colSpan={13} style={{ textAlign: 'center', color: '#6E6A62', padding: '40px 0', fontFamily: "'JetBrains Mono',monospace", fontSize: 12 }}>
                         {ar ? 'لا توجد عطاءات تطابق الفلاتر المحددة' : 'No bids match the selected filters'}
                       </td>
                     </tr>
@@ -207,7 +240,7 @@ export default async function BidsPage({ searchParams }: Props) {
           {bids.length} {ar
             ? (bids.length !== 1 ? 'عطاءات' : 'عطاء')
             : (bids.length !== 1 ? 'bids' : 'bid')}
-          {(decision || outcome || riskIndex) && (ar ? ' (مُصفّى)' : ' (filtered)')}
+          {anyFilter && (ar ? ' (مُصفّى)' : ' (filtered)')}
         </div>
 
       </div>

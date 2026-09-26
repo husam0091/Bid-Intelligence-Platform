@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Header } from '@/components/layout/Header'
+import { can } from '@/lib/rbac'
+import BidEditPanel from './BidEditPanel'
 
 interface Props { params: { id: string } }
 
@@ -87,6 +89,10 @@ export default async function BidDetailPage({ params }: Props) {
 
   if (!bid) notFound()
 
+  const role    = (session.user as any).role as string
+  const userId  = (session.user as any).id as string
+  const canEdit = can.editBid(role, userId, bid)
+
   const decisionPill  = bid.decision === 'GO' ? 'pill pill-go' : bid.decision === 'REVIEW' ? 'pill pill-review' : 'pill pill-nogo'
   const riskPill      = bid.riskIndex === 'LOW' ? 'pill pill-low' : bid.riskIndex === 'MEDIUM' ? 'pill pill-medium' : 'pill pill-high'
   const outcomePill   = bid.outcome === 'WON' ? 'pill pill-go' : bid.outcome === 'LOST' ? 'pill pill-nogo' : 'pill pill-pending'
@@ -109,7 +115,7 @@ export default async function BidDetailPage({ params }: Props) {
             <Link href="/bids/new" className="btn btn--secondary btn--sm">+ New Bid</Link>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: 16, alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 300px', gap: 16, alignItems: 'start' }}>
 
             {/* Left: details */}
             <div>
@@ -123,8 +129,8 @@ export default async function BidDetailPage({ params }: Props) {
                   <span className={riskPill}>{bid.riskIndex} RISK</span>
                   <span className={outcomePill}>{bid.outcome}</span>
                   {bid.hardStop && (
-                    <span style={{ fontSize: 11, color: '#A8362A', background: '#FEF2F2', borderRadius: 3, padding: '2px 6px', fontFamily: "'JetBrains Mono',monospace" }}>
-                      HARD STOP
+                    <span title="Commercial & Financial sub-score is below the flag threshold — review payment terms before committing." style={{ fontSize: 11, color: '#A8362A', background: '#FEF2F2', borderRadius: 3, padding: '2px 6px', fontFamily: "'JetBrains Mono',monospace" }}>
+                      COMMERCIAL FLAG
                     </span>
                   )}
                 </div>
@@ -198,8 +204,17 @@ export default async function BidDetailPage({ params }: Props) {
               })}
             </div>
 
-            {/* Right: score summary */}
-            <div style={{ position: 'sticky', top: 80 }}>
+            {/* Right: score summary + edit */}
+            <div>
+              <BidEditPanel
+                bidId={bid.id}
+                canEdit={canEdit}
+                canDelete={can.deleteBid(role)}
+                initial={{
+                  outcome: bid.outcome, contractValue: bid.contractValue, actualSpend: bid.actualSpend,
+                  remarks: bid.remarks, consultant: bid.consultant, mainCompetitor: bid.mainCompetitor,
+                }}
+              />
               <div className="card" style={{ marginBottom: 12 }}>
                 <div style={{ fontFamily: "'Archivo Narrow',sans-serif", fontWeight: 700, fontSize: 13, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 16, borderBottom: '1px solid #D9D4C4', paddingBottom: 10 }}>
                   Assessment Result
@@ -219,7 +234,7 @@ export default async function BidDetailPage({ params }: Props) {
                 </div>
 
                 <div style={{ marginBottom: 10 }}>
-                  <div style={{ fontSize: 11, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace", marginBottom: 6 }}>CFR RISK</div>
+                  <div style={{ fontSize: 11, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace", marginBottom: 6 }}>RISK</div>
                   <span className={riskPill}>{bid.riskIndex}</span>
                 </div>
 
