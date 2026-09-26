@@ -31,13 +31,13 @@ for (const [path, name] of [['/dashboard','01-dashboard'],['/executive','02-exec
 const bids = (await (await a.request.get(`${BASE}/api/bids`)).json()).data
 ok(bids.every((b, i) => i === 0 || bids[i-1].sr < b.sr), 'API /api/bids sorted ascending by sr')
 await a.goto(`${BASE}/predictor?id=${bids[4].id}`); await a.waitForLoadState('networkidle'); await shot(a, '04-predictor')
-const card = await a.locator('text=Score Distribution').locator('xpath=ancestor::div[contains(concat(" ",@class," ")," card ")][1]').boundingBox()
-const svg  = await a.locator('text=Score Distribution').locator('xpath=ancestor::div[contains(concat(" ",@class," ")," card ")][1]').locator('svg').first().boundingBox()
+const card = await a.locator('text=Colored by outcome').locator('xpath=ancestor::div[contains(concat(" ",@class," ")," card ")][1]').boundingBox()
+const svg  = await a.locator('text=Colored by outcome').locator('xpath=ancestor::div[contains(concat(" ",@class," ")," card ")][1]').locator('canvas').first().boundingBox()
 ok(svg.x + svg.width <= card.x + card.width + 1, 'Score distribution fits inside its card', JSON.stringify({ svgR: svg.x + svg.width, cardR: card.x + card.width }))
 
 // Execution table never contains NO GO / REJECTED
 await a.goto(`${BASE}/executive`)
-const execText = await a.locator('text=Currently in Execution').locator('xpath=ancestor::div[contains(concat(" ",@class," ")," card ")][1]//tbody').innerText()
+const execText = await a.locator('text=Currently in execution').locator('xpath=ancestor::div[contains(concat(" ",@class," ")," card ")][1]//tbody').innerText()
 ok(!/NO GO|REJECTED/.test(execText), 'Executive execution table excludes NO GO / REJECTED')
 const winKpi = await a.locator('.kpi', { hasText: 'Win Rate' }).innerText()
 ok(/Won ÷ \(Won \+ Lost\)/.test(winKpi), 'Win Rate KPI shows its formula', JSON.stringify(winKpi))
@@ -45,13 +45,13 @@ ok(await a.locator('.brand-name').innerText() === 'BLACK CONSTRUCTION' || (await
 
 // Bid detail + edit (admin)
 await a.goto(`${BASE}/bids/${bids[1].id}`); await a.waitForLoadState('networkidle')
-await a.fill('input[type=number] >> nth=0', '1750000')
-await a.click('text=Save changes'); await a.waitForSelector('text=Saved')
+await a.fill('input[type=number] >> nth=0', String(1_700_000 + Date.now() % 50_000))
+await a.click('text=Save changes'); await a.waitForSelector('text=Bid updated')
 await shot(a, '06-bid-detail')
 
 // New bid wizard with descriptions
 await a.goto(`${BASE}/bids/new`); await a.waitForLoadState('networkidle'); await shot(a, '07-newbid-profile')
-await a.fill('input[placeholder*="Riyadh Tower"]', 'E2E Tower'); await a.fill('input[placeholder="City / Region"]', 'Riyadh')
+await a.fill('input[placeholder*="Riyadh Tower"]', 'E2E Tower')
 await a.fill('input[type=number]', '5000000'); await a.click('text=Next →'); await shot(a, '08-newbid-criteria')
 
 // Settings tabs
@@ -71,7 +71,7 @@ r = await a.request.post(`${BASE}/api/admin/reset-bids`, { data: { email: 'admin
 ok(r.status() === 403, 'Reset with wrong password → 403', r.status())
 r = await a.request.post(`${BASE}/api/admin/reset-bids`, { data: { email: 'est@black.sa', password: 'password123', confirm: 'DELETE' } })
 ok(r.status() === 403, 'Reset with a different user\'s credentials → 403', r.status())
-await a.click('button.tab:has-text("Data")'); await a.click('text=Reset all data…'); await a.waitForTimeout(300); await shot(a, '11-reset-modal', false)
+await a.click('button.tab:has-text("Data")'); await a.click('button.btn-danger:has-text("Reset all data")'); await a.waitForTimeout(300); await shot(a, '11-reset-modal', false)
 await a.keyboard.press('Escape'); await a.goto(`${BASE}/settings`)
 
 // Scoring config
@@ -111,7 +111,7 @@ r = await e.request.patch(`${BASE}/api/bids/${own.id}`, { data: { outcome: 'WON'
 ok(r.status() === 200, 'Estimator can edit own bid', r.status())
 await e.goto(`${BASE}/settings`); await e.waitForLoadState('networkidle')
 const st = await e.locator('.page-wrap').innerText()
-ok(!/Danger Zone|Reset all data|Audit Trail|Team Members/i.test(st), 'Settings hides Danger Zone / Team / Audit for estimator')
+ok(!/Danger Zone|Reset all data|Audit Trail|User Management/i.test(st), 'Settings hides Danger Zone / Team / Audit for estimator')
 await shot(e, '12-settings-estimator')
 await e.goto(`${BASE}/bids/${bids[0].id}`); await e.waitForLoadState('networkidle')
 ok(await e.locator('text=Read-only').count() > 0, 'Bid detail is read-only for estimator on others\' bids')

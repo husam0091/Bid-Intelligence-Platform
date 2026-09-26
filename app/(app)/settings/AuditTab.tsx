@@ -1,169 +1,132 @@
 'use client'
 
 import { Fragment, useCallback, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useLang } from '@/components/ui/I18n'
+import { ACTION_KEY, actionClass, roleKey } from '@/lib/permissions'
+import { DECISION_MAP, OUTCOME_MAP, SAR, fmtDateTime } from '@/lib/ui/model'
+import { CardHead } from './shared'
 
 type Change = { field: string; from: unknown; to: unknown }
-type Log = {
-  id: string; createdAt: string; userId: string; userName: string; userEmail: string
-  action: string; entity: string; bidSr: number | null; summary: string; changes: Change[] | Record<string, unknown> | null
-}
-type AuditUser = { userId: string; userName: string; userEmail: string }
+type Log = { id: string; createdAt: string; userId: string; userName: string; userEmail: string; action: string; entityId: string | null; bidSr: number | null; summary: string; changes: Change[] | Record<string, unknown> | null }
+type Filters = { userId: string; from: string; to: string; bid: string; action: string }
+const EMPTY: Filters = { userId: '', from: '', to: '', bid: '', action: '' }
 
-const ACTIONS = [
-  'BID_CREATE', 'BID_UPDATE', 'BID_STATUS', 'BID_DELETE', 'BULK_IMPORT', 'DATA_RESET', 'BACKUP_EXPORT',
-  'USER_CREATE', 'USER_UPDATE', 'USER_DELETE', 'USER_PASSWORD_RESET', 'SCORING_UPDATE',
-]
-
-const ACTION_COLOR: Record<string, string> = {
-  CREATE: 'var(--go)', UPDATE: 'var(--data-blue)', STATUS: 'var(--data-blue)',
-  DELETE: 'var(--nogo)', RESET: 'var(--nogo)', IMPORT: 'var(--review)', EXPORT: 'var(--mute)',
-}
-const colorFor = (a: string) => ACTION_COLOR[Object.keys(ACTION_COLOR).find(k => a.endsWith(k)) ?? ''] ?? 'var(--ink)'
-
-function fmt(v: unknown): string {
-  if (v === null || v === undefined || v === '') return '∅'
-  if (typeof v === 'object') return JSON.stringify(v)
-  return String(v)
-}
-
-export default function AuditTab({ ar }: { ar: boolean }) {
-  const [filters, setFilters] = useState({ userId: '', from: '', to: '', bid: '', action: '' })
-  const [page,    setPage]    = useState(1)
-  const [data,    setData]    = useState<{ logs: Log[]; total: number; pageSize: number; users: AuditUser[] } | null>(null)
-  const [open,    setOpen]    = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+export default function AuditTab() {
+  const { t, lang } = useLang()
+  const router = useRouter()
+  const [f, setF] = useState<Filters>(EMPTY)
+  const [page, setPage] = useState(1)
+  const [data, setData] = useState<{ logs: Log[]; total: number; pageSize: number; users: { userId: string; userName: string; userEmail: string }[] } | null>(null)
+  const [open, setOpen] = useState<Record<string, boolean>>({})
 
   const load = useCallback(async () => {
-    setLoading(true)
-    const qs = new URLSearchParams({ ...Object.fromEntries(Object.entries(filters).filter(([, v]) => v)), page: String(page) })
+    const qs = new URLSearchParams({ ...Object.fromEntries(Object.entries(f).filter(([, v]) => v)), page: String(page) })
     const res = await fetch(`/api/admin/audit?${qs}`)
     if (res.ok) setData(await res.json())
-    setLoading(false)
-  }, [filters, page])
-
+  }, [f, page])
   useEffect(() => { load() }, [load])
 
-  const set = (k: keyof typeof filters, v: string) => { setPage(1); setFilters(f => ({ ...f, [k]: v })) }
+  const set = (k: keyof Filters, v: string) => { setPage(1); setF(p => ({ ...p, [k]: v })) }
+  const label = (field: string) => { const k = 'fld_' + field, v = t(k); return v === k ? field : v }
+  const value = (field: string, v: unknown): string => {
+    if (v === '' || v == null) return '—'
+    if (['contractValue', 'actualSpend', 'estValue'].includes(field)) return SAR(Number(v), lang)
+    if (field === 'outcome') return t((OUTCOME_MAP as any)[String(v)] ?? String(v))
+    if (field === 'decision') return t((DECISION_MAP as any)[String(v)] ?? String(v))
+    if (field === 'role') return t(roleKey(String(v)))
+    if (field === 'active') return t(v ? 'um_active' : 'um_suspended')
+    if (field === 'winBands' && Array.isArray(v)) return v.map((b: any) => `≥${b.min}:${Math.round(b.p * 100)}%`).join(' ')
+    if (typeof v === 'object') return JSON.stringify(v)
+    return String(v)
+  }
+  const fld = (k: string, c: React.ReactNode) => <div className="form-field"><label className="input-label">{t(k)}</label>{c}</div>
   const pages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1
 
   return (
-    <div className="card">
-      <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
-        <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'سجل التدقيق' : 'Audit Trail'}</span>
-        <span style={{ fontSize: 11, color: 'var(--mute)', fontFamily: 'var(--font-mono)' }}>
-          {data ? (ar ? `${data.total} سجل` : `${data.total} entries`) : ''}
-        </span>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 0.7fr 1.2fr auto', gap: 10, marginBottom: 14, alignItems: 'end' }}>
-        <label className="field-label">{ar ? 'المستخدم' : 'User'}
-          <select className="field" value={filters.userId} onChange={e => set('userId', e.target.value)}>
-            <option value="">{ar ? 'الكل' : 'All users'}</option>
-            {data?.users.map(u => <option key={u.userId} value={u.userId}>{u.userName} ({u.userEmail})</option>)}
+    <div className="card pad-0">
+      <CardHead k="au_title" sub="au_sub" right={<span className="tag">{t('au_entries', { n: data?.total ?? 0 })}</span>} />
+      <div className="audit-filters">
+        {fld('au_user', (
+          <select value={f.userId} onChange={e => set('userId', e.target.value)}>
+            <option value="">{t('au_all_users')}</option>
+            {data?.users.map(u => <option key={u.userId} value={u.userId}>{u.userName}</option>)}
           </select>
-        </label>
-        <label className="field-label">{ar ? 'من' : 'From'}
-          <input className="field" type="date" value={filters.from} onChange={e => set('from', e.target.value)} />
-        </label>
-        <label className="field-label">{ar ? 'إلى' : 'To'}
-          <input className="field" type="date" value={filters.to} onChange={e => set('to', e.target.value)} />
-        </label>
-        <label className="field-label">{ar ? 'رقم العطاء' : 'Bid #'}
-          <input className="field" type="number" min="1" value={filters.bid} onChange={e => set('bid', e.target.value)} placeholder="#" />
-        </label>
-        <label className="field-label">{ar ? 'الإجراء' : 'Action'}
-          <select className="field" value={filters.action} onChange={e => set('action', e.target.value)}>
-            <option value="">{ar ? 'الكل' : 'All actions'}</option>
-            {ACTIONS.map(a => <option key={a} value={a}>{a}</option>)}
+        ))}
+        {fld('au_from', <input type="date" value={f.from} onChange={e => set('from', e.target.value)} />)}
+        {fld('au_to', <input type="date" value={f.to} onChange={e => set('to', e.target.value)} />)}
+        {fld('au_bid', <input type="number" min="1" placeholder="#" value={f.bid} onChange={e => set('bid', e.target.value)} />)}
+        {fld('au_action', (
+          <select value={f.action} onChange={e => set('action', e.target.value)}>
+            <option value="">{t('au_all_actions')}</option>
+            {Object.entries(ACTION_KEY).map(([a, k]) => <option key={a} value={a}>{t(k)}</option>)}
           </select>
-        </label>
-        <button className="btn btn--ghost btn--sm" onClick={() => { setPage(1); setFilters({ userId: '', from: '', to: '', bid: '', action: '' }) }}>
-          {ar ? 'مسح' : 'Clear'}
-        </button>
+        ))}
+        <button className="btn btn-ghost btn-sm" style={{ alignSelf: 'end' }} onClick={() => { setPage(1); setF(EMPTY) }}>{t('au_clear')}</button>
       </div>
-
-      <div style={{ overflowX: 'auto' }}>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th style={{ width: 150 }}>{ar ? 'الوقت' : 'Timestamp'}</th>
-              <th>{ar ? 'المستخدم' : 'User'}</th>
-              <th>{ar ? 'الإجراء' : 'Action'}</th>
-              <th style={{ width: 60 }}>{ar ? 'العطاء' : 'Bid #'}</th>
-              <th>{ar ? 'الوصف' : 'Summary'}</th>
-              <th style={{ width: 70 }}></th>
-            </tr>
-          </thead>
+      <div className="tbl-scroll">
+        <table className="perm-table audit-table">
+          <thead><tr><th>{t('au_ts')}</th><th>{t('au_user')}</th><th>{t('au_action')}</th><th>{t('au_bid')}</th><th>{t('au_summary')}</th><th className="right" /></tr></thead>
           <tbody>
-            {data?.logs.map(l => {
-              const changes = Array.isArray(l.changes) ? l.changes : null
-              const isOpen  = open === l.id
+            {data && !data.logs.length && <tr><td colSpan={6} className="empty">{t('au_empty')}</td></tr>}
+            {data?.logs.map(a => {
+              const changes = Array.isArray(a.changes) ? a.changes : null
+              const isOpen = !!open[a.id]
               return (
-                <Fragment key={l.id}>
+                <Fragment key={a.id}>
                   <tr>
-                    <td className="mono" style={{ fontSize: 11 }}>{new Date(l.createdAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'medium' })}</td>
-                    <td>
-                      <div style={{ fontWeight: 600, fontSize: 12 }}>{l.userName}</div>
-                      <div className="mono" style={{ fontSize: 10, color: 'var(--mute)' }}>{l.userEmail}</div>
+                    <td className="mono" style={{ fontSize: 12, whiteSpace: 'nowrap', color: 'var(--ink-2)' }}>{fmtDateTime(a.createdAt, lang)}</td>
+                    <td><div style={{ fontWeight: 600, color: 'var(--ink)', whiteSpace: 'nowrap' }}>{a.userName}</div><div className="um-email">{a.userEmail}</div></td>
+                    <td><span className={`tag action-tag ${actionClass(a.action)}`}>{t(ACTION_KEY[a.action] ?? a.action)}</span></td>
+                    <td className="mono">
+                      {a.bidSr != null
+                        ? (a.action !== 'BID_DELETE' && a.entityId
+                          ? <button className="link-btn" onClick={() => router.push(`/bids/${a.entityId}`)}>#{a.bidSr}</button>
+                          : `#${a.bidSr}`)
+                        : '—'}
                     </td>
-                    <td><span className="mono" style={{ fontSize: 10.5, fontWeight: 700, color: colorFor(l.action) }}>{l.action}</span></td>
-                    <td className="mono">{l.bidSr ?? '—'}</td>
-                    <td style={{ fontSize: 12 }}>{l.summary}</td>
-                    <td>
-                      {l.changes && (
-                        <button className="btn btn--ghost btn--xs" onClick={() => setOpen(isOpen ? null : l.id)}>
-                          {isOpen ? (ar ? 'إخفاء' : 'Hide') : (ar ? 'التفاصيل' : 'Details')}
-                        </button>
-                      )}
+                    <td style={{ color: 'var(--ink-2)' }}>{a.summary}</td>
+                    <td className="right">
+                      <button className="btn btn-secondary btn-sm" aria-expanded={isOpen} onClick={() => setOpen(o => ({ ...o, [a.id]: !isOpen }))}>{isOpen ? t('au_hide') : t('au_details')}</button>
                     </td>
                   </tr>
                   {isOpen && (
-                    <tr>
-                      <td colSpan={6} style={{ background: 'var(--surface)', padding: '10px 16px' }}>
-                        {changes ? (
-                          <table style={{ width: '100%', fontSize: 12, borderCollapse: 'collapse' }}>
-                            <thead>
-                              <tr style={{ textAlign: 'left', color: 'var(--mute)', fontFamily: 'var(--font-mono)', fontSize: 10 }}>
-                                <th style={{ padding: '4px 8px', width: 180 }}>{ar ? 'الحقل' : 'FIELD'}</th>
-                                <th style={{ padding: '4px 8px' }}>{ar ? 'القيمة السابقة' : 'PREVIOUS VALUE'}</th>
-                                <th style={{ padding: '4px 8px' }}>{ar ? 'القيمة الجديدة' : 'NEW VALUE'}</th>
-                              </tr>
-                            </thead>
+                    <tr className="diff-row">
+                      <td colSpan={6}>
+                        {changes && changes.length ? (
+                          <table className="diff-table">
+                            <thead><tr><th>{t('au_field')}</th><th>{t('au_prev')}</th><th>{t('au_new')}</th></tr></thead>
                             <tbody>
                               {changes.map(c => (
-                                <tr key={c.field} style={{ borderTop: '1px dashed var(--hairline-soft)' }}>
-                                  <td className="mono" style={{ padding: '4px 8px' }}>{c.field}</td>
-                                  <td className="mono diff-from" style={{ padding: '4px 8px', wordBreak: 'break-all' }}>{fmt(c.from)}</td>
-                                  <td className="mono diff-to" style={{ padding: '4px 8px', wordBreak: 'break-all' }}>{fmt(c.to)}</td>
+                                <tr key={c.field}>
+                                  <td style={{ fontWeight: 600 }}>{label(c.field)}</td>
+                                  <td><span className="diff-prev">{value(c.field, c.from)}</span></td>
+                                  <td><span className="diff-new">{value(c.field, c.to)}</span></td>
                                 </tr>
                               ))}
                             </tbody>
                           </table>
-                        ) : (
-                          <pre className="mono" style={{ fontSize: 11, whiteSpace: 'pre-wrap', margin: 0 }}>{JSON.stringify(l.changes, null, 2)}</pre>
-                        )}
+                        ) : a.changes && !changes ? (
+                          <pre className="mono" style={{ fontSize: 11.5, whiteSpace: 'pre-wrap', margin: 0 }}>{JSON.stringify(a.changes, null, 2)}</pre>
+                        ) : <div className="dim" style={{ fontSize: 12.5 }}>{t('au_no_changes')}</div>}
                       </td>
                     </tr>
                   )}
                 </Fragment>
               )
             })}
-            {data && data.logs.length === 0 && (
-              <tr><td colSpan={6} style={{ textAlign: 'center', color: 'var(--mute)', padding: '28px 0', fontSize: 12 }}>
-                {ar ? 'لا توجد سجلات تطابق الفلاتر' : 'No audit entries match these filters'}
-              </td></tr>
-            )}
           </tbody>
         </table>
       </div>
-
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12, fontSize: 11, color: 'var(--mute)', fontFamily: 'var(--font-mono)' }}>
-        <span>{loading ? (ar ? 'جارٍ التحميل…' : 'Loading…') : `${ar ? 'صفحة' : 'Page'} ${page} / ${pages}`}</span>
-        <div style={{ display: 'flex', gap: 6 }}>
-          <button className="btn btn--ghost btn--xs" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>←</button>
-          <button className="btn btn--ghost btn--xs" disabled={page >= pages} onClick={() => setPage(p => p + 1)}>→</button>
+      {pages > 1 && (
+        <div className="card-foot" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+          <span className="mono dim" style={{ fontSize: 11 }}>{page} / {pages}</span>
+          <div style={{ display: 'flex', gap: 6 }}>
+            <button className="btn btn-ghost btn-sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>←</button>
+            <button className="btn btn-ghost btn-sm" disabled={page >= pages} onClick={() => setPage(p => p + 1)}>→</button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
