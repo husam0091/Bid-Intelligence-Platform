@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth-options'
 import { prisma } from '@/lib/prisma'
 import { computeDecision } from '@/lib/decision'
+import { getScoringConfig } from '@/lib/scoring-config'
+import { requireAdmin } from '@/lib/rbac'
+import { logAudit } from '@/lib/audit'
 import * as XLSX from 'xlsx'
 import Papa from 'papaparse'
 
@@ -16,12 +17,12 @@ const CRITERIA_KEYS = [
 ] as const
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions)
-  if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  if ((session.user as any).role !== 'ADMIN') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  const actor = await requireAdmin()
+  if (actor instanceof NextResponse) return actor
 
-  const orgId     = (session.user as any).orgId
-  const createdBy = (session.user as any).id
+  const orgId     = actor.orgId
+  const createdBy = actor.id
+  const scoring   = await getScoringConfig(orgId)
 
   const formData = await req.formData()
   const file = formData.get('file') as File | null
@@ -41,6 +42,7 @@ export async function POST(req: Request) {
   }
 
   let ok = 0
+  const created: { sr: number; name: string }[] = []
   const failed: { row: number; error: string }[] = []
 
   for (let i = 0; i < rows.length; i++) {
@@ -75,13 +77,14 @@ export async function POST(req: Request) {
         criteria[k] = isNaN(v) ? 0 : Math.min(5, Math.max(0, v))
       }
 
-      const derived = computeDecision(criteria)
+      const derived = computeDecision(criteria, scoring)
       const last = await prisma.bid.findFirst({ where: { orgId }, orderBy: { sr: 'desc' }, select: { sr: true } })
       const sr   = (last?.sr ?? 0) + 1
 
       const dateRaw = r.date ? new Date(String(r.date)) : new Date()
       const date    = isNaN(dateRaw.getTime()) ? new Date() : dateRaw
 
+      created.push({ sr, name })
       await prisma.bid.create({
         data: {
           sr, orgId, createdBy,
@@ -110,6 +113,12 @@ export async function POST(req: Request) {
       failed.push({ row: i + 2, error: err?.message ?? 'Unknown error' })
     }
   }
+
+  await logAudit(actor, {
+    action: 'BULK_IMPORT', entity: 'BID',
+    summary: `Imported ${ok} bid(s) from "${file.name}"${failed.length ? ` · ${failed.length} row(s) failed` : ''}`,
+    changes: { file: file.name, imported: ok, failed: failed.length, bids: created },
+  })
 
   return NextResponse.json({ ok, failed })
 }

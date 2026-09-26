@@ -4,6 +4,11 @@ import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { Header } from '@/components/layout/Header'
+import { VBarChart, KpiFormula } from '@/components/charts/Charts'
+import { winRate as calcWinRate, WIN_RATE_FORMULA, WIN_RATE_FORMULA_AR } from '@/lib/metrics'
+
+// Distinct categorical colours so every bar is identifiable at a glance.
+const CAT_COLORS = ['var(--data-blue)', 'var(--review)', 'var(--go)', '#7A5C9E', '#2E8B8B', 'var(--nogo)']
 
 function HBar({ label, value, max, color = '#1B2B1E', subtitle }: {
   label: string; value: number; max: number; color?: string; subtitle?: string
@@ -25,36 +30,6 @@ function HBar({ label, value, max, color = '#1B2B1E', subtitle }: {
   )
 }
 
-function VBarChart({ data, height = 110 }: { data: { label: string; value: number; color?: string }[]; height?: number }) {
-  const max  = Math.max(...data.map(d => d.value), 1)
-  const W    = 520; const H = height; const padB = 20
-  const barW = data.length > 0 ? Math.floor((W - (data.length - 1) * 6) / data.length) : 40
-
-  return (
-    <svg viewBox={`0 0 ${W} ${H + padB}`} style={{ width: '100%', overflow: 'visible' }}>
-      {data.map((d, i) => {
-        const barH  = Math.max(2, Math.round((d.value / max) * H))
-        const x     = i * (barW + 6)
-        const y     = H - barH
-        const color = d.color ?? '#1B2B1E'
-        return (
-          <g key={d.label}>
-            <rect x={x} y={y} width={barW} height={barH} fill={color} rx={2} opacity={0.85} />
-            <text x={x + barW / 2} y={H + 14} textAnchor="middle" fontSize={9} fill="#6E6A62" fontFamily="'JetBrains Mono',monospace">
-              {d.label}
-            </text>
-            {d.value > 0 && (
-              <text x={x + barW / 2} y={y - 3} textAnchor="middle" fontSize={9} fill={color} fontFamily="'JetBrains Mono',monospace" fontWeight="700">
-                {d.value}
-              </text>
-            )}
-          </g>
-        )
-      })}
-    </svg>
-  )
-}
-
 export default async function AnalyticsPage() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/login')
@@ -73,9 +48,9 @@ export default async function AnalyticsPage() {
   })
 
   const total   = allBids.length
-  const closed  = allBids.filter(b => b.outcome === 'WON' || b.outcome === 'LOST').length
   const won     = allBids.filter(b => b.outcome === 'WON').length
-  const winRate = closed > 0 ? Math.round((won / closed) * 100) : 0
+  const lost    = allBids.filter(b => b.outcome === 'LOST').length
+  const winRate = calcWinRate(won, lost)
 
   // Win rate by location
   const locMap: Record<string, { total: number; won: number; closed: number }> = {}
@@ -86,7 +61,7 @@ export default async function AnalyticsPage() {
     if (b.outcome === 'LOST') locMap[b.location].closed++
   })
   const byLocation = Object.entries(locMap)
-    .map(([loc, v]) => ({ loc, ...v, wr: v.closed > 0 ? Math.round((v.won / v.closed) * 100) : 0 }))
+    .map(([loc, v]) => ({ loc, ...v, wr: calcWinRate(v.won, v.closed - v.won) }))
     .sort((a, b) => b.total - a.total)
     .slice(0, 8)
 
@@ -99,7 +74,7 @@ export default async function AnalyticsPage() {
     if (b.outcome === 'LOST') typeMap[b.type].closed++
   })
   const byType = Object.entries(typeMap)
-    .map(([type, v]) => ({ type, ...v, wr: v.closed > 0 ? Math.round((v.won / v.closed) * 100) : 0 }))
+    .map(([type, v]) => ({ type, ...v, wr: calcWinRate(v.won, v.closed - v.won) }))
     .sort((a, b) => b.total - a.total)
 
   // Score distribution (buckets: <50, 50-59, 60-74, 75-89, 90+)
@@ -158,7 +133,7 @@ export default async function AnalyticsPage() {
     if (b.outcome === 'LOST')   catMap[cat].closed++
   })
   const byCategory = Object.entries(catMap)
-    .map(([cat, v]) => ({ cat, ...v, wr: v.closed > 0 ? Math.round((v.won / v.closed) * 100) : 0 }))
+    .map(([cat, v]) => ({ cat, ...v, wr: calcWinRate(v.won, v.closed - v.won) }))
     .sort((a, b) => b.total - a.total)
 
   // Win rate by tender type
@@ -171,7 +146,7 @@ export default async function AnalyticsPage() {
     if (b.outcome === 'LOST')   tendMap[t].closed++
   })
   const byTender = Object.entries(tendMap)
-    .map(([t, v]) => ({ t, ...v, wr: v.closed > 0 ? Math.round((v.won / v.closed) * 100) : 0 }))
+    .map(([t, v]) => ({ t, ...v, wr: calcWinRate(v.won, v.closed - v.won) }))
     .sort((a, b) => b.total - a.total)
 
   // Outcome counts
@@ -222,14 +197,17 @@ export default async function AnalyticsPage() {
           {[
             { label: ar ? 'إجمالي العطاءات' : 'Total Bids',         value: total,           accent: '' },
             { label: ar ? 'إجمالي المكاسب'  : 'Total Wins',         value: won,             accent: 'accent-go' },
-            { label: ar ? 'معدل الفوز'      : 'Win Rate',           value: `${winRate}%`,   accent: winRate >= 60 ? 'accent-go' : 'accent-review', sub: ar ? 'الهدف ≥ ٤٥٪' : 'target ≥ 45%' },
-            { label: ar ? 'متوسط النقاط · المكاسب'  : 'Avg Score · Wins',   value: avgScoreWins,    accent: '' },
-            { label: ar ? 'متوسط النقاط · الخسائر'  : 'Avg Score · Losses', value: avgScoreLoss,    accent: '' },
-          ].map(k => (
+            { label: ar ? 'معدل الفوز'      : 'Win Rate',           value: `${winRate}%`,   accent: winRate >= 45 ? 'accent-go' : 'accent-review',
+              sub: `${ar ? WIN_RATE_FORMULA_AR : WIN_RATE_FORMULA} = ${won} / ${won + lost} · ${ar ? 'الهدف ≥ ٤٥٪' : 'target ≥ 45%'}` },
+            { label: ar ? 'متوسط النقاط · المكاسب'  : 'Avg Score · Wins',   value: avgScoreWins,    accent: '', unit: '/135', sub: ar ? `متوسط ${wonBids.length} عطاء فائز` : `mean of ${wonBids.length} won bids` },
+            { label: ar ? 'متوسط النقاط · الخسائر'  : 'Avg Score · Losses', value: avgScoreLoss,    accent: '', unit: '/135', sub: ar ? `متوسط ${lostBids.length} عطاء خاسر` : `mean of ${lostBids.length} lost bids` },
+          ].map((k: { label: string; value: string | number; accent: string; sub?: string; unit?: string }) => (
             <div key={k.label} className={`card kpi ${k.accent}`}>
               <span className="kpi-label">{k.label}</span>
-              <span className={`kpi-value${k.accent === 'accent-go' ? ' text-go' : k.accent === 'accent-review' ? ' text-review' : ''}`}>{k.value}</span>
-              {k.sub && <span style={{ fontSize:10, color:'var(--mute)', fontFamily:"'JetBrains Mono',monospace", marginTop:4 }}>{k.sub}</span>}
+              <span className={`kpi-value${k.accent === 'accent-go' ? ' text-go' : k.accent === 'accent-review' ? ' text-review' : ''}`}>
+                {k.value}{k.unit && <span className="kpi-unit">{k.unit}</span>}
+              </span>
+              {k.sub && <KpiFormula>{k.sub}</KpiFormula>}
             </div>
           ))}
         </div>
@@ -242,10 +220,10 @@ export default async function AnalyticsPage() {
             <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
               <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'حسب نوع المشروع' : 'By Project Type'}</span>
             </div>
-            <div style={{ fontFamily:"'Archivo Narrow',sans-serif", fontWeight:700, fontSize:15, marginBottom:12 }}>{ar ? 'معدل الفوز' : 'WIN RATE'}</div>
+            <div style={{ fontFamily:"'Archivo Narrow',sans-serif", fontWeight:700, fontSize:15, marginBottom:12 }}>{ar ? 'معدل الفوز (٪)' : 'WIN RATE (%)'}</div>
             <VBarChart
-              data={byType.map(t => ({ label: typeLabel(t.type), value: t.wr, color: 'var(--ink)' }))}
-              height={90}
+              data={byType.map((t, i) => ({ label: typeLabel(t.type), value: t.wr, top: `${t.wr}%`, sub: ar ? `${t.won}/${t.closed} فوز` : `${t.won}/${t.closed} won`, color: CAT_COLORS[i % CAT_COLORS.length] }))}
+              width={300} height={110} max={100} maxBarW={48} gap={20}
             />
           </div>
 
@@ -254,10 +232,10 @@ export default async function AnalyticsPage() {
             <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
               <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'حسب قطاع العميل' : 'By Client Sector'}</span>
             </div>
-            <div style={{ fontFamily:"'Archivo Narrow',sans-serif", fontWeight:700, fontSize:15, marginBottom:12 }}>{ar ? 'معدل الفوز' : 'WIN RATE'}</div>
+            <div style={{ fontFamily:"'Archivo Narrow',sans-serif", fontWeight:700, fontSize:15, marginBottom:12 }}>{ar ? 'معدل الفوز (٪)' : 'WIN RATE (%)'}</div>
             <VBarChart
-              data={byCategory.map(c => ({ label: catLabel(c.cat), value: c.wr, color: 'var(--data-blue)' }))}
-              height={90}
+              data={byCategory.map((t, i) => ({ label: catLabel(t.cat), value: t.wr, top: `${t.wr}%`, sub: ar ? `${t.won}/${t.closed} فوز` : `${t.won}/${t.closed} won`, color: CAT_COLORS[i % CAT_COLORS.length] }))}
+              width={300} height={110} max={100} maxBarW={48} gap={20}
             />
           </div>
 
@@ -266,10 +244,10 @@ export default async function AnalyticsPage() {
             <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
               <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'حسب نوع المناقصة' : 'By Tender Type'}</span>
             </div>
-            <div style={{ fontFamily:"'Archivo Narrow',sans-serif", fontWeight:700, fontSize:15, marginBottom:12 }}>{ar ? 'معدل الفوز' : 'WIN RATE'}</div>
+            <div style={{ fontFamily:"'Archivo Narrow',sans-serif", fontWeight:700, fontSize:15, marginBottom:12 }}>{ar ? 'معدل الفوز (٪)' : 'WIN RATE (%)'}</div>
             <VBarChart
-              data={byTender.map(t => ({ label: tenderLabel(t.t), value: t.wr, color: 'var(--go)' }))}
-              height={90}
+              data={byTender.map((t, i) => ({ label: tenderLabel(t.t), value: t.wr, top: `${t.wr}%`, sub: ar ? `${t.won}/${t.closed} فوز` : `${t.won}/${t.closed} won`, color: CAT_COLORS[i % CAT_COLORS.length] }))}
+              width={300} height={110} max={100} maxBarW={48} gap={20}
             />
           </div>
 
@@ -320,7 +298,7 @@ export default async function AnalyticsPage() {
                       <td><span className="mono" style={{ color: '#B07A1B', fontWeight: 700 }}>{row.review}</span></td>
                       <td><span className="mono" style={{ color: '#A8362A', fontWeight: 700 }}>{row.nogo}</span></td>
                       <td>
-                        <span style={{ color: row.wr >= 60 ? '#1F6E45' : row.wr >= 40 ? '#B07A1B' : '#A8362A', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700 }}>
+                        <span style={{ color: row.wr >= 45 ? 'var(--go)' : row.wr >= 30 ? 'var(--review)' : 'var(--nogo)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700 }}>
                           {row.wr}%
                         </span>
                       </td>

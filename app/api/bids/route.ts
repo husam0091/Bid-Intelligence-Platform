@@ -3,6 +3,9 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth-options'
 import { prisma } from '@/lib/prisma'
 import { computeDecision } from '@/lib/decision'
+import { getScoringConfig } from '@/lib/scoring-config'
+import { getActor, unauthorized } from '@/lib/rbac'
+import { logAudit, snapshot } from '@/lib/audit'
 import { z } from 'zod'
 
 const BidSchema = z.object({
@@ -55,21 +58,22 @@ export async function GET(req: Request) {
   if (p.get('riskIndex')) where.riskIndex = p.get('riskIndex')
   if (p.get('location'))  where.location  = p.get('location')
   if (p.get('type'))      where.type      = p.get('type')
+  if (p.get('clientCategory')) where.clientCategory = p.get('clientCategory')
 
   const bids = await prisma.bid.findMany({
     where,
-    orderBy: { date: 'desc' },
+    orderBy: p.get('order') === 'recent' ? { date: 'desc' } : { sr: 'asc' },
   })
 
   return NextResponse.json({ data: bids })
 }
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions)
-  if (!session) return NextResponse.json({ error: 'Unauthorized', code: 'AUTH_REQUIRED' }, { status: 401 })
+  const actor = await getActor()
+  if (!actor) return unauthorized()
 
-  const orgId     = (session.user as any).orgId
-  const createdBy = (session.user as any).id
+  const orgId     = actor.orgId
+  const createdBy = actor.id
 
   const body   = await req.json()
   const parsed = BidSchema.safeParse(body)
@@ -91,7 +95,7 @@ export async function POST(req: Request) {
     payments: d.payments, finDuration: d.finDuration,
   }
 
-  const derived = computeDecision(criteria)
+  const derived = computeDecision(criteria, await getScoringConfig(orgId))
 
   // auto-increment sr per org
   const last = await prisma.bid.findFirst({ where: { orgId }, orderBy: { sr: 'desc' }, select: { sr: true } })
@@ -109,6 +113,13 @@ export async function POST(req: Request) {
       ...criteria,
       ...derived,
     },
+  })
+
+  const { id: _id, ...rest } = bid
+  await logAudit(actor, {
+    action: 'BID_CREATE', entity: 'BID', entityId: bid.id, bidSr: bid.sr,
+    summary: `Created bid #${bid.sr} "${bid.name}" — score ${bid.totalScore}, ${bid.decision.replace('_', ' ')}`,
+    changes: snapshot(rest, 'create'),
   })
 
   return NextResponse.json({ data: bid }, { status: 201 })

@@ -23,9 +23,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard', req.url))
   }
 
-  if (pathname.startsWith('/settings') && role !== 'ADMIN') {
-    return NextResponse.redirect(new URL('/dashboard', req.url))
-  }
+  // /settings is open to every role: the page itself hides admin-only sections
+  // (team, data, audit trail, danger zone) and the scoring formula is read-only for non-admins.
+  // All admin actions are additionally enforced server-side in the API routes.
 
   if (pathname.startsWith('/analytics') && role !== 'MANAGER' && role !== 'EXECUTIVE' && role !== 'ADMIN') {
     return NextResponse.redirect(new URL('/dashboard', req.url))

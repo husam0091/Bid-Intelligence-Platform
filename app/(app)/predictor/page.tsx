@@ -5,6 +5,8 @@ import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { Header } from '@/components/layout/Header'
 import BidSelector from './BidSelector'
+import { getScoringConfig } from '@/lib/scoring-config'
+import { MAX_SCORE } from '@/lib/decision'
 
 const OUTCOME_COLOR: Record<string, string> = {
   WON:      '#1F6E45',
@@ -41,74 +43,83 @@ function CompareBar({ label, score, max = 135, color, highlight = false }: {
   )
 }
 
-// Score distribution SVG chart — all bids as vertical bars, colored by outcome
-function ScoreDistribution({ bids, selectedId }: {
-  bids: { id: string; totalScore: number; outcome: string; name: string }[]
-  selectedId?: string
+// Score distribution — histogram of all bids in 5-point bins, stacked by outcome.
+// Fixed number of bins, so it always fits the card no matter how many bids exist.
+function ScoreDistribution({ bids, selectedScore, reviewMin, goMin, ar }: {
+  bids: { totalScore: number; outcome: string }[]
+  selectedScore?: number
+  reviewMin: number
+  goMin: number
+  ar: boolean
 }) {
   if (bids.length === 0) {
     return (
-      <div style={{ textAlign: 'center', color: '#6E6A62', fontSize: 12, fontFamily: "'JetBrains Mono',monospace", padding: '24px 0' }}>
-        No bid data
+      <div style={{ textAlign: 'center', color: 'var(--mute)', fontSize: 12, fontFamily: "'JetBrains Mono',monospace", padding: '24px 0' }}>
+        {ar ? 'لا توجد بيانات' : 'No bid data'}
       </div>
     )
   }
 
-  const sorted = [...bids].sort((a, b) => b.totalScore - a.totalScore)
-  const W   = 480
-  const H   = 100
-  const padB = 20
-  const barW = Math.max(4, Math.floor((W - (sorted.length - 1) * 2) / sorted.length))
-  const gap  = 2
+  const BIN = 5
+  const nBins = Math.ceil((MAX_SCORE + 1) / BIN)            // 0–4, 5–9, … 135
+  const outcomes = ['WON', 'LOST', 'PENDING', 'REJECTED'] as const
+  const bins = Array.from({ length: nBins }, () => ({ WON: 0, LOST: 0, PENDING: 0, REJECTED: 0 } as Record<string, number>))
+  bids.forEach(b => { const i = Math.min(nBins - 1, Math.floor(Math.max(0, b.totalScore) / BIN)); bins[i][b.outcome] = (bins[i][b.outcome] ?? 0) + 1 })
+  const maxBin = Math.max(...bins.map(b => outcomes.reduce((s, o) => s + b[o], 0)), 1)
+
+  const W = 480; const H = 110; const padT = 14; const padB = 22
+  const slot = W / nBins
+  const barW = slot - 2
+  const xFor = (score: number) => (score / (nBins * BIN)) * W
 
   return (
-    <div>
+    <div style={{ width: '100%', overflow: 'hidden' }}>
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 8, justifyContent: 'flex-end' }}>
         {Object.entries(OUTCOME_COLOR).map(([outcome, color]) => (
           <div key={outcome} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <div style={{ width: 8, height: 8, borderRadius: 2, background: color }} />
-            <span style={{ fontSize: 9, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace" }}>{outcome}</span>
+            <span style={{ fontSize: 9, color: 'var(--mute)', fontFamily: "'JetBrains Mono',monospace" }}>{outcome}</span>
           </div>
         ))}
       </div>
-      <svg viewBox={`0 0 ${W} ${H + padB}`} style={{ width: '100%', overflow: 'visible' }}>
-        {sorted.map((b, i) => {
-          const barH   = Math.max(3, Math.round((b.totalScore / 135) * H))
-          const x      = i * (barW + gap)
-          const y      = H - barH
-          const color  = OUTCOME_COLOR[b.outcome] ?? '#6E6A62'
-          const isSelected = b.id === selectedId
+      <svg viewBox={`0 0 ${W} ${padT + H + padB}`} style={{ width: '100%', display: 'block' }} role="img">
+        {/* Decision zones */}
+        <rect x={0} y={padT} width={xFor(reviewMin)} height={H} style={{ fill: 'var(--nogo-tint)' }} />
+        <rect x={xFor(reviewMin)} y={padT} width={xFor(goMin) - xFor(reviewMin)} height={H} style={{ fill: 'var(--review-tint)' }} />
+        <rect x={xFor(goMin)} y={padT} width={W - xFor(goMin)} height={H} style={{ fill: 'var(--go-tint)' }} />
+        {bins.map((b, i) => {
+          let y = padT + H
           return (
-            <g key={b.id}>
-              <rect
-                x={x} y={y}
-                width={barW} height={barH}
-                fill={color}
-                rx={1}
-                opacity={isSelected ? 1 : 0.65}
-                stroke={isSelected ? '#1B2B1E' : 'none'}
-                strokeWidth={isSelected ? 1.5 : 0}
-              />
-              {isSelected && (
-                <text x={x + barW / 2} y={y - 3} textAnchor="middle" fontSize={8} fill="#1B2B1E" fontFamily="'JetBrains Mono',monospace" fontWeight="700">
-                  {b.totalScore}
-                </text>
-              )}
+            <g key={i}>
+              <title>{`${i * BIN}–${i * BIN + BIN - 1}: ${outcomes.map(o => `${o} ${b[o]}`).join(', ')}`}</title>
+              {outcomes.map(o => {
+                if (!b[o]) return null
+                const h = (b[o] / maxBin) * H
+                y -= h
+                return <rect key={o} x={i * slot + 1} y={y} width={barW} height={h} fill={OUTCOME_COLOR[o]} opacity={0.8} />
+              })}
             </g>
           )
         })}
-        {/* Score bands */}
-        {[90, 75, 60].map(band => {
-          const bandY = H - Math.round((band / 135) * H)
-          return (
-            <line key={band} x1={0} y1={bandY} x2={W} y2={bandY} stroke="#D9D4C4" strokeWidth={0.5} strokeDasharray="3,3" />
-          )
-        })}
-      </svg>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 14, marginTop: 4 }}>
-        {[{ label: '≥90 GO', y: 90 }, { label: '75 GO', y: 75 }, { label: '60 REVIEW', y: 60 }].map(b => (
-          <span key={b.label} style={{ fontSize: 9, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace" }}>{b.label}</span>
+        {[reviewMin, goMin].map(t => (
+          <line key={t} x1={xFor(t)} x2={xFor(t)} y1={padT} y2={padT + H} style={{ stroke: 'var(--mute-2)' }} strokeWidth={0.75} strokeDasharray="3,3" />
         ))}
+        {selectedScore != null && (
+          <g>
+            <line x1={xFor(selectedScore)} x2={xFor(selectedScore)} y1={padT - 4} y2={padT + H} style={{ stroke: 'var(--ink)' }} strokeWidth={2} />
+            <text x={Math.min(W - 20, Math.max(20, xFor(selectedScore)))} y={padT - 6} textAnchor="middle" fontSize={9} fontWeight={700} fontFamily="'JetBrains Mono',monospace" style={{ fill: 'var(--ink)' }}>
+              {ar ? 'هذا' : 'This'} · {selectedScore}
+            </text>
+          </g>
+        )}
+        {[0, reviewMin, goMin, MAX_SCORE].map(t => (
+          <text key={t} x={Math.max(6, Math.min(W - 8, xFor(t)))} y={padT + H + 14} textAnchor="middle" fontSize={9} fontFamily="'JetBrains Mono',monospace" style={{ fill: 'var(--mute)' }}>{t}</text>
+        ))}
+      </svg>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginTop: 4, fontSize: 9, color: 'var(--mute)', fontFamily: "'JetBrains Mono',monospace" }}>
+        <span>{ar ? 'مرفوض' : 'NO GO'} &lt; {reviewMin}</span>
+        <span>{ar ? 'مراجعة' : 'REVIEW'} {reviewMin}–{goMin - 1}</span>
+        <span>{ar ? 'مقبول' : 'GO'} ≥ {goMin}</span>
       </div>
     </div>
   )
@@ -134,6 +145,7 @@ export default async function PredictorPage({
     },
     orderBy: { sr: 'asc' },
   })
+  const scoring = await getScoringConfig(orgId)
 
   const selectedId  = searchParams.id
   const selectedBid = selectedId ? allBids.find(b => b.id === selectedId) ?? null : null
@@ -168,7 +180,7 @@ export default async function PredictorPage({
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 16, alignItems: 'start' }}>
 
           {/* ── LEFT column ── */}
           <div>
@@ -324,7 +336,7 @@ export default async function PredictorPage({
             </div>
 
             {/* Score distribution chart */}
-            <div className="card">
+            <div className="card" style={{ overflow: 'hidden' }}>
               <div className="card-section-head" style={{ marginBottom: 14, paddingBottom: 10 }}>
                 <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'توزيع النقاط' : 'Score Distribution'}</span>
                 <span style={{ fontSize: 10, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace" }}>
@@ -332,8 +344,11 @@ export default async function PredictorPage({
                 </span>
               </div>
               <ScoreDistribution
-                bids={allBids.map(b => ({ id: b.id, totalScore: b.totalScore, outcome: b.outcome, name: b.name }))}
-                selectedId={selectedId}
+                bids={allBids.map(b => ({ totalScore: b.totalScore, outcome: b.outcome }))}
+                selectedScore={selectedBid?.totalScore}
+                reviewMin={scoring.reviewMin}
+                goMin={scoring.goMin}
+                ar={ar}
               />
             </div>
 

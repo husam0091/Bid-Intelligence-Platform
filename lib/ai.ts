@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { getScoringConfig } from '@/lib/scoring-config'
 
 // ── AI client (plain fetch — Pollinations free API, no key needed) ───────────
 const AI_URL = 'https://text.pollinations.ai/openai/chat/completions'
@@ -22,6 +23,7 @@ async function callAI(messages: ChatMessage[], maxTokens = 400, temperature = 0.
 // Pulls live DB stats and injects them into every AI call.
 // This is what makes the AI "understand" the user's actual data.
 export async function buildPortfolioContext(orgId: string): Promise<string> {
+  const cfg = await getScoringConfig(orgId)
   const [bids, stats] = await Promise.all([
     prisma.bid.findMany({
       where:   { orgId },
@@ -89,9 +91,11 @@ Top locations: ${topLocations || 'N/A'}
 Recent bids:
   ${recentSummary || 'None yet'}
 
-Scoring system: 27 criteria, max 135 pts. Decision bands:
-  ≥90 = GO (win 60–75%) | 75–89 = GO/REVIEW (51–60%) | 60–74 = REVIEW (38%) | <60 = NO GO
-  HARD STOP: if Commercial & Financial Risk domain < 13pts → forced NO GO regardless of total
+Scoring system: 27 criteria, max 135 pts. Unified decision rules (decision and risk are tied to score):
+  ≥${cfg.goMin} = GO / LOW risk | ${cfg.reviewMin}–${cfg.goMin - 1} = REVIEW / MEDIUM risk | <${cfg.reviewMin} = NO GO / HIGH risk
+  Win probability: ${cfg.winBands.map(b => `≥${b.min} → ${Math.round(b.p * 100)}%`).join(' | ')}
+  Commercial flag: if Commercial & Financial domain < ${cfg.cfrFlagMin}pts the bid is flagged for commercial review (advisory, does not change the decision)
+  Win rate = Won ÷ (Won + Lost)
 `.trim()
 }
 

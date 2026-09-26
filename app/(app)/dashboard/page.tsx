@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { Header } from '@/components/layout/Header'
 import { cookies } from 'next/headers'
+import { KpiFormula } from '@/components/charts/Charts'
+import { winRate as calcWinRate, WIN_RATE_FORMULA, WIN_RATE_FORMULA_AR, EXECUTION_WHERE } from '@/lib/metrics'
 
 function DonutChart({ segments, ar }: { segments: { label: string; value: number; color: string }[]; ar: boolean }) {
   const total = segments.reduce((s, d) => s + d.value, 0) || 1
@@ -47,7 +49,7 @@ export default async function DashboardPage() {
 
   const orgId = (session.user as any).orgId
 
-  const [total, goCount, reviewCount, nogoCount, highRisk, lowRisk, medRisk, wonCount, closedCount, allBids, pendingBids] =
+  const [total, goCount, reviewCount, nogoCount, highRisk, lowRisk, medRisk, wonCount, lostCount, allBids, pendingBids] =
     await Promise.all([
       prisma.bid.count({ where: { orgId } }),
       prisma.bid.count({ where: { orgId, decision: 'GO' } }),
@@ -57,21 +59,20 @@ export default async function DashboardPage() {
       prisma.bid.count({ where: { orgId, riskIndex: 'LOW' } }),
       prisma.bid.count({ where: { orgId, riskIndex: 'MEDIUM' } }),
       prisma.bid.count({ where: { orgId, outcome: 'WON' } }),
-      prisma.bid.count({ where: { orgId, outcome: { in: ['WON', 'LOST'] } } }),
+      prisma.bid.count({ where: { orgId, outcome: 'LOST' } }),
       prisma.bid.findMany({
         where:   { orgId },
         orderBy: { date: 'asc' },
         select:  { location: true, decision: true, outcome: true, date: true, clientCategory: true },
       }),
       prisma.bid.findMany({
-        where:   { orgId, outcome: 'PENDING' },
-        orderBy: { date: 'desc' },
-        take:    10,
-        select:  { id: true, sr: true, name: true, location: true, type: true, decision: true, riskIndex: true, expectWin: true, estValue: true, date: true, totalScore: true },
+        where:   { orgId, ...EXECUTION_WHERE },
+        orderBy: { sr: 'asc' },
+        select:  { id: true, sr: true, name: true, location: true, type: true, decision: true, riskIndex: true, expectWin: true, estValue: true, date: true, totalScore: true, outcome: true },
       }),
     ])
 
-  const winRate = closedCount > 0 ? Math.round((wonCount / closedCount) * 100) : 0
+  const winRate = calcWinRate(wonCount, lostCount)
 
   // Monthly bid counts — last 6 months, stacked by decision
   const now = new Date()
@@ -88,19 +89,20 @@ export default async function DashboardPage() {
   const maxBar = Math.max(...months.map(m => m.go + m.review + m.nogo), 1)
 
   // Win dynamics by client category
-  const catMap: Record<string, { total: number; won: number }> = { GOV: {total:0,won:0}, PRIVATE: {total:0,won:0}, SEMI: {total:0,won:0} }
+  const catMap: Record<string, { total: number; won: number; lost: number }> = { GOV: {total:0,won:0,lost:0}, PRIVATE: {total:0,won:0,lost:0}, SEMI: {total:0,won:0,lost:0} }
   allBids.forEach(b => {
     const cat = b.clientCategory ?? 'GOV'
-    if (!catMap[cat]) catMap[cat] = { total: 0, won: 0 }
+    if (!catMap[cat]) catMap[cat] = { total: 0, won: 0, lost: 0 }
     catMap[cat].total++
-    if (b.outcome === 'WON') catMap[cat].won++
+    if (b.outcome === 'WON')  catMap[cat].won++
+    if (b.outcome === 'LOST') catMap[cat].lost++
   })
   const catLabels: Record<string, string> = { GOV: 'Government', PRIVATE: 'Private', SEMI: 'Semi-Gov' }
   const winDynamics = Object.entries(catMap).map(([cat, v]) => ({
     label: catLabels[cat] ?? cat,
     total: v.total,
     won:   v.won,
-    wr:    v.total > 0 ? Math.round((v.won / v.total) * 100) : 0,
+    wr:    calcWinRate(v.won, v.lost),
   }))
 
   // Bids by city — top 6
@@ -146,7 +148,8 @@ export default async function DashboardPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 14, marginBottom: 14 }}>
           {[
             { label: ar ? 'إجمالي المشاريع' : 'Total Projects', value: total,         accent: '' },
-            { label: ar ? 'معدل الفوز' : 'Win Rate',            value: `${winRate}%`, accent: winRate >= 60 ? 'accent-go' : 'accent-review' },
+            { label: ar ? 'معدل الفوز' : 'Win Rate',            value: `${winRate}%`, accent: winRate >= 45 ? 'accent-go' : 'accent-review',
+              formula: `${ar ? WIN_RATE_FORMULA_AR : WIN_RATE_FORMULA} = ${wonCount} / ${wonCount + lostCount}` },
             { label: ar ? 'مقبول' : 'GO',                       value: goCount,        accent: 'accent-go' },
             { label: ar ? 'مراجعة' : 'REVIEW',                  value: reviewCount,    accent: 'accent-review' },
             { label: ar ? 'مخاطر عالية' : 'High Risk',          value: highRisk,       accent: highRisk > 0 ? 'accent-nogo' : '' },
@@ -156,6 +159,7 @@ export default async function DashboardPage() {
               <span className={`kpi-value${k.accent === 'accent-go' ? ' text-go' : k.accent === 'accent-review' ? ' text-review' : k.accent === 'accent-nogo' ? ' text-nogo' : ''}`}>
                 {k.value}
               </span>
+              {'formula' in k && k.formula && <KpiFormula>{k.formula}</KpiFormula>}
             </div>
           ))}
         </div>
@@ -291,7 +295,7 @@ export default async function DashboardPage() {
         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
           <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--hairline)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span className="card-eyebrow"><span className="eyebrow-dot" />{ar ? 'قيد التنفيذ حالياً' : 'Currently in Execution'}</span>
-            <span className="breadcrumb">{ar ? 'معلق' : 'Pending'} · {pendingBids.length} bid{pendingBids.length !== 1 ? 's' : ''}</span>
+            <span className="breadcrumb">{ar ? 'فائز أو معلق · باستثناء المرفوض' : 'Won or Pending · excl. NO GO & Rejected'} · {pendingBids.length} bid{pendingBids.length !== 1 ? 's' : ''}</span>
           </div>
           <div style={{ overflowX: 'auto' }}>
             <table className="data-table">
@@ -303,6 +307,7 @@ export default async function DashboardPage() {
                   <th>{ar ? 'النوع' : 'Type'}</th>
                   <th>{ar ? 'القرار' : 'Decision'}</th>
                   <th>{ar ? 'المخاطر' : 'Risk'}</th>
+                  <th>{ar ? 'الحالة' : 'Status'}</th>
                   <th style={{ width: 55 }}>{ar ? '٪ الفوز' : 'Win %'}</th>
                   <th style={{ width: 50 }}>{ar ? 'النقاط' : 'Score'}</th>
                   <th>{ar ? 'القيمة التقديرية (ريال)' : 'Est. Value (SAR)'}</th>
@@ -313,20 +318,21 @@ export default async function DashboardPage() {
                 {pendingBids.map(bid => (
                   <tr key={bid.id}>
                     <td className="mono" style={{ color: '#6E6A62' }}>{bid.sr}</td>
-                    <td style={{ fontWeight: 500, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{bid.name}</td>
+                    <td style={{ fontWeight: 500, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}><a href={`/bids/${bid.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>{bid.name}</a></td>
                     <td style={{ fontSize: 12 }}>{bid.location}</td>
                     <td style={{ fontSize: 11, color: '#6E6A62', fontFamily: "'JetBrains Mono',monospace" }}>{bid.type}</td>
                     <td><span className={decisionClass(bid.decision)}>{bid.decision.replace('_', ' ')}</span></td>
                     <td><span className="mono" style={{ color: riskColor(bid.riskIndex), fontWeight: 600, fontSize: 11 }}>{bid.riskIndex}</span></td>
+                    <td><span className={`pill ${bid.outcome === 'WON' ? 'pill-go' : 'pill-pending'}`}>{bid.outcome}</span></td>
                     <td className="mono">{Math.round(bid.expectWin * 100)}%</td>
-                    <td className="mono" style={{ fontWeight: 700 }}>{bid.totalScore}</td>
+                    <td className="mono" style={{ fontWeight: 700 }}>{bid.totalScore}<span style={{ color: 'var(--mute)', fontWeight: 400 }}>/135</span></td>
                     <td className="mono" style={{ color: '#6E6A62', fontSize: 12 }}>{bid.estValue.toLocaleString()}</td>
                     <td className="mono" style={{ color: '#6E6A62', fontSize: 11 }}>{new Date(bid.date).toLocaleDateString('en-SA')}</td>
                   </tr>
                 ))}
                 {pendingBids.length === 0 && (
                   <tr>
-                    <td colSpan={10} style={{ textAlign: 'center', color: '#6E6A62', padding: '32px 0', fontFamily: "'JetBrains Mono',monospace", fontSize: 12 }}>
+                    <td colSpan={11} style={{ textAlign: 'center', color: '#6E6A62', padding: '32px 0', fontFamily: "'JetBrains Mono',monospace", fontSize: 12 }}>
                       {ar ? 'لا توجد عطاءات قيد التنفيذ' : 'No pending bids in execution'}
                     </td>
                   </tr>

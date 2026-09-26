@@ -308,7 +308,7 @@ export async function POST(
     rows  = await prisma.bid.findMany({ where: { orgId, outcome: 'PENDING' }, orderBy: { sr: 'asc' } })
   } else if (type === 'win-loss') {
     title = 'Win/Loss Analysis'
-    rows  = await prisma.bid.findMany({ where: { orgId, outcome: { in: ['WON', 'LOST'] } }, orderBy: { date: 'desc' } })
+    rows  = await prisma.bid.findMany({ where: { orgId, outcome: { in: ['WON', 'LOST'] } }, orderBy: { sr: 'asc' } })
   } else if (type === 'scorecard') {
     title = 'Bid Scorecard'
     const bid = await prisma.bid.findFirst({ where: { orgId, id: String(body.bidId ?? '') } })
