@@ -145,7 +145,7 @@ export default function ReportsPage() {
   const curYear = new Date().getFullYear()
 
   return (
-    <div className="page-wrap">
+    <div className="page">
       <div className="page-header">
         <div className="h-left">
           <div className="h-kicker"><span className="dash" />{ar ? '08 · التقارير' : '08 · Reports'}</div>

@@ -1,54 +1,48 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { useState, useEffect } from 'react'
+import { useLang } from '@/components/ui/I18n'
+import { NAV, isActive, roleKey } from '@/components/layout/Sidebar'
 
-interface HeaderProps {
-  title:    string
-  titleAr?: string
-}
-
-export function Header({ title, titleAr }: HeaderProps) {
+export function Header() {
+  const pathname = usePathname()
   const { data: session } = useSession()
-  const user = session?.user as any
-  const isAr = typeof document !== 'undefined' && document.body.classList.contains('ar')
-  const displayTitle = isAr && titleAr ? titleAr : title
-
+  const { lang, t } = useLang()
   const [time, setTime] = useState('')
+
   useEffect(() => {
-    function tick() {
-      const now = new Date()
-      setTime(now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }))
-    }
+    const tick = () => setTime(new Date().toLocaleTimeString(lang === 'ar' ? 'ar-SA' : 'en-GB', { hour: '2-digit', minute: '2-digit' }))
     tick()
-    const id = setInterval(tick, 30000)
+    const id = setInterval(tick, 30_000)
     return () => clearInterval(id)
-  }, [])
+  }, [lang])
+
+  const current = NAV.find(n => isActive(pathname, n.href))
 
   return (
-    <header className="main-header">
+    <div className="main-header">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/fulllogo_transparent_nobuffer.png" alt="Black Construction" className="wordmark" />
-      <span className="header-divider" />
-      <nav className="crumb">Bid Intelligence · <b>{displayTitle.toUpperCase()}</b></nav>
+      <img src="/fulllogo_transparent_nobuffer.png" className="wordmark" alt="Black Construction" />
+      <div className="header-divider" />
+      <div className="crumb">
+        {t('crumb_app')} · <b>{current ? t(current.key) : ''}</b>
+      </div>
       <div className="header-meta">
-        {time && (
-          <div className="meta-cell">
-            <span className="lbl">STATUS</span>
-            <span className="val"><span className="live-dot" />{time}</span>
-          </div>
-        )}
-        {user?.name && (
-          <div className="meta-cell">
-            <span className="lbl">USER</span>
-            <span className="val">{user.name}</span>
-          </div>
-        )}
         <div className="meta-cell">
-          <span className="lbl">REGION</span>
-          <span className="val">KSA · 2026</span>
+          <span className="lbl">{t('last_sync')}</span>
+          <span className="val"><span className="live-dot" />{time}</span>
+        </div>
+        <div className="meta-cell">
+          <span className="lbl">{t('user')}</span>
+          <span className="val">{session?.user.name ? `${session.user.name} · ${t(roleKey(session.user.role))}` : '—'}</span>
+        </div>
+        <div className="meta-cell">
+          <span className="lbl">KSA</span>
+          <span className="val">2026</span>
         </div>
       </div>
-    </header>
+    </div>
   )
 }
