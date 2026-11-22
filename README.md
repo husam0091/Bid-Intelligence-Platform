@@ -1,24 +1,16 @@
 <div align="center">
 
-<br/>
+# Bid Intelligence Platform
 
-```
-  ██████╗
-  ██╔══██╗
-      ██████╔╝   BLACK — BID INTELLIGENCE
-  ██╔══██╗
-  ██████╔╝
-  ╚═════╝
-```
+**Bilingual bid evaluation, risk scoring & decision support for construction teams**
 
-### Bilingual bid decision engine for Saudi construction contractors
+![Next.js](https://img.shields.io/badge/Next.js-14-172235?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![Localization](https://img.shields.io/badge/Localization-EN%20%2F%20AR%20RTL-1F6376)
 
-[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](https://docker.com)
-[![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](https://postgresql.org)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-[![Arabic](https://img.shields.io/badge/Arabic-RTL_ready-success)](docs/i18n.md)
+[Overview](#what-is-this) · [Quick start](#quick-start) · [Features](#features) · [Tech stack](#tech-stack) · [Security](#security)
 
 </div>
 
@@ -43,8 +35,8 @@
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/black-bid-intelligence.git
-cd black-bid-intelligence
+git clone https://github.com/husam0091/Bid-Intelligence-Platform.git
+cd Bid-Intelligence-Platform
 
 # 2. Configure environment
 cp .env.example .env
